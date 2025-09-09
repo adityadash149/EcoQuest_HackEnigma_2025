@@ -9,6 +9,9 @@ import {
   Calendar,
   Award,
   Users,
+  Trash2,
+  Leaf,
+  HelpCircle
 } from 'lucide-react';
 import type {
   Lesson,
@@ -17,6 +20,8 @@ import type {
   LeaderboardEntry,
   Ngo,
   ExternalGame,
+  RecyclingItem,
+  Bin
 } from './types';
 
 export const lessons: Lesson[] = [
@@ -81,12 +86,12 @@ export const lessons: Lesson[] = [
 ];
 
 export const games: Game[] = [
-  { id: 'recycling', title: 'Recycling Game', description: 'Drag & drop waste into the correct bins.', subject: 'Science', icon: Recycle, href: '/games' },
-  { id: 'tree-planting', title: 'Tree Planting Game', description: 'Dig, seed, water, and watch it grow!', subject: 'Social Studies', icon: TreePine, href: '/games' },
-  { id: 'water-conservation', title: 'Water Conservation', description: 'Tap to close leaks and collect rainwater.', subject: 'Science', icon: Droplet, href: '/games' },
-  { id: 'pollution-control', title: 'Pollution Control', description: 'Upgrade factories to reduce smoke.', subject: 'Technology', icon: Factory, href: '/games' },
-  { id: 'green-tech', title: 'Green Tech Game', description: 'Choose between EVs, solar panels, etc.', subject: 'Technology', icon: Lightbulb, href: '/games' },
-  { id: 'poster-creator', title: 'Poster Creator', description: 'Design posters for environmental awareness.', subject: 'Arts', icon: Paintbrush, href: '/games' },
+  { id: 'recycling', title: 'Recycling Game', description: 'Drag & drop waste into the correct bins.', subject: 'Science', icon: Recycle, href: '/games/recycling' },
+  { id: 'tree-planting', title: 'Tree Planting Game', description: 'Dig, seed, water, and watch it grow!', subject: 'Social Studies', icon: TreePine, href: '/games/tree-planting' },
+  { id: 'water-conservation', title: 'Water Conservation', description: 'Tap to close leaks and collect rainwater.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
+  { id: 'pollution-control', title: 'Pollution Control', description: 'Upgrade factories to reduce smoke.', subject: 'Technology', icon: Factory, href: '/games/pollution-control' },
+  { id: 'green-tech', title: 'Green Tech Game', description: 'Choose between EVs, solar panels, etc.', subject: 'Technology', icon: Lightbulb, href: '/games/green-tech' },
+  { id: 'poster-creator', title: 'Poster Creator', description: 'Design posters for environmental awareness.', subject: 'Arts', icon: Paintbrush, href: '/games/poster-creator' },
 ];
 
 export const quizzes: Quiz[] = [
@@ -122,3 +127,21 @@ export const externalGames: ExternalGame[] = [
     { id: '2', title: 'National Geographic Kids', description: 'Explore the world with fun games and quizzes.', href: '#', image: 'https://picsum.photos/300/202' },
     { id: '3', title: 'PBS Kids Nature Games', description: 'Go on adventures with your favorite characters.', href: '#', image: 'https://picsum.photos/302/202' },
 ]
+
+export const recyclingItems: RecyclingItem[] = [
+    { id: 'item-1', name: 'Plastic Bottle', type: 'recycling' },
+    { id: 'item-2', name: 'Apple Core', type: 'compost' },
+    { id: 'item-3', name: 'Newspaper', type: 'recycling' },
+    { id: 'item-4', name: 'Styrofoam Cup', type: 'trash' },
+    { id: 'item-5', name: 'Glass Jar', type: 'recycling' },
+    { id: 'item-6', name: 'Banana Peel', type: 'compost' },
+    { id: 'item-7', name: 'Chip Bag', type: 'trash' },
+    { id: 'item-8', name: 'Aluminum Can', type: 'recycling' },
+];
+
+export const bins: Bin[] = [
+    { id: 'bin-1', name: 'Recycling', accepts: ['recycling'], icon: Recycle },
+    { id: 'bin-2', name: 'Compost', accepts: ['compost'], icon: Leaf },
+    { id: 'bin-3', name: 'Trash', accepts: ['trash'], icon: Trash2 },
+    { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle },
+];

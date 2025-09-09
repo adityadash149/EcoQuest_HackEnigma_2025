@@ -33,7 +33,7 @@ export interface Quiz {
   description: string;
   subject: string;
   icon: any;
-  href: string;
+  href:string;
 }
 
 export interface LeaderboardEntry {
@@ -58,4 +58,17 @@ export interface ExternalGame {
   description: string;
   href: string;
   image: string;
+}
+
+export interface RecyclingItem {
+    id: string;
+    name: string;
+    type: 'recycling' | 'compost' | 'trash' | 'hazardous';
+}
+
+export interface Bin {
+    id: string;
+    name: string;
+    accepts: string[];
+    icon: any;
 }
