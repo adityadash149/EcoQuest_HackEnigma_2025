@@ -1,7 +1,23 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragOverlay,
+  useDraggable,
+  useDroppable,
+} from '@dnd-kit/core';
+import {
+  sortableKeyboardCoordinates,
+  arrayMove,
+} from '@dnd-kit/sortable';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,134 +27,238 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Loader, Lightbulb, ThumbsUp, ThumbsDown, Wand2 } from 'lucide-react';
+import { ArrowLeft, Lightbulb, CheckCircle, XCircle, Award } from 'lucide-react';
 import Link from 'next/link';
-import { useToast } from '@/hooks/use-toast';
-import { evaluateSlogan, type EvaluateSloganOutput } from '@/ai/flows/evaluate-slogan';
 import { cn } from '@/lib/utils';
-import { Progress } from '@/components/ui/progress';
+import { ecoSlogans } from '@/lib/mock-data';
 
-const topics = [
-    'Deforestation',
-    'Water Conservation',
-    'Recycling',
-    'Climate Change',
-    'Plastic Pollution',
-    'Renewable Energy',
-];
+const Word = ({ word, id, isDragging }: { word: string; id: string, isDragging?: boolean }) => {
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+        id,
+        data: { word },
+    });
+    
+    const style = transform
+        ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+        : {};
 
-export default function EcoSloganCreatorPage() {
-  const [topic, setTopic] = useState(topics[0]);
-  const [slogan, setSlogan] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<EvaluateSloganOutput | null>(null);
-  const { toast } = useToast();
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...listeners}
+            {...attributes}
+            className={cn(
+                'px-4 py-2 bg-accent text-accent-foreground rounded-lg shadow cursor-grab touch-none select-none',
+                isDragging && 'opacity-50'
+            )}
+        >
+            {word}
+        </div>
+    );
+};
 
-  const handleGenerate = async () => {
-    if (!slogan.trim()) {
-      toast({
-        title: 'Slogan is empty',
-        description: 'Please write a slogan before submitting.',
-        variant: 'destructive',
-      });
-      return;
+const DropZone = ({ children, id }: { children: React.ReactNode, id: string }) => {
+    const { isOver, setNodeRef } = useDroppable({ id });
+
+    return (
+        <div
+            ref={setNodeRef}
+            className={cn(
+                'min-h-[6rem] w-full bg-background rounded-lg border-2 border-dashed p-4 flex flex-wrap gap-2 items-center justify-center',
+                isOver ? 'border-primary' : 'border-border'
+            )}
+        >
+            {children}
+        </div>
+    );
+};
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+  return array.sort(() => Math.random() - 0.5);
+};
+
+export default function EcoSloganScramblePage() {
+  const [sloganIndex, setSloganIndex] = useState(0);
+  const [jumbledWords, setJumbledWords] = useState<string[]>([]);
+  const [arrangedWords, setArrangedWords] = useState<string[]>([]);
+  const [attempts, setAttempts] = useState(0);
+  const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const currentSlogan = ecoSlogans[sloganIndex];
+
+  useEffect(() => {
+    if (currentSlogan) {
+      const words = currentSlogan.split(' ');
+      setJumbledWords(shuffleArray([...words]));
+      setArrangedWords([]);
+      setFeedback(null);
+      setAttempts(0);
     }
+  }, [sloganIndex, currentSlogan]);
+  
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
-    setIsLoading(true);
-    setResult(null);
-
-    try {
-      const res = await evaluateSlogan({ topic, slogan });
-      setResult(res);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'Could not evaluate the slogan. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleDragStart = (event: any) => {
+    setActiveId(event.active.id);
   };
   
-  const handleNewTopic = () => {
-    let newTopic = topic;
-    while(newTopic === topic) {
-        newTopic = topics[Math.floor(Math.random() * topics.length)];
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null);
+    const { over, active } = event;
+
+    if (over && over.id === 'dropzone' && active.data.current?.word) {
+      const word = active.data.current.word as string;
+      setArrangedWords((prev) => [...prev, word]);
+      setJumbledWords((prev) => prev.filter((w, i) => `${w}-${i}` !== active.id));
     }
-    setTopic(newTopic);
-    setSlogan('');
-    setResult(null);
+  };
+
+  const handleResetAttempt = () => {
+    const words = currentSlogan.split(' ');
+    setJumbledWords(shuffleArray([...words]));
+    setArrangedWords([]);
+  }
+
+  const handleSubmit = () => {
+    const userAnswer = arrangedWords.join(' ');
+    if (userAnswer === currentSlogan) {
+      setFeedback('correct');
+    } else {
+      setAttempts(prev => prev + 1);
+      setFeedback('wrong');
+    }
+  };
+
+  const handleNext = () => {
+    if (sloganIndex < ecoSlogans.length - 1) {
+      setSloganIndex(prev => prev + 1);
+    } else {
+      // Game over
+      alert("You've completed all the slogans! Great job!");
+      setSloganIndex(0); // Restart
+    }
+  };
+
+  const isGameOver = sloganIndex >= ecoSlogans.length;
+
+  if (!isClient) return null;
+  
+  if (isGameOver) {
+      return (
+         <div className="max-w-md mx-auto text-center">
+            <Card>
+                <CardHeader>
+                    <div className="flex justify-center">
+                        <Award className="h-16 w-16 text-yellow-500" />
+                    </div>
+                    <CardTitle className="text-2xl">Congratulations!</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground mb-4">You've successfully unscrambled all the slogans. You're an Eco-Hero!</p>
+                </CardContent>
+                <CardFooter>
+                    <Button onClick={() => setSloganIndex(0)} className="w-full">
+                        Play Again
+                    </Button>
+                </CardFooter>
+            </Card>
+        </div>
+      )
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-4">
-        <Button asChild variant="ghost">
-          <Link href="/games">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Games
-          </Link>
-        </Button>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Lightbulb className="h-8 w-8 text-yellow-400" />
-            Eco Slogan Creator
-          </CardTitle>
-          <CardDescription>
-            Craft a catchy slogan for the topic: <span className="font-bold text-primary">{topic}</span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={slogan}
-            onChange={(e) => setSlogan(e.target.value)}
-            placeholder={`e.g., "Don't be a punk, recycle your junk!"`}
-            className="text-lg"
-            rows={3}
-          />
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button onClick={handleGenerate} disabled={isLoading} className="w-full">
-            {isLoading ? <Loader className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
-            Evaluate Slogan
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-4">
+          <Button asChild variant="ghost">
+            <Link href="/games">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Games
+            </Link>
           </Button>
-          <Button onClick={handleNewTopic} variant="outline" className="w-full">
-            Try Another Topic
-          </Button>
-        </CardFooter>
-      </Card>
-
-      {isLoading && (
-        <Card className="mt-4">
-          <CardContent className="p-6 flex items-center justify-center">
-            <Loader className="animate-spin mr-4 h-8 w-8 text-primary" />
-            <p className="text-muted-foreground">AI is thinking...</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {result && (
-        <Card className="mt-4">
-            <CardHeader>
-                 <CardTitle className={cn("flex items-center gap-2", result.isGoodSlogan ? "text-green-600" : "text-red-500")}>
-                    {result.isGoodSlogan ? <ThumbsUp /> : <ThumbsDown />}
-                    AI Feedback
-                </CardTitle>
-            </CardHeader>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Lightbulb className="h-8 w-8 text-yellow-400" />
+              Eco Slogan Scramble
+            </CardTitle>
+            <CardDescription>
+              Arrange the words to form a correct environmental slogan. You have {3 - attempts} tries left.
+            </CardDescription>
+          </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-muted-foreground italic">"{result.feedback}"</p>
-            <div>
-                <Label>Score: {result.score}/10</Label>
-                <Progress value={result.score * 10} className={cn(result.isGoodSlogan ? "[&>div]:bg-green-500" : "[&>div]:bg-red-500")} />
+            <div className="p-4 bg-muted/50 rounded-lg min-h-[6rem] flex flex-wrap gap-2 items-center justify-center">
+                {jumbledWords.map((word, index) => (
+                    <Word key={`${word}-${index}`} id={`${word}-${index}`} word={word} />
+                ))}
             </div>
+            
+            <p className="text-center text-muted-foreground">Drag the words into the box below</p>
+            
+            <DropZone id="dropzone">
+                {arrangedWords.map((word, index) => (
+                   <div key={index} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg shadow">
+                        {word}
+                    </div>
+                ))}
+                {!arrangedWords.length && <p className="text-muted-foreground">Drop words here</p>}
+            </DropZone>
           </CardContent>
+          <CardFooter className="flex flex-col gap-4">
+            <Button onClick={handleSubmit} className="w-full" disabled={feedback === 'correct' || attempts >= 3}>
+              Check Slogan
+            </Button>
+            <Button onClick={handleResetAttempt} variant="outline" className="w-full">
+              Reset
+            </Button>
+          </CardFooter>
         </Card>
-      )}
-    </div>
+
+        {feedback && (
+          <Card className="mt-4">
+            <CardContent className="p-6 text-center space-y-4">
+              {feedback === 'correct' && (
+                <>
+                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
+                  <h3 className="text-2xl font-bold text-green-500">Correct!</h3>
+                  <Button onClick={handleNext} className="w-full">Next Slogan</Button>
+                </>
+              )}
+              {feedback === 'wrong' && (
+                <>
+                  <XCircle className="h-12 w-12 text-red-500 mx-auto" />
+                  <h3 className="text-2xl font-bold text-red-500">Not Quite!</h3>
+                  {attempts < 3 ? (
+                    <p>Try again! You have {3 - attempts} tries left.</p>
+                  ) : (
+                    <div className="space-y-4">
+                        <p>You've used all your attempts. The correct slogan is:</p>
+                        <p className="font-bold text-lg text-primary">"{currentSlogan}"</p>
+                        <Button onClick={handleNext} className="w-full">Next Slogan</Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
+      </div>
+      <DragOverlay>
+        {activeId ? <Word id="overlay" word={activeId.split('-')[0]} isDragging /> : null}
+      </DragOverlay>
+    </DndContext>
   );
 }

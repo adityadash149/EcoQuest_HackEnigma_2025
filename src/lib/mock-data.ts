@@ -192,6 +192,18 @@ export const quizzes: Quiz[] = [
   },
 ];
 
+export const ecoSlogans: string[] = [
+  "Don’t be a drip, save every drop.",
+  "Waste water today, live in a desert tomorrow.",
+  "Water is the new oil. Don’t waste it.",
+  "Go green, go clean.",
+  "Give Earth a hand, it’s our only land.",
+  "Our planet, our future.",
+  "The Earth is what we all have in common.",
+  "What we do to the forests of the world is but a mirror reflection of what we do to ourselves and to one another.",
+  "Mother Earth is our life support system, let’s treat her right."
+];
+
 export const treePlantingQuestions: QuizQuestion[] = [
   {
     question: "What is the first step in planting a tree?",
