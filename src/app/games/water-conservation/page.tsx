@@ -217,7 +217,7 @@ export default function WaterConservationPage() {
                 <Cloud className="absolute top-10 left-1/4 h-24 w-48 text-white/80" />
                 <Cloud className="absolute top-20 right-1/4 h-16 w-32 text-white/70" />
                 <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white/90 text-sky-700 font-bold px-3 py-1 rounded-full text-sm">
-                    Rainwater Harvesting
+                    Water Conservation
                 </div>
                 
                 <div className="absolute top-[40%] left-0 w-full h-4 bg-gray-700" />
@@ -238,7 +238,7 @@ export default function WaterConservationPage() {
                         <Bucket x={bucketPosition} />
 
                         <p className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/80 text-xs font-semibold">
-                            Collect rainwater to understand the importance of Rainwater Harvesting!
+                            Collect rainwater to understand the importance of Water Conservation!
                         </p>
                     </>
                 ) : (
@@ -258,5 +258,3 @@ export default function WaterConservationPage() {
     </div>
   );
 }
-
-    
