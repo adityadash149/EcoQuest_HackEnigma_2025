@@ -31,6 +31,7 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctAnswer: string;
+  explanation: string;
 }
 
 export interface Quiz {
@@ -71,6 +72,7 @@ export interface RecyclingItem {
     id: string;
     name: string;
     type: 'recycling' | 'compost' | 'trash' | 'hazardous';
+    image: string;
 }
 
 export interface Bin {
@@ -78,4 +80,5 @@ export interface Bin {
     name: string;
     accepts: string[];
     icon: any;
+    color: string;
 }
