@@ -94,7 +94,11 @@ export default {
         },
         fall: {
             '0%': { transform: 'translateY(-20px)', opacity: '1' },
-            '100%': { transform: 'translateY(24rem)', opacity: '0' }
+            '100%': { transform: 'translateY(calc(100vh - 50px))', opacity: '0' }
+        },
+        'fall-roof': {
+            '0%': { transform: 'translateY(0)', opacity: '1' },
+            '100%': { transform: 'translateY(500px)', opacity: '1' }
         }
       },
       animation: {
@@ -102,8 +106,11 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'drip': 'drip 1s infinite',
         'fall': 'fall 2s linear infinite',
+        'fall-roof': 'fall-roof 2s linear forwards',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
+
+    
