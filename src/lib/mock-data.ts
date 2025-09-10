@@ -301,7 +301,7 @@ export const recyclingItems: RecyclingItem[] = [
 ];
 
 export const bins: Bin[] = [
-    { id: 'bin-1', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-gray-500' },
+    { id: 'bin-1', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-blue-600' },
     { id: 'bin-2', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-green-700' },
     { id: 'bin-3', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-black' },
     { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
