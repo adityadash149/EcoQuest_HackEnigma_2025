@@ -5,8 +5,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Atom, Users, Cpu, Palette, BookCopy } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Atom, Users, Cpu, Palette, BookCopy, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const subjects = [
     {
@@ -14,7 +16,7 @@ const subjects = [
         icon: Atom,
         topics: [
             { name: "Pollution", details: "Air, water, soil, noise" },
-            { name: "Waste Management", details: "Reduce, reuse, recycle, composting" },
+            { name: "Waste Management", details: "Reduce, reuse, recycle, composting", gameHref: "/games/recycling" },
             { name: "Climate Change", details: "Greenhouse gases, global warming, carbon footprint" },
         ]
     },
@@ -22,8 +24,8 @@ const subjects = [
         name: "Social Studies",
         icon: Users,
         topics: [
-            { name: "Deforestation & Afforestation", details: "" },
-            { name: "Water Conservation", details: "Rainwater harvesting, watershed management" },
+            { name: "Deforestation & Afforestation", details: "Learn about the importance of forests and how to restore them.", gameHref: "/games/tree-planting" },
+            { name: "Water Conservation", details: "Rainwater harvesting, watershed management", gameHref: "/games/water-conservation" },
             { name: "Cultural Practices & Nature", details: "How traditions protect the environment" },
             { name: "Sustainable Development Goals (SDGs)", details: "" },
             { name: "Environmental Laws & Policies", details: "Clean India Mission, Paris Agreement basics" },
@@ -76,11 +78,20 @@ export default function SubjectsPage() {
                                 <AccordionItem value={`item-${index}`} key={topic.name}>
                                     <AccordionTrigger className="text-lg font-semibold">{topic.name}</AccordionTrigger>
                                     <AccordionContent>
-                                        {topic.details ? (
-                                            <p className="text-muted-foreground pl-4">{topic.details}</p>
-                                        ) : (
-                                            <p className="text-muted-foreground pl-4">Explore lessons and activities related to {topic.name}.</p>
-                                        )}
+                                       <div className="space-y-4 pl-4">
+                                            {topic.details ? (
+                                                <p className="text-muted-foreground">{topic.details}</p>
+                                            ) : (
+                                                <p className="text-muted-foreground">Explore lessons and activities related to {topic.name}.</p>
+                                            )}
+                                            {topic.gameHref && (
+                                                 <Button asChild>
+                                                    <Link href={topic.gameHref}>
+                                                        Play Game <ArrowRight className="ml-2 h-4 w-4" />
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                       </div>
                                     </AccordionContent>
                                 </AccordionItem>
                             ))}
