@@ -25,22 +25,22 @@ const DraggableItem = ({ item, isDropped, isCorrect }: { item: RecyclingItem; is
       }
     : undefined;
   
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState<{ top: string; left: string } | null>(null);
 
   useEffect(() => {
     // Only set random position on client-side to avoid hydration mismatch
     setPosition({
-      top: Math.random() * 80, // %
-      left: Math.random() * 80, // %
+      top: `${Math.random() * 80}%`,
+      left: `${Math.random() * 80}%`,
     });
   }, []);
 
-  if (isDropped) return null;
+  if (isDropped || !position) return null;
 
   return (
     <div
       ref={setNodeRef}
-      style={{ ...style, position: 'absolute', top: `${position.top}%`, left: `${position.left}%` }}
+      style={{ ...style, position: 'absolute', top: position.top, left: position.left }}
       {...listeners}
       {...attributes}
       className="touch-none cursor-grab"
