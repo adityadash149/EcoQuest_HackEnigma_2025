@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Lesson, Scenario } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import Image from 'next/image';
-import { CheckCircle, XCircle, Award, Leaf } from 'lucide-react';
+import { CheckCircle, XCircle, Award, Leaf, Wand, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -19,9 +19,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { generateLessonAnimation } from '@/ai/flows/generate-lesson-animation';
 
 interface LessonPlayerProps {
   lesson: Lesson;
+}
+
+async function toDataURI(url: string) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
 }
 
 export function LessonPlayer({ lesson }: LessonPlayerProps) {
@@ -31,10 +43,18 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
+  const [scenarioImage, setScenarioImage] = useState("https://picsum.photos/seed/scenario1/600/400");
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
   const currentScenario = lesson.scenarios[currentScenarioIndex];
   const progress = ((currentScenarioIndex + 1) / lesson.scenarios.length) * 100;
+
+  useEffect(() => {
+    // Reset image on new scenario
+    setScenarioImage(`https://picsum.photos/seed/scenario${currentScenarioIndex + 1}/600/400`);
+  }, [currentScenarioIndex]);
+
 
   const shuffledAnswers = useMemo(() => {
     if (!currentScenario) return [];
@@ -42,19 +62,40 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     return answers.sort(() => Math.random() - 0.5);
   }, [currentScenario]);
 
-  const handleAnswer = (answer: string) => {
+  const handleAnswer = async (answer: string) => {
     if (showExplanation) return;
     setSelectedAnswer(answer);
     const correct = answer === currentScenario.correctAnswer;
     setIsCorrect(correct);
     setShowExplanation(true);
+
     if (correct) {
       setScore(score + 10);
       toast({
         title: "Correct!",
-        description: "+10 Eco-Points!",
+        description: "Generating new scene... this may take a moment.",
         variant: "default",
-      })
+      });
+
+      setIsGenerating(true);
+      try {
+        const baseImageDataUri = await toDataURI(scenarioImage);
+        const result = await generateLessonAnimation({
+            baseImage: baseImageDataUri,
+            animationUpdate: currentScenario.animationUpdate,
+        });
+        setScenarioImage(result.imageUrl);
+      } catch (error) {
+        console.error("Failed to generate animation", error);
+        toast({
+            title: "Animation Error",
+            description: "Could not generate the updated scene. Showing the original instead.",
+            variant: "destructive",
+        })
+      } finally {
+        setIsGenerating(false);
+      }
+
     } else {
         toast({
             title: "Not quite...",
@@ -100,8 +141,14 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
           </CardHeader>
           <CardContent>
              <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
-                <Image src="https://picsum.photos/seed/scenario1/600/400" layout="fill" objectFit="cover" alt={currentScenario.scenarioTitle} data-ai-hint={currentScenario.animationUpdate} />
-                {isCorrect !== null && (
+                <Image src={scenarioImage} layout="fill" objectFit="cover" alt={currentScenario.scenarioTitle} data-ai-hint={currentScenario.animationUpdate} />
+                {isGenerating && (
+                    <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white">
+                        <Loader className="animate-spin h-12 w-12 mb-4" />
+                        <p>Enhancing scene with AI...</p>
+                    </div>
+                )}
+                {isCorrect !== null && !isGenerating && (
                     <div className={cn("absolute inset-0 flex items-center justify-center transition-opacity", isCorrect ? 'bg-green-500/30' : 'bg-red-500/30')}>
                         {isCorrect ? <CheckCircle className="h-24 w-24 text-white" /> : <XCircle className="h-24 w-24 text-white" />}
                     </div>
@@ -141,10 +188,14 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground mb-4">{currentScenario.explanation}</p>
-                    <Badge variant="outline" className="text-accent-foreground border-accent">{currentScenario.animationUpdate}</Badge>
+                    <Badge variant="outline" className="text-accent-foreground border-accent flex items-center gap-2">
+                        <Wand className="h-4 w-4" />
+                        <span>{currentScenario.animationUpdate}</span>
+                    </Badge>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={handleNext} className="w-full">
+                    <Button onClick={handleNext} className="w-full" disabled={isGenerating}>
+                        {isGenerating && <Loader className="animate-spin mr-2"/>}
                         {currentScenarioIndex < lesson.scenarios.length - 1 ? 'Next Scenario' : 'Finish Lesson'}
                     </Button>
                 </CardFooter>
