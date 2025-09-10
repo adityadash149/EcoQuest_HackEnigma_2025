@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Shovel, HandPlatter, Droplets, Sun, ArrowLeft, Award, Leaf, TreePine, CheckCircle, XCircle } from 'lucide-react';
@@ -20,12 +20,16 @@ export default function TreePlantingPage() {
   const [answered, setAnswered] = useState(false);
   const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
   const [gameComplete, setGameComplete] = useState(false);
+  const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
 
   const currentQuestion = treePlantingQuestions[currentQuestionIndex];
-
-  const shuffledAnswers = useMemo(() => {
-    if (!currentQuestion) return [];
-    return [...currentQuestion.options].sort(() => Math.random() - 0.5);
+  
+  useEffect(() => {
+    if (currentQuestion) {
+      setShuffledAnswers(
+        [...currentQuestion.options].sort(() => Math.random() - 0.5)
+      );
+    }
   }, [currentQuestion]);
   
   const treeGrowth = (correctAnswersCount / treePlantingQuestions.length) * 100;
@@ -63,6 +67,10 @@ export default function TreePlantingPage() {
     setGameComplete(false);
   };
 
+  if (!currentQuestion) {
+    return null; // or a loading state
+  }
+
   if (gameComplete) {
     return (
         <div className="max-w-md mx-auto text-center">
@@ -80,7 +88,7 @@ export default function TreePlantingPage() {
                     <div className="flex justify-center items-center gap-4 my-4">
                         <div className="flex items-center gap-2 text-lg font-semibold text-primary">
                             <Leaf className="h-6 w-6"/>
-                            <span>+{(correctAnswersCount * 10)} Points</span>
+                            <span>+{correctAnswersCount * 10} Points</span>
                         </div>
                     </div>
                     <Button onClick={handlePlayAgain} className="w-full">
@@ -169,3 +177,5 @@ export default function TreePlantingPage() {
     </div>
   );
 }
+
+    
