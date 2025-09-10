@@ -220,9 +220,15 @@ export default function WaterConservationPage() {
                     Water Conservation
                 </div>
                 
-                <div className="absolute top-[40%] left-0 w-full h-4 bg-gray-700" />
+                {/* Roof */}
                 <div 
-                    className="absolute top-[calc(40%+1rem)] left-0 w-0 h-0 border-l-[50vw] border-l-transparent border-r-[50vw] border-r-transparent border-b-[10vh] border-b-gray-600"
+                    className="absolute top-[40%] left-0 w-full h-[15vh] bg-orange-700/80 "
+                    style={{
+                        clipPath: 'polygon(0 0, 100% 30%, 100% 100%, 0 100%)'
+                    }}
+                />
+                <div 
+                    className="absolute top-[calc(40%+15vh)] left-0 w-full h-4 bg-orange-900/70"
                 />
 
 
