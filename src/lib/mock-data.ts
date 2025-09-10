@@ -1,3 +1,4 @@
+
 import {
   BookOpen,
   Recycle,
@@ -129,7 +130,7 @@ export const lessons: Lesson[] = [
 
 export const games: Game[] = [
   { id: 'recycling', title: 'Recycling Game', description: 'Drag & drop waste into the correct bins.', subject: 'Science', icon: Recycle, href: '/games/recycling' },
-  { id: 'tree-planting', title: 'Tree Planting Game', description: 'Follow the steps to plant and grow a tree!', subject: 'Social Studies', icon: TreePine, href: '/games/tree-planting' },
+  { id: 'tree-planting', title: 'Tree Planting Challenge', description: 'Answer questions to plant and grow a tree!', subject: 'Social Studies', icon: TreePine, href: '/games/tree-planting' },
   { id: 'water-conservation', title: 'Water Conservation', description: 'Fix leaks and collect rainwater to save water.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
 ];
 
@@ -146,11 +147,13 @@ export const quizzes: Quiz[] = [
         question: 'When is Earth Day celebrated?',
         options: ['March 22', 'April 22', 'June 5', 'October 4'],
         correctAnswer: 'April 22',
+        explanation: 'Earth Day is an annual event on April 22 to demonstrate support for environmental protection.'
       },
       {
         question: 'What is the theme for Earth Day 2024?',
         options: ['Restore Our Earth', 'Invest In Our Planet', 'Planet vs. Plastics', 'Protect Our Species'],
         correctAnswer: 'Planet vs. Plastics',
+        explanation: 'The theme for Earth Day 2024 is "Planet vs. Plastics," which calls to advocate for widespread awareness on the health risk of plastics.'
       },
     ],
   },
@@ -165,7 +168,8 @@ export const quizzes: Quiz[] = [
         {
             question: 'Which award is often referred to as the "Nobel Prize for the Environment"?',
             options: ['The Goldman Environmental Prize', 'The Blue Planet Prize', 'Champions of the Earth', 'The Tyler Prize for Environmental Achievement'],
-            correctAnswer: 'The Goldman Environmental Prize'
+            correctAnswer: 'The Goldman Environmental Prize',
+            explanation: 'The Goldman Environmental Prize is a prestigious award given annually to grassroots environmental activists, one from each of the world\'s six geographic regions.'
         }
     ]
   },
@@ -180,10 +184,74 @@ export const quizzes: Quiz[] = [
         {
             question: 'Which young activist is known for starting the "Fridays for Future" movement?',
             options: ['Greta Thunberg', 'Malala Yousafzai', 'Autumn Peltier', 'Xiuhtezcatl Martinez'],
-            correctAnswer: 'Greta Thunberg'
+            correctAnswer: 'Greta Thunberg',
+            explanation: 'Greta Thunberg, a Swedish environmental activist, initiated the "Fridays for Future" school climate strike movement in 2018.'
         }
     ]
   },
+];
+
+export const treePlantingQuestions: QuizQuestion[] = [
+  {
+    question: "What is the first step in planting a tree?",
+    options: ["Watering the spot", "Adding fertilizer", "Digging a hole", "Putting the seed in"],
+    correctAnswer: "Digging a hole",
+    explanation: "You need to dig a hole that is wide and deep enough for the tree's root ball."
+  },
+  {
+    question: "Why are trees important for the air we breathe?",
+    options: ["They absorb carbon dioxide and produce oxygen", "They create wind", "They cool the air", "They clean the dust from the air"],
+    correctAnswer: "They absorb carbon dioxide and produce oxygen",
+    explanation: "Through photosynthesis, trees take in carbon dioxide from the atmosphere and release oxygen, which is essential for human and animal life."
+  },
+  {
+    question: "What is deforestation?",
+    options: ["Planting new forests", "The clearing of forests for other land uses", "A disease that affects trees", "A type of tree"],
+    correctAnswer: "The clearing of forests for other land uses",
+    explanation: "Deforestation is the permanent removal of trees to make room for something besides forest. This can include clearing the land for agriculture or grazing, or using the timber for fuel, construction or manufacturing."
+  },
+  {
+    question: "What does a young tree need to grow strong?",
+    options: ["Lots of shade", "Water, sunlight, and nutrients", "Very cold weather", "Salty water"],
+    correctAnswer: "Water, sunlight, and nutrients",
+    explanation: "Like most plants, trees need a combination of water, sunlight for photosynthesis, and nutrients from the soil to grow healthy and strong."
+  },
+  {
+    question: "What is the benefit of planting native trees?",
+    options: ["They grow faster than any other tree", "They require more water", "They provide the best food and shelter for local wildlife", "They are more resistant to all diseases"],
+    correctAnswer: "They provide the best food and shelter for local wildlife",
+    explanation: "Native trees are adapted to the local climate and soil conditions, and they have co-evolved with local wildlife, providing essential habitat and food sources."
+  },
+  {
+    question: "How do tree roots help the soil?",
+    options: ["They make the soil looser", "They hold the soil in place and prevent erosion", "They add salt to the soil", "They remove all water from the soil"],
+    correctAnswer: "They hold the soil in place and prevent erosion",
+    explanation: "The network of tree roots acts like a net, binding the soil together and preventing it from being washed or blown away by water and wind."
+  },
+  {
+    question: "What is the process of planting trees called?",
+    options: ["Deforestation", "Gardening", "Afforestation", "Agriculture"],
+    correctAnswer: "Afforestation",
+    explanation: "Afforestation is the establishment of a forest or stand of trees in an area where there was no previous tree cover."
+  },
+  {
+    question: "Which of these is NOT a direct product from trees?",
+    options: ["Paper", "Apples", "Lumber", "Plastic"],
+    correctAnswer: "Plastic",
+    explanation: "Paper, fruits like apples, and lumber for building are all products that come from trees. Plastic is derived from petroleum."
+  },
+  {
+    question: "What is a 'carbon footprint'?",
+    options: ["The shape of a leaf", "The total amount of greenhouse gases generated by our actions", "A type of tree fertilizer", "The shadow a tree casts"],
+    correctAnswer: "The total amount of greenhouse gases generated by our actions",
+    explanation: "Our carbon footprint is a measure of our impact on the environment. Planting trees is a great way to help reduce this footprint."
+  },
+  {
+    question: "What is the best time of year to plant most trees?",
+    options: ["Peak of summer", "Autumn, after leaves drop, or early spring", "Middle of winter", "Any time is fine"],
+    correctAnswer: "Autumn, after leaves drop, or early spring",
+    explanation: "Planting in the fall or early spring gives the tree's roots time to establish themselves before the stress of summer heat or winter cold."
+  }
 ];
 
 export const schoolLeaderboard: LeaderboardEntry[] = [
@@ -231,3 +299,5 @@ export const bins: Bin[] = [
     { id: 'bin-3', name: 'Trash', accepts: ['trash'], icon: Trash2 },
     { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle },
 ];
+
+    
