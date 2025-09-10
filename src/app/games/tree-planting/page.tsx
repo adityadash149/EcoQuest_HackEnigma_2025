@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Shovel, HandPlatter, Droplets, Sun, ArrowLeft, Award, Leaf } from 'lucide-react';
+import { Shovel, HandPlatter, Droplets, Sun, ArrowLeft, Award, Leaf, TreePine } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
