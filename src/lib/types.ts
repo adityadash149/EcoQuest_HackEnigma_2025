@@ -27,13 +27,20 @@ export interface Game {
   href: string;
 }
 
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
 export interface Quiz {
   id: string;
   title: string;
   description: string;
   subject: string;
   icon: any;
-  href:string;
+  href: string;
+  questions: QuizQuestion[];
 }
 
 export interface LeaderboardEntry {

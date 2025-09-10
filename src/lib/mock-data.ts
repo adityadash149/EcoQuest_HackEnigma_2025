@@ -95,9 +95,56 @@ export const games: Game[] = [
 ];
 
 export const quizzes: Quiz[] = [
-  { id: 'earth-day', title: 'Earth Day Special', description: 'Test your knowledge on this important day.', subject: 'Current Affairs', icon: Calendar, href: '/quizzes' },
-  { id: 'green-awards', title: 'Environmental Awards', description: 'Learn about the Nobel prizes of green work.', subject: 'Current Affairs', icon: Award, href: '/quizzes' },
-  { id: 'eco-activists', title: 'Famous Activists', description: 'Who are the heroes of the eco-movement?', subject: 'Social Studies', icon: Users, href: '/quizzes' },
+  {
+    id: 'earth-day',
+    title: 'Earth Day Special',
+    description: 'Test your knowledge on this important day.',
+    subject: 'Current Affairs',
+    icon: Calendar,
+    href: '/quizzes/earth-day',
+    questions: [
+      {
+        question: 'When is Earth Day celebrated?',
+        options: ['March 22', 'April 22', 'June 5', 'October 4'],
+        correctAnswer: 'April 22',
+      },
+      {
+        question: 'What is the theme for Earth Day 2024?',
+        options: ['Restore Our Earth', 'Invest In Our Planet', 'Planet vs. Plastics', 'Protect Our Species'],
+        correctAnswer: 'Planet vs. Plastics',
+      },
+    ],
+  },
+  {
+    id: 'green-awards',
+    title: 'Environmental Awards',
+    description: 'Learn about the Nobel prizes of green work.',
+    subject: 'Current Affairs',
+    icon: Award,
+    href: '/quizzes/green-awards',
+    questions: [
+        {
+            question: 'Which award is often referred to as the "Nobel Prize for the Environment"?',
+            options: ['The Goldman Environmental Prize', 'The Blue Planet Prize', 'Champions of the Earth', 'The Tyler Prize for Environmental Achievement'],
+            correctAnswer: 'The Goldman Environmental Prize'
+        }
+    ]
+  },
+  {
+    id: 'eco-activists',
+    title: 'Famous Activists',
+    description: 'Who are the heroes of the eco-movement?',
+    subject: 'Social Studies',
+    icon: Users,
+    href: '/quizzes/eco-activists',
+    questions: [
+        {
+            question: 'Which young activist is known for starting the "Fridays for Future" movement?',
+            options: ['Greta Thunberg', 'Malala Yousafzai', 'Autumn Peltier', 'Xiuhtezcatl Martinez'],
+            correctAnswer: 'Greta Thunberg'
+        }
+    ]
+  },
 ];
 
 export const schoolLeaderboard: LeaderboardEntry[] = [
