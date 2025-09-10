@@ -1,15 +1,37 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Droplets, Faucet, CloudRain, ArrowLeft, Award } from 'lucide-react';
+import { Droplets, CloudRain, ArrowLeft, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 const GAME_DURATION = 30000; // 30 seconds
 const LEAK_INTERVAL = 2000; // New leak every 2 seconds
 const RAINDROP_INTERVAL = 500; // New raindrop every 0.5 seconds
+
+function FaucetIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+      >
+        <path d="M14.3 16.9c1.2-1.2 1.1-3.1-.1-4.2-1.2-1.1-3.1-1.1-4.2.1-1.2 1.2-1.1 3.1.1 4.2 1.2 1.1 3.1 1.1 4.2-.1z" />
+        <path d="M16 14h2c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2h-2" />
+        <path d="M4 14h2c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2H4" />
+        <path d="M12 12V4" />
+        <path d="M12 4H8" />
+      </svg>
+    );
+  }
 
 export default function WaterConservationPage() {
   const [score, setScore] = useState(0);
@@ -164,7 +186,7 @@ export default function WaterConservationPage() {
                     {/* Leaking Taps */}
                     {leaks.map(leak => (
                         <button key={leak.id} style={{ left: `${leak.x}%`, top: `${leak.y}%`}} className="absolute text-blue-500 animate-pulse" onClick={() => handleFixLeak(leak.id)}>
-                            <Faucet className="h-8 w-8"/>
+                            <FaucetIcon className="h-8 w-8"/>
                             <Droplets className="h-4 w-4 absolute -bottom-3 left-2 animate-drip" />
                         </button>
                     ))}
@@ -192,3 +214,5 @@ export default function WaterConservationPage() {
 // drip: { '0%, 100%': { transform: 'translateY(0)', opacity: '1' }, '100%': { transform: 'translateY(20px)', opacity: '0' }, },
 // fall: { '0%': { transform: 'translateY(-20px)', opacity: '1' }, '100%': { transform: 'translateY(calc(100vh - 50px))', opacity: '0' } }
 // This is a comment, the implementation should handle this. I will update tailwind.config.ts
+
+    
