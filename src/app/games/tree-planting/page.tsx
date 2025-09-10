@@ -35,7 +35,9 @@ export default function TreePlantingPage() {
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
 
   const currentQuestion = treePlantingQuestions[currentQuestionIndex];
-  const progress = (score / (treePlantingQuestions.length * 10)) * 100;
+  const questionsCorrect = score / 10;
+  const totalQuestions = treePlantingQuestions.length;
+  const progress = (questionsCorrect / totalQuestions) * 100;
 
   useEffect(() => {
     // Prevents hydration error by shuffling on client
@@ -102,7 +104,7 @@ export default function TreePlantingPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              You've successfully planted a tree. You're a true Eco-Hero!
+              You've successfully answered the questions. You're a true Eco-Hero!
             </p>
             <div className="flex justify-center items-center gap-4 my-4">
               <div className="flex items-center gap-2 text-lg font-semibold text-primary">
@@ -143,39 +145,64 @@ export default function TreePlantingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="relative w-full h-80 bg-sky-100 dark:bg-sky-900/30 rounded-lg flex flex-col justify-end items-center overflow-hidden p-4">
+            <div className="relative w-full h-80 bg-sky-100 dark:bg-sky-900/30 rounded-lg flex flex-col justify-end items-center overflow-hidden p-4">
                 {/* Ground */}
                 <div className="absolute bottom-0 left-0 w-full h-1/4 bg-green-800/40 z-0" />
                 <div className="absolute bottom-0 left-0 w-full h-1/6 bg-yellow-900/30 z-10" />
 
-                {/* Tree */}
+                {/* Tree Structure */}
                 <div
-                  className={cn(
-                    'absolute bottom-[15%] w-2 bg-yellow-900/80 rounded-t-sm transition-all duration-1000 ease-out origin-bottom z-20',
-                    progress < 5 ? 'scale-y-0' : ''
-                  )}
-                  style={{ height: `${progress * 0.7}%` }}
+                  className="absolute bottom-[15%] flex items-end justify-center transition-all duration-1000 ease-out origin-bottom z-20"
+                  style={{ height: '80%', width: '100%' }}
                 >
-                  {/* Leaves */}
-                  {progress > 40 && (
-                    <div
-                      className="absolute -top-4 -left-3 w-10 h-10 rounded-full bg-green-600 transition-all duration-500 origin-bottom"
-                      style={{ transform: `scale(${progress / 100})` }}
-                    />
-                  )}
-                   {progress > 60 && (
-                    <div
-                      className="absolute -top-8 -right-4 w-12 h-12 rounded-full bg-green-700 transition-all duration-500 delay-200 origin-bottom"
-                       style={{ transform: `scale(${progress / 100})` }}
-                    />
-                  )}
-                   {progress > 80 && (
-                    <div
-                      className="absolute -top-12 left-0 w-10 h-10 rounded-full bg-green-500 transition-all duration-500 delay-500 origin-bottom"
-                       style={{ transform: `scale(${progress / 100})` }}
-                    />
-                  )}
+                  {/* Trunk */}
+                  <div
+                    className={cn(
+                      'w-3 bg-yellow-950/80 rounded-t-md transition-all duration-1000 ease-out origin-bottom',
+                      questionsCorrect > 0 ? 'scale-y-100' : 'scale-y-0'
+                    )}
+                    style={{ height: `${Math.min(100, progress * 1.5)}%` }}
+                  />
+
+                  {/* Branches & Leaves */}
+                  <div className="absolute top-0 left-0 w-full h-full">
+                    {/* Branch 1 (Left) */}
+                    {questionsCorrect >= 2 && (
+                      <div
+                        className="absolute bottom-[20%] left-[calc(50%-0.75rem)] w-12 h-1 bg-yellow-950/80 transition-all duration-500 origin-right -rotate-45"
+                        style={{ transform: 'translateX(-100%) rotate(-45deg)', opacity: questionsCorrect >= 2 ? 1 : 0 }}
+                      >
+                          {questionsCorrect >= 3 && <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-green-600 animate-in fade-in zoom-in" />}
+                      </div>
+                    )}
+
+                    {/* Branch 2 (Right) */}
+                    {questionsCorrect >= 4 && (
+                      <div
+                        className="absolute bottom-[40%] right-[calc(50%-0.75rem)] w-16 h-1 bg-yellow-950/80 transition-all duration-500 origin-left rotate-45"
+                         style={{ transform: 'translateX(100%) rotate(45deg)', opacity: questionsCorrect >= 4 ? 1 : 0 }}
+                      >
+                         {questionsCorrect >= 5 && <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-green-700 animate-in fade-in zoom-in delay-200" />}
+                      </div>
+                    )}
+                     
+                    {/* Branch 3 (Left) */}
+                    {questionsCorrect >= 6 && (
+                      <div
+                        className="absolute bottom-[60%] left-[calc(50%-0.75rem)] w-14 h-1 bg-yellow-950/80 transition-all duration-500 origin-right -rotate-30"
+                        style={{ transform: 'translateX(-100%) rotate(-30deg)', opacity: questionsCorrect >= 6 ? 1 : 0 }}
+                      >
+                         {questionsCorrect >= 7 && <div className="absolute -top-4 -left-3 w-10 h-10 rounded-full bg-green-600 animate-in fade-in zoom-in delay-300" />}
+                      </div>
+                    )}
+
+                     {/* Canopy */}
+                     {questionsCorrect >= 8 && <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-16 h-16 rounded-full bg-green-500 animate-in fade-in zoom-in-50 duration-500" />}
+                     {questionsCorrect >= 9 && <div className="absolute top-[0%] left-[calc(50%-2rem)] -translate-x-1/2 w-14 h-14 rounded-full bg-green-600 animate-in fade-in zoom-in-50 duration-500 delay-200" />}
+                     {questionsCorrect >= 10 && <div className="absolute top-[0%] left-[calc(50%+2rem)] -translate-x-1/2 w-14 h-14 rounded-full bg-green-700 animate-in fade-in zoom-in-50 duration-500 delay-400" />}
+                  </div>
                 </div>
+
                 <Progress value={progress} className="absolute bottom-4 w-11/12" />
               </div>
             </CardContent>
@@ -248,5 +275,3 @@ export default function TreePlantingPage() {
     </div>
   );
 }
-
-    
