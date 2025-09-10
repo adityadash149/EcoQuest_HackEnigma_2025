@@ -18,7 +18,7 @@ type Raindrop = {
   bounced: boolean;
 };
 
-const Raindrop = ({ y }: { y: number }) => (
+const RaindropEl = ({ y }: { y: number }) => (
     <div className="w-1 h-4 bg-blue-400 rounded-full" style={{ transform: `translateY(${y}px)` }} />
 );
 
@@ -66,6 +66,12 @@ export default function WaterConservationPage() {
     }, 1000);
     return () => clearTimeout(timer);
   }, [timeLeft, isGameActive]);
+
+  useEffect(() => {
+      if(isGameOver) {
+          localStorage.setItem('game-water-conservation-completed', 'true');
+      }
+  }, [isGameOver]);
 
   // Raindrop generator
   useEffect(() => {
@@ -237,7 +243,7 @@ export default function WaterConservationPage() {
                         {/* Raindrops */}
                         {raindrops.map(drop => (
                              <div key={drop.id} className="absolute top-0 animate-fall-roof" style={{ left: `${drop.x}%`}}>
-                                <Raindrop y={drop.y} />
+                                <RaindropEl y={drop.y} />
                             </div>
                         ))}
                         {/* Bucket */}

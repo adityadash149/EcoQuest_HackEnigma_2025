@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Accordion,
   AccordionContent,
@@ -6,9 +8,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Atom, Users, Cpu, Palette, BookCopy, ArrowRight } from "lucide-react";
+import { Atom, Users, Cpu, Palette, BookCopy, ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 const subjects = [
     {
@@ -16,7 +19,7 @@ const subjects = [
         icon: Atom,
         topics: [
             { name: "Pollution", details: "Air, water, soil, noise" },
-            { name: "Waste Management", details: "Reduce, reuse, recycle, composting", gameHref: "/games/recycling" },
+            { name: "Waste Management", details: "Reduce, reuse, recycle, composting", gameHref: "/games/recycling", gameId: "recycling" },
             { name: "Climate Change", details: "Greenhouse gases, global warming, carbon footprint" },
         ]
     },
@@ -24,8 +27,8 @@ const subjects = [
         name: "Social Studies",
         icon: Users,
         topics: [
-            { name: "Deforestation & Afforestation", details: "Learn about the importance of forests and how to restore them.", gameHref: "/games/tree-planting" },
-            { name: "Water Conservation", details: "Saving water, rainwater harvesting, watershed management", gameHref: "/games/water-conservation" },
+            { name: "Deforestation & Afforestation", details: "Learn about the importance of forests and how to restore them.", gameHref: "/games/tree-planting", gameId: "tree-planting" },
+            { name: "Water Conservation", details: "Saving water, rainwater harvesting, watershed management", gameHref: "/games/water-conservation", gameId: "water-conservation" },
             { name: "Cultural Practices & Nature", details: "How traditions protect the environment" },
             { name: "Sustainable Development Goals (SDGs)", details: "" },
             { name: "Environmental Laws & Policies", details: "Clean India Mission, Paris Agreement basics" },
@@ -43,12 +46,21 @@ const subjects = [
         icon: Palette,
         topics: [
             { name: "Design posters on 'Save Earth'", details: "" },
-            { name: "Create eco-slogans or short poems", details: "", gameHref: "/games/eco-slogans" },
+            { name: "Create eco-slogans or short poems", details: "", gameHref: "/games/eco-slogans", gameId: "eco-slogans" },
         ]
     }
-]
+];
 
 export default function SubjectsPage() {
+    const [completedGames, setCompletedGames] = useState<string[]>([]);
+
+    useEffect(() => {
+        const completed = subjects.flatMap(s => s.topics)
+                                  .filter(topic => topic.gameId && localStorage.getItem(`game-${topic.gameId}-completed`))
+                                  .map(topic => topic.gameId!);
+        setCompletedGames(completed);
+    }, []);
+
   return (
     <div>
         <div className="mb-8">
@@ -76,7 +88,12 @@ export default function SubjectsPage() {
                         <Accordion type="single" collapsible className="w-full">
                             {subject.topics.map((topic, index) => (
                                 <AccordionItem value={`item-${index}`} key={topic.name}>
-                                    <AccordionTrigger className="text-lg font-semibold">{topic.name}</AccordionTrigger>
+                                    <AccordionTrigger className="text-lg font-semibold">
+                                        <div className="flex items-center gap-2">
+                                            {topic.gameId && completedGames.includes(topic.gameId) && <CheckCircle className="h-5 w-5 text-green-500" />}
+                                            <span>{topic.name}</span>
+                                        </div>
+                                    </AccordionTrigger>
                                     <AccordionContent>
                                        <div className="space-y-4 pl-4">
                                             {topic.details ? (

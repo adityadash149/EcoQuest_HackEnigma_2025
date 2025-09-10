@@ -49,6 +49,12 @@ export default function TreePlantingPage() {
     }
   }, [currentQuestion]);
 
+  useEffect(() => {
+    if (gameComplete) {
+        localStorage.setItem('game-tree-planting-completed', 'true');
+    }
+  }, [gameComplete]);
+
 
   const handleAnswerSelect = (answer: string) => {
     if (showExplanation) return;

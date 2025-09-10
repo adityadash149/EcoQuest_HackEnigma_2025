@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const DraggableItem = ({ item, isDropped, isCorrect }: { item: RecyclingItem; isDropped: boolean; isCorrect: boolean | null }) => {
+const DraggableItem = ({ item, isDropped }: { item: RecyclingItem; isDropped: boolean;}) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: item.id,
     data: item,
@@ -33,7 +33,7 @@ const DraggableItem = ({ item, isDropped, isCorrect }: { item: RecyclingItem; is
       top: `${Math.random() * 80}%`,
       left: `${Math.random() * 80}%`,
     });
-  }, []);
+  }, [item.id]);
 
   if (isDropped || !position) return null;
 
@@ -93,6 +93,12 @@ export default function RecyclingGamePage() {
 
   const remainingItems = useMemo(() => items.filter(item => !Object.values(droppedItems).flat().some(dropped => dropped.id === item.id)), [items, droppedItems]);
   const isGameComplete = remainingItems.length === 0;
+
+  useEffect(() => {
+    if(isGameComplete) {
+        localStorage.setItem('game-recycling-completed', 'true');
+    }
+  }, [isGameComplete]);
 
   const handleDragStart = (event: any) => {
     setActiveDragId(event.active.id);
@@ -205,7 +211,6 @@ export default function RecyclingGamePage() {
                     key={item.id} 
                     item={item} 
                     isDropped={Object.values(droppedItems).flat().some(i => i.id === item.id)}
-                    isCorrect={feedback[item.id]}
                 />
             ))}
         </div>

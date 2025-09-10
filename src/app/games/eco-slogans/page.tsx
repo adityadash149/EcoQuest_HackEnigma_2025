@@ -86,22 +86,23 @@ export default function EcoSloganScramblePage() {
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const currentSlogan = ecoSlogans[sloganIndex];
+  const currentSlogan = useMemo(() => ecoSlogans[sloganIndex], [sloganIndex]);
 
   useEffect(() => {
-    if (currentSlogan) {
+    if (isClient && currentSlogan) {
       const words = currentSlogan.split(' ');
       setJumbledWords(shuffleArray([...words]));
       setArrangedWords([]);
       setFeedback(null);
       setAttempts(0);
     }
-  }, [sloganIndex, currentSlogan]);
+  }, [sloganIndex, currentSlogan, isClient]);
   
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -120,8 +121,21 @@ export default function EcoSloganScramblePage() {
 
     if (over && over.id === 'dropzone' && active.data.current?.word) {
       const word = active.data.current.word as string;
+      const wordId = active.id as string;
       setArrangedWords((prev) => [...prev, word]);
-      setJumbledWords((prev) => prev.filter((w, i) => `${w}-${i}` !== active.id));
+      setJumbledWords((prev) => prev.filter((w, i) => `${w}-${i}` !== wordId));
+    } else if (over && over.id === 'jumblezone' && active.data.current?.word) {
+      const word = active.data.current.word as string;
+      const wordId = active.id as string;
+      
+      const originalIndex = parseInt(wordId.split('-').pop() || '0', 10);
+      
+      setArrangedWords((prev) => prev.filter((w, i) => `${w}-${i}` !== wordId));
+      
+      setJumbledWords((prev) => {
+          const newJumbled = [...prev, word];
+          return newJumbled;
+      });
     }
   };
 
@@ -145,13 +159,10 @@ export default function EcoSloganScramblePage() {
     if (sloganIndex < ecoSlogans.length - 1) {
       setSloganIndex(prev => prev + 1);
     } else {
-      // Game over
-      alert("You've completed all the slogans! Great job!");
-      setSloganIndex(0); // Restart
+      setIsGameOver(true);
+      localStorage.setItem('game-eco-slogans-completed', 'true');
     }
   };
-
-  const isGameOver = sloganIndex >= ecoSlogans.length;
 
   if (!isClient) return null;
   
@@ -169,7 +180,7 @@ export default function EcoSloganScramblePage() {
                     <p className="text-muted-foreground mb-4">You've successfully unscrambled all the slogans. You're an Eco-Hero!</p>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={() => setSloganIndex(0)} className="w-full">
+                    <Button onClick={() => { setSloganIndex(0); setIsGameOver(false); }} className="w-full">
                         Play Again
                     </Button>
                 </CardFooter>
@@ -200,11 +211,12 @@ export default function EcoSloganScramblePage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-muted/50 rounded-lg min-h-[6rem] flex flex-wrap gap-2 items-center justify-center">
+             <DropZone id="jumblezone">
                 {jumbledWords.map((word, index) => (
                     <Word key={`${word}-${index}`} id={`${word}-${index}`} word={word} />
                 ))}
-            </div>
+                 {!jumbledWords.length && <p className="text-muted-foreground">Well done!</p>}
+             </DropZone>
             
             <p className="text-center text-muted-foreground">Drag the words into the box below</p>
             
