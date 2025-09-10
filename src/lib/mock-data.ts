@@ -22,7 +22,8 @@ import type {
   Ngo,
   ExternalGame,
   RecyclingItem,
-  Bin
+  Bin,
+  QuizQuestion,
 } from './types';
 
 export const lessons: Lesson[] = [
@@ -128,11 +129,8 @@ export const lessons: Lesson[] = [
 
 export const games: Game[] = [
   { id: 'recycling', title: 'Recycling Game', description: 'Drag & drop waste into the correct bins.', subject: 'Science', icon: Recycle, href: '/games/recycling' },
-  { id: 'tree-planting', title: 'Tree Planting Game', description: 'Dig, seed, water, and watch it grow!', subject: 'Social Studies', icon: TreePine, href: '/games/tree-planting' },
-  { id: 'water-conservation', title: 'Water Conservation', description: 'Tap to close leaks and collect rainwater.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
-  { id: 'pollution-control', title: 'Pollution Control', description: 'Upgrade factories to reduce smoke.', subject: 'Technology', icon: Factory, href: '/games/pollution-control' },
-  { id: 'green-tech', title: 'Green Tech Game', description: 'Choose between EVs, solar panels, etc.', subject: 'Technology', icon: Lightbulb, href: '/games/green-tech' },
-  { id: 'poster-creator', title: 'Poster Creator', description: 'Design posters for environmental awareness.', subject: 'Arts', icon: Paintbrush, href: '/games/poster-creator' },
+  { id: 'tree-planting', title: 'Tree Planting Game', description: 'Answer questions to plant and grow a tree!', subject: 'Social Studies', icon: TreePine, href: '/games/tree-planting' },
+  { id: 'water-conservation', title: 'Water Conservation', description: 'Fix leaks and collect rainwater to save water.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
 ];
 
 export const quizzes: Quiz[] = [
@@ -233,3 +231,56 @@ export const bins: Bin[] = [
     { id: 'bin-3', name: 'Trash', accepts: ['trash'], icon: Trash2 },
     { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle },
 ];
+
+export const treePlantingQuestions: QuizQuestion[] = [
+    {
+      question: 'What is the first step in planting a tree?',
+      options: ['Watering the spot', 'Digging a hole', 'Adding fertilizer', 'Putting the seed in'],
+      correctAnswer: 'Digging a hole',
+    },
+    {
+      question: 'Why do trees need sunlight?',
+      options: ['To keep warm', 'To make food (photosynthesis)', 'So they can see', 'To scare away birds'],
+      correctAnswer: 'To make food (photosynthesis)',
+    },
+    {
+      question: 'What gas do trees absorb from the atmosphere, helping to clean the air?',
+      options: ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Helium'],
+      correctAnswer: 'Carbon Dioxide',
+    },
+    {
+      question: 'What is it called when you plant a lot of trees in an area?',
+      options: ['Deforestation', 'Gardening', 'Afforestation', 'Landscaping'],
+      correctAnswer: 'Afforestation',
+    },
+    {
+      question: 'Which part of the tree absorbs water and nutrients from the soil?',
+      options: ['Leaves', 'Branches', 'Bark', 'Roots'],
+      correctAnswer: 'Roots',
+    },
+    {
+      question: 'How does planting trees help prevent soil erosion?',
+      options: ['Their roots hold the soil together', 'Their leaves block the wind', 'They make the soil heavier', 'They provide shade'],
+      correctAnswer: 'Their roots hold the soil together',
+    },
+    {
+      question: 'What do you call the process of a seed starting to grow?',
+      options: ['Sprouting', 'Blooming', 'Wilting', 'Germination'],
+      correctAnswer: 'Germination',
+    },
+    {
+      question: 'Why is it good to plant native trees?',
+      options: ['They are cheaper', 'They grow faster', 'They are better suited for the local climate and wildlife', 'They have brighter colors'],
+      correctAnswer: 'They are better suited for the local climate and wildlife',
+    },
+    {
+      question: 'What should you add around the base of a newly planted tree to keep it moist?',
+      options: ['Stones', 'Plastic wrap', 'Mulch', 'Sand'],
+      correctAnswer: 'Mulch',
+    },
+    {
+      question: 'What is a large group of trees called?',
+      options: ['A field', 'A meadow', 'A forest', 'A prairie'],
+      correctAnswer: 'A forest',
+    },
+  ];
