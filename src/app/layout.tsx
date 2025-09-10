@@ -14,7 +14,7 @@ import {
 import {
   Home,
   BookOpen,
-  Gamepad2,
+  BookCopy,
   ListChecks,
   Trophy,
   Globe,
@@ -90,10 +90,10 @@ export default function RootLayout({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild tooltip="Games">
-                    <Link href="/games">
-                      <Gamepad2 />
-                      <span>Games</span>
+                  <SidebarMenuButton asChild tooltip="Subjects">
+                    <Link href="/subjects">
+                      <BookCopy />
+                      <span>Subjects</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
