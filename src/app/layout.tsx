@@ -20,6 +20,7 @@ import {
   Globe,
   Menu,
   Search,
+  Gamepad2,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -94,6 +95,14 @@ export default function RootLayout({
                     <Link href="/subjects">
                       <BookCopy />
                       <span>Subjects</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip="Games">
+                    <Link href="/games">
+                      <Gamepad2 />
+                      <span>Games</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

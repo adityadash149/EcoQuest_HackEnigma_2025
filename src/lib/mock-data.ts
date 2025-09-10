@@ -11,7 +11,8 @@ import {
   Users,
   Trash2,
   Leaf,
-  HelpCircle
+  HelpCircle,
+  Gamepad2,
 } from 'lucide-react';
 import type {
   Lesson,
