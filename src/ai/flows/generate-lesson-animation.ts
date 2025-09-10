@@ -10,7 +10,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GenerateLessonAnimationInputSchema = z.object({
+const GenerateLessonAnimationInputSchema = z.object({
   baseImage: z
     .string()
     .describe(
@@ -20,7 +20,7 @@ export const GenerateLessonAnimationInputSchema = z.object({
 });
 export type GenerateLessonAnimationInput = z.infer<typeof GenerateLessonAnimationInputSchema>;
 
-export const GenerateLessonAnimationOutputSchema = z.object({
+const GenerateLessonAnimationOutputSchema = z.object({
   imageUrl: z.string().describe('The data URI of the generated image.'),
 });
 export type GenerateLessonAnimationOutput = z.infer<typeof GenerateLessonAnimationOutputSchema>;
