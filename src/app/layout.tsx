@@ -67,7 +67,7 @@ export default function RootLayout({
             <SidebarHeader>
               <div className="flex items-center gap-2">
                 <EcoQuestLogo className="w-8 h-8 text-primary" />
-                <h1 className="text-xl font-bold font-headline text-primary-foreground group-data-[collapsible=icon]:hidden">
+                <h1 className="text-xl font-bold font-headline text-sidebar-primary group-data-[collapsible=icon]:hidden">
                   EcoQuest
                 </h1>
               </div>
