@@ -43,7 +43,7 @@ const subjects = [
         icon: Palette,
         topics: [
             { name: "Design posters on 'Save Earth'", details: "" },
-            { name: "Create eco-slogans or short poems", details: "" },
+            { name: "Create eco-slogans or short poems", details: "", gameHref: "/games/eco-slogans" },
         ]
     }
 ]

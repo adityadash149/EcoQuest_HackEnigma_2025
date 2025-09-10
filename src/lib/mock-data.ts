@@ -132,6 +132,7 @@ export const games: Game[] = [
   { id: 'recycling', title: 'Recycling Game', description: 'Drag & drop waste into the correct bins.', subject: 'Science', icon: Recycle, href: '/games/recycling' },
   { id: 'tree-planting', title: 'Tree Planting Challenge', description: 'Answer questions to plant and grow a tree!', subject: 'Social Studies', icon: TreePine, href: '/games/tree-planting' },
   { id: 'water-conservation', title: 'Water Conservation', description: 'Fix leaks and collect rainwater to save water.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
+  { id: 'eco-slogans', title: 'Eco Slogan Creator', description: 'Craft catchy slogans for environmental topics.', subject: 'Arts & Creativity', icon: Paintbrush, href: '/games/eco-slogans' },
 ];
 
 export const quizzes: Quiz[] = [
