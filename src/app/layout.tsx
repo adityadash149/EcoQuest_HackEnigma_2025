@@ -147,7 +147,7 @@ export default function RootLayout({
                   >
                     <Avatar>
                       <AvatarImage
-                        src="https://picsum.photos/40/40"
+                        src="https://picsum.photos/seed/user/40/40"
                         alt="User avatar"
                         data-ai-hint="student avatar"
                       />

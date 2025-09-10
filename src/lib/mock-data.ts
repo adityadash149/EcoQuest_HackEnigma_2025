@@ -31,7 +31,7 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
     gradeLevel: 'Middle School',
-    image: 'https://picsum.photos/600/400',
+    image: 'https://picsum.photos/seed/lesson1/600/400',
     scenarios: [
       {
         scenarioTitle: 'The Spark',
@@ -80,8 +80,48 @@ export const lessons: Lesson[] = [
     subject: 'Social Studies',
     description: 'Understand the journey of plastic from our homes to the ocean and its impact on marine life.',
     gradeLevel: 'Elementary',
-    image: 'https://picsum.photos/600/400',
-    scenarios: [],
+    image: 'https://picsum.photos/seed/lesson2/600/400',
+    scenarios: [
+      {
+        scenarioTitle: 'A Day at the Beach',
+        scenarioDescription: 'You and your family are having a picnic at the beach. When it\'s time to go, you see a plastic bottle, a plastic bag, and an apple core left on the sand.',
+        question: 'What should you do with the plastic items to protect the ocean?',
+        correctAnswer: 'Pick them up and put them in a recycling bin.',
+        incorrectAnswers: [
+          'Leave them on the beach, the waves will wash them away.',
+          'Bury them in the sand.',
+          'Throw them into the ocean for the fish to play with.',
+        ],
+        explanation: 'Plastic left on the beach can be washed into the ocean, where it harms marine animals. Recycling plastic allows it to be made into new things! The apple core can be composted.',
+        animationUpdate: 'The beach becomes clean and the plastic bottle appears in a recycling bin.',
+      },
+      {
+        scenarioTitle: 'A Turtle\'s Trouble',
+        scenarioDescription: 'In the ocean, a sea turtle sees a floating plastic bag. It looks a lot like a jellyfish, which is the turtle\'s favorite food.',
+        question: 'What is the danger for the sea turtle?',
+        correctAnswer: 'The turtle might eat the bag and get very sick.',
+        incorrectAnswers: [
+          'The turtle will get a fun new toy to play with.',
+          'The plastic bag will give the turtle superpowers.',
+          'The bag will help the turtle float.',
+        ],
+        explanation: 'Sea turtles and other marine animals often mistake plastic bags for food. Eating plastic can make them very sick and block their stomachs, which is very dangerous for them.',
+        animationUpdate: 'The plastic bag disappears and a jellyfish swims by. The turtle happily eats the jellyfish.',
+      },
+      {
+        scenarioTitle: 'The Solution at Home',
+        scenarioDescription: 'You are at the grocery store with your parent. You see them choosing between buying water in a plastic bottle or using a reusable water bottle from home.',
+        question: 'What is the best choice to help reduce ocean plastic?',
+        correctAnswer: 'Use a reusable water bottle.',
+        incorrectAnswers: [
+          'Buy the plastic bottle, it\'s easier.',
+          'Drink water directly from the store\'s fountain.',
+          'Ask for a paper bag for the plastic bottle.',
+        ],
+        explanation: 'Using a reusable bottle is the best way to reduce the amount of new plastic we create. The less plastic we use, the less can end up in our oceans. Every small choice makes a big difference!',
+        animationUpdate: 'A person is shown happily filling a reusable bottle from a water tap.',
+      },
+    ],
   },
 ];
 
@@ -148,31 +188,31 @@ export const quizzes: Quiz[] = [
 ];
 
 export const schoolLeaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: 'Greenwood High', avatar: 'https://picsum.photos/40/40', points: 15400, school: 'Greenwood High' },
-  { rank: 2, name: 'Riverside Academy', avatar: 'https://picsum.photos/41/41', points: 12800, school: 'Riverside Academy' },
-  { rank: 3, name: 'Oakridge International', avatar: 'https://picsum.photos/42/42', points: 11950, school: 'Oakridge International' },
-  { rank: 4, name: 'Valley Public School', avatar: 'https://picsum.photos/43/43', points: 9800, school: 'Valley Public School' },
+  { rank: 1, name: 'Greenwood High', avatar: 'https://picsum.photos/seed/school1/40/40', points: 15400, school: 'Greenwood High' },
+  { rank: 2, name: 'Riverside Academy', avatar: 'https://picsum.photos/seed/school2/40/40', points: 12800, school: 'Riverside Academy' },
+  { rank: 3, name: 'Oakridge International', avatar: 'https://picsum.photos/seed/school3/40/40', points: 11950, school: 'Oakridge International' },
+  { rank: 4, name: 'Valley Public School', avatar: 'https://picsum.photos/seed/school4/40/40', points: 9800, school: 'Valley Public School' },
 ];
 
 export const classLeaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: 'Emily', avatar: 'https://picsum.photos/44/44', points: 1850, school: 'Greenwood High' },
-  { rank: 2, name: 'David', avatar: 'https://picsum.photos/45/45', points: 1720, school: 'Greenwood High' },
-  { rank: 3, name: 'Sophia', avatar: 'https://picsum.photos/46/46', points: 1680, school: 'Greenwood High' },
-  { rank: 4, name: 'James', avatar: 'https://picsum.photos/47/47', points: 1500, school: 'Greenwood High' },
-  { rank: 5, name: 'Alex', avatar: 'https://picsum.photos/40/40', points: 1250, school: 'Greenwood High' },
+  { rank: 1, name: 'Emily', avatar: 'https://picsum.photos/seed/student1/40/40', points: 1850, school: 'Greenwood High' },
+  { rank: 2, name: 'David', avatar: 'https://picsum.photos/seed/student2/40/40', points: 1720, school: 'Greenwood High' },
+  { rank: 3, name: 'Sophia', avatar: 'https://picsum.photos/seed/student3/40/40', points: 1680, school: 'Greenwood High' },
+  { rank: 4, name: 'James', avatar: 'https://picsum.photos/seed/student4/40/40', points: 1500, school: 'Greenwood High' },
+  { rank: 5, name: 'Alex', avatar: 'https://picsum.photos/seed/student5/40/40', points: 1250, school: 'Greenwood High' },
 ];
 
 
 export const ngos: Ngo[] = [
-    { id: '1', name: 'Books for All', city: 'New York', website: '#', image: 'https://picsum.photos/300/200' },
-    { id: '2', name: 'Readers Future', city: 'London', website: '#', image: 'https://picsum.photos/301/200' },
-    { id: '3', name: 'The Book Bridge', city: 'Toronto', website: '#', image: 'https://picsum.photos/300/201' },
+    { id: '1', name: 'Books for All', city: 'New York', website: '#', image: 'https://picsum.photos/seed/ngo1/300/200' },
+    { id: '2', name: 'Readers Future', city: 'London', website: '#', image: 'https://picsum.photos/seed/ngo2/300/200' },
+    { id: '3', name: 'The Book Bridge', city: 'Toronto', website: '#', image: 'https://picsum.photos/seed/ngo3/300/200' },
 ];
 
 export const externalGames: ExternalGame[] = [
-    { id: '1', title: 'NASA Climate Kids', description: 'Play games and learn about Earth\'s climate.', href: '#', image: 'https://picsum.photos/302/200' },
-    { id: '2', title: 'National Geographic Kids', description: 'Explore the world with fun games and quizzes.', href: '#', image: 'https://picsum.photos/300/202' },
-    { id: '3', title: 'PBS Kids Nature Games', description: 'Go on adventures with your favorite characters.', href: '#', image: 'https://picsum.photos/302/202' },
+    { id: '1', title: 'NASA Climate Kids', description: 'Play games and learn about Earth\'s climate.', href: '#', image: 'https://picsum.photos/seed/game1/300/200' },
+    { id: '2', title: 'National Geographic Kids', description: 'Explore the world with fun games and quizzes.', href: '#', image: 'https://picsum.photos/seed/game2/300/200' },
+    { id: '3', title: 'PBS Kids Nature Games', description: 'Go on adventures with your favorite characters.', href: '#', image: 'https://picsum.photos/seed/game3/300/200' },
 ]
 
 export const recyclingItems: RecyclingItem[] = [

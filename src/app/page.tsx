@@ -43,13 +43,13 @@ export default function HomePage() {
                   <Link href="/lessons">Continue Lesson</Link>
                 </Button>
                 <Button asChild variant="secondary" size="lg">
-                  <Link href="/games">Play Games</Link>
+                  <Link href="/subjects">Explore Subjects</Link>
                 </Button>
               </div>
             </div>
             <div className="md:w-1/2 h-64 md:h-auto relative">
               <Image
-                src="https://picsum.photos/800/600"
+                src="https://picsum.photos/seed/hero/800/600"
                 alt="Boy cleaning the street illustration"
                 fill
                 className="object-cover"
