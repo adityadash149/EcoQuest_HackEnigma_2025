@@ -22,7 +22,7 @@ import {
   Search,
   Gamepad2,
 } from 'lucide-react';
-import { EcoQuestLogo } from '@/components/icons';
+import { EcoQuestLogo, UserIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -32,7 +32,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Toaster } from '@/components/ui/toaster';
 import { Input } from '@/components/ui/input';
@@ -154,14 +153,8 @@ export default function RootLayout({
                     size="icon"
                     className="overflow-hidden rounded-full"
                   >
-                    <Avatar>
-                      <AvatarImage
-                        src="https://picsum.photos/seed/user/40/40"
-                        alt="User avatar"
-                        data-ai-hint="student avatar"
-                      />
-                      <AvatarFallback>S</AvatarFallback>
-                    </Avatar>
+                    <UserIcon className="h-5 w-5" />
+                    <span className="sr-only">Toggle user menu</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
