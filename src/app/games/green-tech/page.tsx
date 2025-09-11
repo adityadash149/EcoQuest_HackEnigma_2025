@@ -144,7 +144,7 @@ export default function GreenTechCityPage() {
     setSelectedBuilding(null);
 
     // Trigger quiz event
-    if ((grid.length + 1) % 4 === 0 && grid.length > 0) {
+    if ((grid.length + 1) % 3 === 0 && grid.length > 0) {
         const randomQuestion = cityBuildingQuestions[Math.floor(Math.random() * cityBuildingQuestions.length)];
         setQuiz({
             question: randomQuestion,
@@ -247,9 +247,9 @@ export default function GreenTechCityPage() {
                     <DialogTitle className="text-2xl">Welcome to Green Tech City Builder!</DialogTitle>
                     <DialogDescription asChild>
                       <div className="text-base py-4 space-y-2">
-                        <p>Your mission is to build a sustainable city. You'll need to balance budget, population growth, power needs, and pollution.</p>
-                        <p><strong>Goal:</strong> Reach a population of <strong>{populationGoal}</strong>, keep pollution below <strong>{pollutionMax}</strong>, and generate enough power for your citizens!</p>
-                        <p>Select buildings from the panel and place them on the grid. Keep an eye on your stats, and answer pop quizzes correctly for budget boosts. Good luck, Eco-Planner!</p>
+                        <div>Your mission is to build a sustainable city. You'll need to balance budget, population growth, power needs, and pollution.</div>
+                        <div><strong>Goal:</strong> Reach a population of <strong>{populationGoal}</strong>, keep pollution below <strong>{pollutionMax}</strong>, and generate enough power for your citizens!</div>
+                        <div>Select buildings from the panel and place them on the grid. Keep an eye on your stats, and answer pop quizzes correctly for budget boosts. Good luck, Eco-Planner!</div>
                       </div>
                     </DialogDescription>
                 </DialogHeader>
@@ -267,66 +267,77 @@ export default function GreenTechCityPage() {
                 </Link>
             </Button>
         </div>
-        <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Green Tech City Builder</CardTitle>
-                        <CardDescription>Build a sustainable city by placing buildings on the grid.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="bg-green-800/80 p-4 rounded-lg overflow-auto">
-                        <div className="inline-block">{renderGrid()}</div>
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="space-y-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>City Stats</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="p-3 bg-blue-900/10 rounded-lg border border-blue-500/20 text-center">
-                            <p className="font-bold text-blue-300">GOAL</p>
-                            <p className="text-sm text-muted-foreground">
-                                Pop: {populationGoal} | Power: Positive | Pollution: &lt; {pollutionMax}
-                            </p>
-                        </div>
+        
+        <div className="space-y-4">
+            <Card>
+                <CardHeader>
+                    <CardTitle>City Stats</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+                    <div className="p-3 bg-blue-900/10 rounded-lg border border-blue-500/20 text-center">
+                        <p className="font-bold text-blue-300">GOAL</p>
+                        <p className="text-sm text-muted-foreground">
+                            Pop: {populationGoal} | Power: +ve | Poll: &lt; {pollutionMax}
+                        </p>
+                    </div>
 
-                        <div className="flex justify-between items-center">
-                            <span className="flex items-center gap-2 text-lg"><DollarSign /> Budget:</span>
-                            <span className="font-bold text-green-500">${budget}</span>
-                        </div>
+                    <div className="flex justify-between items-center text-lg">
+                        <span className="flex items-center gap-2"><DollarSign /> Budget:</span>
+                        <span className="font-bold text-green-500">${budget}</span>
+                    </div>
+                    
+                    <div className="space-y-2">
                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2"><Users /> Population:</span>
                             <span className="font-bold">{population} / {populationGoal}</span>
                         </div>
-                         <Progress value={(population / populationGoal) * 100} />
+                        <Progress value={(population / populationGoal) * 100} />
+                    </div>
 
+                    <div className="space-y-2">
                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2"><Zap /> Power:</span>
                             <span className={cn("font-bold", power.generated < power.demand ? 'text-red-500': 'text-yellow-400')}>{power.generated} / {power.demand} MW</span>
                         </div>
-                         <Progress value={(power.generated / (power.demand || 1)) * 100} className="[&>div]:bg-yellow-400" />
-                        
-                        <div className="flex justify-between items-center">
+                        <Progress value={(power.generated / (power.demand || 1)) * 100} className="[&>div]:bg-yellow-400" />
+                    </div>
+                    
+                    <div className="space-y-2 lg:col-start-4">
+                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2"><Mountain /> Pollution:</span>
                             <span className={cn("font-bold", pollution > pollutionMax ? 'text-red-500': 'text-green-400')}>{pollution} / {pollutionMax}</span>
                         </div>
                          <Progress value={(pollution / (pollutionMax * 1.5)) * 100} className="[&>div]:bg-red-500" />
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader><CardTitle>Building Panel</CardTitle></CardHeader>
-                    <CardContent className="grid grid-cols-2 gap-4">
-                        {Object.entries(buildingTypes).map(([type, info]) => (
-                            <Button key={type} variant={selectedBuilding === type ? 'default': 'outline'} className="h-20 flex-col" onClick={() => handleSelectBuilding(type as BuildingType)}>
-                                <info.icon className="h-6 w-6 mb-1" />
-                                <span>{info.name}</span>
-                                <span className="text-xs text-muted-foreground">${info.cost}</span>
-                            </Button>
-                        ))}
-                    </CardContent>
-                </Card>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <div className="grid lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Green Tech City Builder</CardTitle>
+                            <CardDescription>Build a sustainable city by placing buildings on the grid.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="bg-green-800/80 p-4 rounded-lg overflow-auto">
+                            <div className="inline-block">{renderGrid()}</div>
+                        </CardContent>
+                    </Card>
+                </div>
+                <div className="space-y-4">
+                    <Card>
+                        <CardHeader><CardTitle>Building Panel</CardTitle></CardHeader>
+                        <CardContent className="grid grid-cols-2 gap-4">
+                            {Object.entries(buildingTypes).map(([type, info]) => (
+                                <Button key={type} variant={selectedBuilding === type ? 'default': 'outline'} className="h-20 flex-col" onClick={() => handleSelectBuilding(type as BuildingType)}>
+                                    <info.icon className="h-6 w-6 mb-1" />
+                                    <span>{info.name}</span>
+                                    <span className="text-xs text-muted-foreground">${info.cost}</span>
+                                </Button>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
 
