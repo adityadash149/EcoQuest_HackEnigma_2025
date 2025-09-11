@@ -1,8 +1,9 @@
+
 'use server';
 /**
- * @fileOverview Finds NGOs near a specified location.
+ * @fileOverview Finds environmental clubs and centers near a specified location.
  * 
- * - findNearbyNgos - A function that returns a list of NGOs near a location.
+ * - findNearbyNgos - A function that returns a list of organizations near a location.
  * - FindNearbyNgosInput - The input type for the findNearbyNgos function.
  * - FindNearbyNgosOutput - The return type for the findNearbyNgos function.
  */
@@ -16,13 +17,13 @@ const FindNearbyNgosInputSchema = z.object({
 export type FindNearbyNgosInput = z.infer<typeof FindNearbyNgosInputSchema>;
 
 const NgoSchema = z.object({
-    name: z.string().describe('The name of the NGO.'),
-    address: z.string().describe('The full address of the NGO.'),
-    description: z.string().describe('A brief description of the NGO and its mission.'),
+    name: z.string().describe('The name of the organization.'),
+    address: z.string().describe('The full address of the organization.'),
+    description: z.string().describe('A brief description of the organization and its mission.'),
 });
 
 const FindNearbyNgosOutputSchema = z.object({
-  ngos: z.array(NgoSchema).describe('An array of NGOs found near the location.'),
+  ngos: z.array(NgoSchema).describe('An array of environmental clubs or centers found near the location.'),
 });
 export type FindNearbyNgosOutput = z.infer<typeof FindNearbyNgosOutputSchema>;
 
@@ -35,13 +36,13 @@ const findNearbyNgosPrompt = ai.definePrompt({
     name: 'findNearbyNgosPrompt',
     input: { schema: FindNearbyNgosInputSchema },
     output: { schema: FindNearbyNgosOutputSchema },
-    prompt: `You are an expert at finding local organizations. The user wants to find NGOs related to book donations or environmental protection near them.
+    prompt: `You are an expert at finding local organizations. The user wants to find environmental exhibition centers, environmental clubs, or Earth clubs near them.
 
-    Find 3-5 real NGOs near the following location: {{{location}}}.
+    Find 3-5 real organizations near the following location: {{{location}}}.
     
     The location may be provided as a city name, zip code, or as latitude and longitude coordinates.
     
-    For each NGO, provide the name, a real or plausible full address, and a brief description of their work.
+    For each organization, provide the name, a real or plausible full address, and a brief description of their work.
     `,
 });
 

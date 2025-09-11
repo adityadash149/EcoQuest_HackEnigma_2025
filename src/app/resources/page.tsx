@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { externalGames } from "@/lib/mock-data";
-import { MapPin, Search, ArrowRight, BookHeart, Loader } from "lucide-react";
+import { MapPin, Search, ArrowRight, BookHeart, Loader, Sprout } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { findNearbyNgos } from '@/ai/flows/find-nearby-ngos';
@@ -35,16 +35,21 @@ export default function ResourcesPage() {
 
     setIsLoading(true);
     setHasSearched(true);
+    setFilteredNgos([]);
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         try {
           const result = await findNearbyNgos({ location: `${latitude},${longitude}` });
-          setFilteredNgos(result.ngos);
+          if (result.ngos && result.ngos.length > 0) {
+            setFilteredNgos(result.ngos);
+          } else {
+            toast({ title: 'No Results', description: 'Could not find any environmental clubs or centers near you.', variant: 'default' });
+          }
         } catch (error) {
           console.error("Failed to find NGOs:", error);
-          toast({ title: 'Error', description: 'Could not fetch NGO information. Please try again.', variant: 'destructive' });
+          toast({ title: 'Error', description: 'Could not fetch information. Please try again.', variant: 'destructive' });
           setFilteredNgos([]);
         } finally {
           setIsLoading(false);
@@ -68,18 +73,18 @@ export default function ResourcesPage() {
       <section>
         <div className="mb-8">
             <h1 className="text-4xl font-bold font-headline flex items-center gap-2">
-                <BookHeart className="w-10 h-10 text-primary" />
-                <span>NGO Book Donation Finder</span>
+                <Sprout className="w-10 h-10 text-primary" />
+                <span>Environmental Club Finder</span>
             </h1>
             <p className="text-muted-foreground">
-                Find nearby NGOs to donate books and support education.
+                Find nearby environmental clubs, exhibition centers, and earth-friendly places.
             </p>
         </div>
         <div className="max-w-xl">
             <div className="flex gap-2 mb-8">
                 <Button size="lg" className="h-12 w-full text-lg" onClick={handleSearch} disabled={isLoading}>
                     {isLoading ? <Loader className="mr-2 h-5 w-5 animate-spin" /> : <MapPin className="mr-2 h-5 w-5" />}
-                    Find NGOs Near Me
+                    Find Clubs Near Me
                 </Button>
             </div>
         </div>
@@ -107,7 +112,7 @@ export default function ResourcesPage() {
         {!isLoading && hasSearched && filteredNgos.length === 0 && (
             <Card className="mt-6">
                 <CardContent className="pt-6">
-                    <p className="text-center text-muted-foreground">No NGOs found for your search. Please try a different location.</p>
+                    <p className="text-center text-muted-foreground">No organizations found near you. Try searching in a larger city.</p>
                 </CardContent>
             </Card>
         )}
@@ -120,7 +125,7 @@ export default function ResourcesPage() {
                     return (
                         <Card key={index} className="flex flex-col overflow-hidden">
                             <div className="relative h-40 w-full">
-                                <Image src={`https://picsum.photos/seed/ngo${index}/300/200`} alt={ngo.name} fill className="object-cover" data-ai-hint="charity organization" />
+                                <Image src={`https://picsum.photos/seed/ngo${index}/300/200`} alt={ngo.name} fill className="object-cover" data-ai-hint="environmental organization" />
                             </div>
                             <CardHeader>
                                 <CardTitle>{ngo.name}</CardTitle>
