@@ -245,10 +245,12 @@ export default function GreenTechCityPage() {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-2xl">Welcome to Green Tech City Builder!</DialogTitle>
-                    <DialogDescription className="text-base py-4 space-y-2">
+                    <DialogDescription asChild>
+                      <div className="text-base py-4 space-y-2">
                         <p>Your mission is to build a sustainable city. You'll need to balance budget, population growth, power needs, and pollution.</p>
                         <p><strong>Goal:</strong> Reach a population of <strong>{populationGoal}</strong>, keep pollution below <strong>{pollutionMax}</strong>, and generate enough power for your citizens!</p>
                         <p>Select buildings from the panel and place them on the grid. Keep an eye on your stats, and answer pop quizzes correctly for budget boosts. Good luck, Eco-Planner!</p>
+                      </div>
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -348,3 +350,5 @@ export default function GreenTechCityPage() {
     </div>
   );
 }
+
+    
