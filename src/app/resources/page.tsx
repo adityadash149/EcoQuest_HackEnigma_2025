@@ -1,33 +1,47 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ngos as allNgos, externalGames } from "@/lib/mock-data";
-import { MapPin, Search, ArrowRight, BookHeart } from "lucide-react";
+import { externalGames } from "@/lib/mock-data";
+import { MapPin, Search, ArrowRight, BookHeart, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { Ngo } from '@/lib/types';
+import { findNearbyNgos } from '@/ai/flows/find-nearby-ngos';
+import { useToast } from '@/hooks/use-toast';
+
+interface Ngo {
+  name: string;
+  address: string;
+  description: string;
+}
 
 export default function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredNgos, setFilteredNgos] = useState<Ngo[]>(allNgos);
+  const [filteredNgos, setFilteredNgos] = useState<Ngo[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const { toast } = useToast();
 
-  const handleSearch = () => {
-    setHasSearched(true);
+  const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setFilteredNgos(allNgos);
+      toast({ title: 'Please enter a location.', variant: 'destructive' });
       return;
     }
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const results = allNgos.filter(ngo => 
-        ngo.city.toLowerCase().includes(lowerCaseQuery) || 
-        ngo.address.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredNgos(results);
+    setIsLoading(true);
+    setHasSearched(true);
+    try {
+      const result = await findNearbyNgos({ location: searchQuery });
+      setFilteredNgos(result.ngos);
+    } catch (error) {
+      console.error("Failed to find NGOs:", error);
+      toast({ title: 'Error', description: 'Could not fetch NGO information. Please try again.', variant: 'destructive' });
+      setFilteredNgos([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -58,48 +72,72 @@ export default function ResourcesPage() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={handleKeyDown}
+                        disabled={isLoading}
                     />
                 </div>
-                <Button size="lg" className="h-12" onClick={handleSearch}>
-                    <Search className="mr-2 h-5 w-5" />
+                <Button size="lg" className="h-12" onClick={handleSearch} disabled={isLoading}>
+                    {isLoading ? <Loader className="mr-2 h-5 w-5 animate-spin" /> : <Search className="mr-2 h-5 w-5" />}
                     Find
                 </Button>
             </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredNgos.map((ngo) => {
-            const mapQuery = encodeURIComponent(`${ngo.name}, ${ngo.address}`);
-            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-            return (
-                <Card key={ngo.id} className="flex flex-col overflow-hidden">
-                    <div className="relative h-40 w-full">
-                        <Image src={ngo.image} alt={ngo.name} fill className="object-cover" data-ai-hint="charity organization" />
-                    </div>
-                    <CardHeader>
-                        <CardTitle>{ngo.name}</CardTitle>
-                        <CardDescription className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {ngo.address}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                        {/* Add a short description if available */}
-                    </CardContent>
-                    <CardFooter>
-                        <Button asChild variant="outline" className="w-full">
-                            <Link href={mapUrl} target="_blank">
-                                Visit <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            )
-          })}
-        </div>
-        {hasSearched && filteredNgos.length === 0 && (
+        {isLoading && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {[...Array(3)].map((_, i) => (
+                    <Card key={i} className="animate-pulse">
+                        <div className="h-40 w-full bg-muted rounded-t-lg" />
+                        <CardHeader>
+                            <div className="h-6 w-3/4 bg-muted rounded" />
+                            <div className="h-4 w-full bg-muted rounded" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="h-4 w-5/6 bg-muted rounded" />
+                        </CardContent>
+                        <CardFooter>
+                            <div className="h-10 w-full bg-muted rounded" />
+                        </CardFooter>
+                    </Card>
+                ))}
+            </div>
+        )}
+
+        {!isLoading && hasSearched && filteredNgos.length === 0 && (
             <Card className="mt-6">
                 <CardContent className="pt-6">
-                    <p className="text-center text-muted-foreground">No NGOs found for your search. Please try a different city or zip code.</p>
+                    <p className="text-center text-muted-foreground">No NGOs found for your search. Please try a different location.</p>
                 </CardContent>
             </Card>
+        )}
+
+        {!isLoading && filteredNgos.length > 0 && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {filteredNgos.map((ngo, index) => {
+                    const mapQuery = encodeURIComponent(`${ngo.name}, ${ngo.address}`);
+                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+                    return (
+                        <Card key={index} className="flex flex-col overflow-hidden">
+                            <div className="relative h-40 w-full">
+                                <Image src={`https://picsum.photos/seed/ngo${index}/300/200`} alt={ngo.name} fill className="object-cover" data-ai-hint="charity organization" />
+                            </div>
+                            <CardHeader>
+                                <CardTitle>{ngo.name}</CardTitle>
+                                <CardDescription className="flex items-start gap-1"><MapPin className="h-4 w-4 mt-1 shrink-0" /> {ngo.address}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex-grow">
+                                <p className="text-sm text-muted-foreground">{ngo.description}</p>
+                            </CardContent>
+                            <CardFooter>
+                                <Button asChild variant="outline" className="w-full">
+                                    <Link href={mapUrl} target="_blank">
+                                        Visit <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    )
+                })}
+            </div>
         )}
       </section>
 
