@@ -91,11 +91,11 @@ export default function GreenTechCityPage() {
     }
 
     // Lose condition
-    if (budget < cheapestBuildingCost && !isGameOver) {
+    if (budget < cheapestBuildingCost && grid.length > 0 && !isGameOver) {
        setGameOverMessage({ title: 'Out of Funds!', description: "You've run out of budget before reaching the city's goals. Plan more carefully next time!" });
        setIsGameOver(true);
     }
-  }, [population, pollution, power.generated, power.demand, budget, cheapestBuildingCost, isGameOver]);
+  }, [population, pollution, power.generated, power.demand, budget, cheapestBuildingCost, isGameOver, grid.length]);
 
   const calculateStats = useCallback(() => {
     let newPopulation = 0;
@@ -319,8 +319,10 @@ export default function GreenTechCityPage() {
                             <CardTitle>Green Tech City Builder</CardTitle>
                             <CardDescription>Build a sustainable city by placing buildings on the grid.</CardDescription>
                         </CardHeader>
-                        <CardContent className="bg-green-800/80 p-4 rounded-lg overflow-auto">
-                            <div className="inline-block">{renderGrid()}</div>
+                        <CardContent className="flex justify-center">
+                            <div className="inline-block p-4 bg-green-800/80 rounded-lg border-2 border-white">
+                                {renderGrid()}
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
@@ -361,5 +363,7 @@ export default function GreenTechCityPage() {
     </div>
   );
 }
+
+    
 
     
