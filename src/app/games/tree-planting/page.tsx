@@ -22,10 +22,15 @@ import {
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
-import { treePlantingQuestions } from '@/lib/mock-data';
+import { treePlantingQuestions as allQuestions } from '@/lib/mock-data';
 import type { QuizQuestion } from '@/lib/types';
 
+const shuffleArray = <T,>(array: T[]): T[] => {
+    return [...array].sort(() => Math.random() - 0.5);
+};
+
 export default function TreePlantingPage() {
+  const [shuffledQuestions, setShuffledQuestions] = useState<QuizQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -34,10 +39,14 @@ export default function TreePlantingPage() {
   const [gameComplete, setGameComplete] = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
 
-  const currentQuestion = treePlantingQuestions[currentQuestionIndex];
+  useEffect(() => {
+    setShuffledQuestions(shuffleArray(allQuestions));
+  }, []);
+
+  const currentQuestion = useMemo(() => shuffledQuestions[currentQuestionIndex], [currentQuestionIndex, shuffledQuestions]);
   const questionsCorrect = score / 10;
-  const totalQuestions = treePlantingQuestions.length;
-  const progress = (questionsCorrect / totalQuestions) * 100;
+  const totalQuestions = shuffledQuestions.length;
+  const progress = totalQuestions > 0 ? (questionsCorrect / totalQuestions) * 100 : 0;
 
   useEffect(() => {
     // Prevents hydration error by shuffling on client
@@ -74,7 +83,7 @@ export default function TreePlantingPage() {
     setIsCorrect(null);
     setShowExplanation(false);
 
-    if (currentQuestionIndex < treePlantingQuestions.length - 1) {
+    if (currentQuestionIndex < shuffledQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       setGameComplete(true);
@@ -82,6 +91,7 @@ export default function TreePlantingPage() {
   };
 
   const handlePlayAgain = () => {
+    setShuffledQuestions(shuffleArray(allQuestions));
     setCurrentQuestionIndex(0);
     setScore(0);
     setSelectedAnswer(null);
@@ -125,6 +135,10 @@ export default function TreePlantingPage() {
         </Card>
       </div>
     );
+  }
+  
+  if (!currentQuestion) {
+      return null; // Or a loading state
   }
 
   return (
@@ -173,39 +187,39 @@ export default function TreePlantingPage() {
                   {/* Branches & Leaves */}
                   <div className="absolute top-0 left-0 w-full h-full">
                     {/* Branch 1 (Left) */}
-                    {questionsCorrect >= 2 && (
+                    {questionsCorrect >= (totalQuestions * 0.2) && (
                       <div
                         className="absolute bottom-[20%] left-[calc(50%-0.75rem)] w-12 h-1 bg-yellow-950/80 transition-all duration-500 origin-right -rotate-45"
-                        style={{ transform: 'translateX(-100%) rotate(-45deg)', opacity: questionsCorrect >= 2 ? 1 : 0 }}
+                        style={{ transform: 'translateX(-100%) rotate(-45deg)', opacity: questionsCorrect >= (totalQuestions * 0.2) ? 1 : 0 }}
                       >
-                          {questionsCorrect >= 3 && <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-green-600 animate-in fade-in zoom-in" />}
+                          {questionsCorrect >= (totalQuestions * 0.3) && <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-green-600 animate-in fade-in zoom-in" />}
                       </div>
                     )}
 
                     {/* Branch 2 (Right) */}
-                    {questionsCorrect >= 4 && (
+                    {questionsCorrect >= (totalQuestions * 0.4) && (
                       <div
                         className="absolute bottom-[40%] right-[calc(50%-0.75rem)] w-16 h-1 bg-yellow-950/80 transition-all duration-500 origin-left rotate-45"
-                         style={{ transform: 'translateX(100%) rotate(45deg)', opacity: questionsCorrect >= 4 ? 1 : 0 }}
+                         style={{ transform: 'translateX(100%) rotate(45deg)', opacity: questionsCorrect >= (totalQuestions * 0.4) ? 1 : 0 }}
                       >
-                         {questionsCorrect >= 5 && <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-green-700 animate-in fade-in zoom-in delay-200" />}
+                         {questionsCorrect >= (totalQuestions * 0.5) && <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-green-700 animate-in fade-in zoom-in delay-200" />}
                       </div>
                     )}
                      
                     {/* Branch 3 (Left) */}
-                    {questionsCorrect >= 6 && (
+                    {questionsCorrect >= (totalQuestions * 0.6) && (
                       <div
                         className="absolute bottom-[60%] left-[calc(50%-0.75rem)] w-14 h-1 bg-yellow-950/80 transition-all duration-500 origin-right -rotate-30"
-                        style={{ transform: 'translateX(-100%) rotate(-30deg)', opacity: questionsCorrect >= 6 ? 1 : 0 }}
+                        style={{ transform: 'translateX(-100%) rotate(-30deg)', opacity: questionsCorrect >= (totalQuestions * 0.6) ? 1 : 0 }}
                       >
-                         {questionsCorrect >= 7 && <div className="absolute -top-4 -left-3 w-10 h-10 rounded-full bg-green-600 animate-in fade-in zoom-in delay-300" />}
+                         {questionsCorrect >= (totalQuestions * 0.7) && <div className="absolute -top-4 -left-3 w-10 h-10 rounded-full bg-green-600 animate-in fade-in zoom-in delay-300" />}
                       </div>
                     )}
 
                      {/* Canopy */}
-                     {questionsCorrect >= 8 && <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-16 h-16 rounded-full bg-green-500 animate-in fade-in zoom-in-50 duration-500" />}
-                     {questionsCorrect >= 9 && <div className="absolute top-[0%] left-[calc(50%-2rem)] -translate-x-1/2 w-14 h-14 rounded-full bg-green-600 animate-in fade-in zoom-in-50 duration-500 delay-200" />}
-                     {questionsCorrect >= 10 && <div className="absolute top-[0%] left-[calc(50%+2rem)] -translate-x-1/2 w-14 h-14 rounded-full bg-green-700 animate-in fade-in zoom-in-50 duration-500 delay-400" />}
+                     {questionsCorrect >= (totalQuestions * 0.8) && <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-16 h-16 rounded-full bg-green-500 animate-in fade-in zoom-in-50 duration-500" />}
+                     {questionsCorrect >= (totalQuestions * 0.9) && <div className="absolute top-[0%] left-[calc(50%-2rem)] -translate-x-1/2 w-14 h-14 rounded-full bg-green-600 animate-in fade-in zoom-in-50 duration-500 delay-200" />}
+                     {questionsCorrect >= totalQuestions && <div className="absolute top-[0%] left-[calc(50%+2rem)] -translate-x-1/2 w-14 h-14 rounded-full bg-green-700 animate-in fade-in zoom-in-50 duration-500 delay-400" />}
                   </div>
                 </div>
 
@@ -219,7 +233,7 @@ export default function TreePlantingPage() {
           <Card>
             <CardHeader>
               <CardTitle>
-                Question {currentQuestionIndex + 1} / {treePlantingQuestions.length}
+                Question {currentQuestionIndex + 1} / {shuffledQuestions.length}
               </CardTitle>
               <CardDescription className="text-lg pt-2">
                 {currentQuestion.question}
@@ -269,7 +283,7 @@ export default function TreePlantingPage() {
               </CardContent>
               <CardFooter>
                 <Button onClick={handleNext} className="w-full">
-                  {currentQuestionIndex < treePlantingQuestions.length - 1
+                  {currentQuestionIndex < shuffledQuestions.length - 1
                     ? 'Next Question'
                     : 'Finish Game'}
                 </Button>

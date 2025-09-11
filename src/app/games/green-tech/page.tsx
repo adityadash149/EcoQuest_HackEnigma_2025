@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -65,6 +65,10 @@ const initialBudget = 12000;
 const populationGoal = 700;
 const pollutionMax = 25;
 
+const shuffleArray = <T,>(array: T[]): T[] => {
+    return [...array].sort(() => Math.random() - 0.5);
+};
+
 export default function GreenTechCityPage() {
   const [grid, setGrid] = useState<PlacedBuilding[]>([]);
   const [budget, setBudget] = useState(initialBudget);
@@ -76,12 +80,20 @@ export default function GreenTechCityPage() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
   const [gameOverMessage, setGameOverMessage] = useState({title: '', description: ''});
+  const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<CityBuildingQuestion[]>([]);
+  const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
+
+
+  useEffect(() => {
+    setShuffledQuizQuestions(shuffleArray(cityBuildingQuestions));
+  }, []);
 
   const { toast } = useToast();
 
   const cheapestBuildingCost = Math.min(...Object.values(buildingTypes).map(b => b.cost));
 
   const checkEndGameConditions = useCallback(() => {
+    if (isGameOver) return;
     // Win condition
     if (population >= populationGoal && pollution < pollutionMax && power.generated >= power.demand) {
         setGameOverMessage({ title: 'Sustainable City Built!', description: "You've successfully built a thriving, green city. You're an Eco-Planner!" });
@@ -91,7 +103,7 @@ export default function GreenTechCityPage() {
     }
 
     // Lose condition
-    if (budget < cheapestBuildingCost && grid.length > 0 && !isGameOver) {
+    if (budget < cheapestBuildingCost && grid.length > 0) {
        setGameOverMessage({ title: 'Out of Funds!', description: "You've run out of budget before reaching the city's goals. Plan more carefully next time!" });
        setIsGameOver(true);
     }
@@ -141,11 +153,12 @@ export default function GreenTechCityPage() {
     
     // Trigger quiz event
     if ((grid.length + 1) % 3 === 0 && grid.length > 0) {
-        const randomQuestion = cityBuildingQuestions[Math.floor(Math.random() * cityBuildingQuestions.length)];
+        const question = shuffledQuizQuestions[quizQuestionIndex % shuffledQuizQuestions.length];
         setQuiz({
-            question: randomQuestion,
+            question: question,
             onCorrect: () => setBudget(b => b + 1000)
         });
+        setQuizQuestionIndex(prev => prev + 1);
     }
 
     setGrid(prev => [...prev, newBuilding]);
@@ -190,6 +203,8 @@ export default function GreenTechCityPage() {
     setIsGameOver(false);
     setGameOverMessage({title: '', description: ''});
     setIsWelcomeOpen(true);
+    setShuffledQuizQuestions(shuffleArray(cityBuildingQuestions));
+    setQuizQuestionIndex(0);
   }
 
   const renderGrid = () => {
@@ -363,7 +378,3 @@ export default function GreenTechCityPage() {
     </div>
   );
 }
-
-    
-
-    
