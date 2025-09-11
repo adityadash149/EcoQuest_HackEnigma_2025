@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -99,6 +100,14 @@ export default {
         'fall-roof': {
             '0%': { transform: 'translateY(0)', opacity: '1' },
             '100%': { transform: 'translateY(500px)', opacity: '1' }
+        },
+        'cloud-move-1': {
+            '0%': { transform: 'translateX(-150%)' },
+            '100%': { transform: 'translateX(250%)' },
+        },
+        'cloud-move-2': {
+            '0%': { transform: 'translateX(150%)' },
+            '100%': { transform: 'translateX(-250%)' },
         }
       },
       animation: {
@@ -107,10 +116,10 @@ export default {
         'drip': 'drip 1s infinite',
         'fall': 'fall 2s linear infinite',
         'fall-roof': 'fall-roof 2s linear forwards',
+        'cloud-move-1': 'cloud-move-1 30s linear infinite',
+        'cloud-move-2': 'cloud-move-2 40s linear infinite alternate',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
-
-    

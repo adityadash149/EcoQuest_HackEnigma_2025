@@ -220,8 +220,8 @@ export default function WaterConservationPage() {
                 onTouchMove={handleTouchMove}
             >
                 {/* Environment */}
-                <Cloud className="absolute top-10 left-1/4 h-24 w-48 text-white/80" />
-                <Cloud className="absolute top-20 right-1/4 h-16 w-32 text-white/70" />
+                <Cloud className="absolute top-10 left-1/4 h-24 w-48 text-white/80 animate-cloud-move-1" />
+                <Cloud className="absolute top-20 right-1/4 h-16 w-32 text-white/70 animate-cloud-move-2" />
                 <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white/90 text-sky-700 font-bold px-3 py-1 rounded-full text-sm">
                     Water Conservation
                 </div>
