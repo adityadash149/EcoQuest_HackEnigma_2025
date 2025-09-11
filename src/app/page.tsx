@@ -22,10 +22,13 @@ import {
   Castle,
   User,
   Cloud,
+  Mountain,
+  Bird,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
 import { quotes } from '@/lib/mock-data';
 import type { Quote } from '@/lib/types';
+import Image from 'next/image';
 
 
 export default function HomePage() {
@@ -41,37 +44,30 @@ export default function HomePage() {
   return (
     <div className="space-y-8">
       <section className="relative w-full rounded-lg overflow-hidden border bg-card text-card-foreground shadow-sm min-h-[350px] md:min-h-[400px] flex flex-col justify-between p-6">
-        {/* 2D Cartoon Background Scene */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Sky and Sun */}
-          <div className="absolute inset-0 bg-gradient-to-b from-sky-400 to-sky-200" />
-          <div className="absolute top-10 right-20 w-16 h-16 bg-yellow-300 rounded-full" />
+        {/* Realistic Background Scene */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://picsum.photos/seed/realistic-landscape/1200/800"
+            alt="A beautiful landscape with a path leading to distant mountains."
+            fill
+            className="object-cover"
+            data-ai-hint="realistic landscape path"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
           
-          {/* Animated Clouds */}
-          <Cloud className="absolute top-16 left-1/4 h-12 w-20 text-white/80 animate-cloud-slow" />
-          <Cloud className="absolute top-24 left-3/4 h-16 w-24 text-white/70 animate-cloud-fast" />
-          <Cloud className="absolute top-8 left-1/2 h-10 w-16 text-white/90 animate-cloud-medium" />
-
-          {/* Far Hills */}
-          <div className="absolute bottom-1/4 w-full h-1/4 bg-green-400/70 rounded-t-full" />
-          
-          {/* Castle */}
-          <div className="absolute bottom-[40%] right-[10%] opacity-70">
-              <Castle className="h-32 w-32 text-gray-400" />
-          </div>
-
-          {/* Mid-ground Hills */}
-          <div className="absolute bottom-1/4 w-[150%] h-1/4 bg-green-500/80 rounded-t-full -left-1/4" />
-
-          {/* Path */}
-          <div className="absolute bottom-0 w-full h-1/4 bg-yellow-700/60" style={{ clipPath: 'polygon(20% 0, 80% 0, 100% 100%, 0% 100%)' }} />
-
-          {/* Foreground Ground */}
-          <div className="absolute bottom-0 w-full h-1/4 bg-green-600" />
+           {/* Animated Birds */}
+          <Bird className="absolute top-16 left-1/4 h-6 w-6 text-white/80 animate-cloud-slow" style={{ animationDelay: '0s' }} />
+          <Bird className="absolute top-24 left-1/3 h-4 w-4 text-white/70 animate-cloud-medium" style={{ animationDelay: '2s' }} />
+          <Bird className="absolute top-20 left-1/2 h-5 w-5 text-white/90 animate-cloud-fast" style={{ animationDelay: '5s' }} />
 
           {/* Character */}
-          <div className="absolute bottom-1/4 mb-2 transition-all duration-1000 ease-in-out z-10" style={{ left: `calc(${progress * 0.7 + 10}%)` }}>
-              <User className="h-16 w-16 text-black" />
+          <div className="absolute bottom-[20%] transition-all duration-1000 ease-in-out z-10" style={{ left: `calc(${progress * 0.7 + 10}%)` }}>
+              <User className="h-16 w-16 text-white drop-shadow-lg" />
+          </div>
+           {/* Destination */}
+           <div className="absolute bottom-[22%] right-[10%]">
+              <Mountain className="h-32 w-32 text-white/70 drop-shadow-lg" />
           </div>
         </div>
         
@@ -79,16 +75,16 @@ export default function HomePage() {
         <div className="relative z-10 text-left">
           <div className="flex items-center gap-3 mb-4">
             <EcoQuestLogo className="w-12 h-12 text-primary" />
-            <h1 className="text-4xl md:text-5xl font-bold font-headline text-background drop-shadow-lg">
+            <h1 className="text-4xl md:text-5xl font-bold font-headline text-white drop-shadow-lg">
               EcoQuest
             </h1>
           </div>
           {randomQuote && (
-            <blockquote className="border-l-4 border-primary bg-background/80 p-4 rounded-r-lg max-w-md">
-              <p className="text-lg italic text-foreground/80">
+            <blockquote className="border-l-4 border-primary bg-black/50 backdrop-blur-sm p-4 rounded-r-lg max-w-md">
+              <p className="text-lg italic text-white/90">
                 "{randomQuote.text}"
               </p>
-              <footer className="text-sm text-muted-foreground mt-2">
+              <footer className="text-sm text-white/70 mt-2">
                 — {randomQuote.author}
               </footer>
             </blockquote>
