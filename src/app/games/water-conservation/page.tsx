@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Droplet, ArrowLeft, Award, Cloud } from 'lucide-react';
+import { Droplet, ArrowLeft, Award, Cloud, Castle, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -15,7 +15,6 @@ type Raindrop = {
   id: number;
   x: number;
   y: number;
-  bounced: boolean;
 };
 
 const RaindropEl = ({ y }: { y: number }) => (
@@ -24,7 +23,7 @@ const RaindropEl = ({ y }: { y: number }) => (
 
 const Bucket = ({ x }: { x: number }) => (
     <div 
-        className="absolute bottom-4 h-20 w-28 bg-gray-400 border-4 border-gray-600 rounded-t-lg"
+        className="absolute bottom-1/4 h-20 w-28 bg-gray-400 border-4 border-gray-600 rounded-t-lg z-20"
         style={{ left: `${x}%`, transform: 'translateX(-50%)' }}
     >
         <div className="w-full h-2 bg-gray-600 rounded-t-sm" />
@@ -77,7 +76,7 @@ export default function WaterConservationPage() {
   useEffect(() => {
     if (!isGameActive) return;
     const dropGenerator = setInterval(() => {
-        setRaindrops(prev => [...prev, { id: Date.now(), x: Math.random() * 95 + 2.5, y: -20, bounced: false }]);
+        setRaindrops(prev => [...prev, { id: Date.now(), x: Math.random() * 95 + 2.5, y: -20 }]);
     }, RAINDROP_INTERVAL);
     return () => clearInterval(dropGenerator);
   }, [isGameActive]);
@@ -87,26 +86,18 @@ export default function WaterConservationPage() {
     if (!isGameActive || !gameAreaRef.current) return;
     
     const gameAreaHeight = gameAreaRef.current.offsetHeight;
-    const roofHeight = gameAreaHeight * 0.4;
     const bucketWidth = 7; // 7% of game area width approx.
 
     setRaindrops(prevDrops => {
-        const updatedDrops = prevDrops.map(drop => {
+        let updatedDrops = prevDrops.map(drop => {
             let newY = drop.y + 5; // Rain speed
-            let bounced = drop.bounced;
-
-            // Bounce logic
-            if (!bounced && newY >= roofHeight) {
-                newY = roofHeight;
-                bounced = true;
-            }
-
-            return { ...drop, y: newY, bounced };
+            return { ...drop, y: newY };
         }).filter(drop => drop.y < gameAreaHeight); // Remove drops that are off-screen
 
         // Collision detection
-        const bucketBottom = gameAreaHeight - 16;
+        const bucketBottom = gameAreaHeight - (gameAreaHeight * 0.25) + 16;
         const bucketTop = bucketBottom - 80;
+
 
         const dropsInBucket = updatedDrops.filter(drop => {
             if (drop.y >= bucketTop && drop.y <= bucketBottom) {
@@ -121,7 +112,7 @@ export default function WaterConservationPage() {
         if (dropsInBucket.length > 0) {
             setScore(s => s + dropsInBucket.length);
             // Remove collected drops
-            return updatedDrops.filter(drop => !dropsInBucket.find(d => d.id === drop.id));
+            updatedDrops = updatedDrops.filter(drop => !dropsInBucket.find(d => d.id === drop.id));
         }
 
         return updatedDrops;
@@ -155,6 +146,8 @@ export default function WaterConservationPage() {
       const newPosition = (x / rect.width) * 100;
       setBucketPosition(Math.max(5, Math.min(95, newPosition)));
   }
+
+  const characterProgress = Math.min(100, (score / 100) * 100);
 
 
   if (isGameOver) {
@@ -219,46 +212,51 @@ export default function WaterConservationPage() {
                 onMouseMove={handleMouseMove}
                 onTouchMove={handleTouchMove}
             >
-                {/* Environment */}
-                <Cloud className="absolute top-10 left-1/4 h-24 w-48 text-white/80 animate-cloud-move-1" />
-                <Cloud className="absolute top-20 right-1/4 h-16 w-32 text-white/70 animate-cloud-move-2" />
-                <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white/90 text-sky-700 font-bold px-3 py-1 rounded-full text-sm">
-                    Water Conservation
-                </div>
-                
-                {/* Roof */}
-                <div 
-                    className="absolute top-[40%] left-0 w-full h-[15vh] bg-orange-700/80 "
-                    style={{
-                        clipPath: 'polygon(0 0, 100% 30%, 100% 100%, 0 100%)'
-                    }}
-                />
-                <div 
-                    className="absolute top-[calc(40%+15vh)] left-0 w-full h-4 bg-orange-900/70"
-                />
+                {/* 2D Cartoon Background */}
+                <div className="absolute inset-0 z-0">
+                    {/* Sky */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-sky-400 to-sky-200" />
+                    
+                    {/* Far Hills */}
+                    <div className="absolute bottom-1/4 w-full h-1/4 bg-green-400/70 rounded-t-full" />
+                    
+                    {/* Castle */}
+                    <div className="absolute bottom-[40%] left-1/2 -translate-x-1/2 opacity-70">
+                        <Castle className="h-24 w-24 text-gray-400" />
+                    </div>
 
+                    {/* Mid-ground Hills */}
+                    <div className="absolute bottom-1/4 w-[150%] h-1/4 bg-green-500/80 rounded-t-full -left-1/4" />
+
+                    {/* Path */}
+                    <div className="absolute bottom-0 w-full h-1/4 bg-yellow-700/60" style={{ clipPath: 'polygon(40% 0, 60% 0, 100% 100%, 0 100%)' }} />
+
+                    {/* Foreground Ground */}
+                    <div className="absolute bottom-0 w-full h-1/4 bg-green-600" />
+
+                    {/* Character */}
+                    <div className="absolute bottom-1/4 mb-2 transition-all duration-500 ease-linear z-10" style={{ left: `calc(${characterProgress * 0.4 + 5}%` }}>
+                        <User className="h-12 w-12 text-black" />
+                    </div>
+                </div>
 
                 {isGameActive ? (
                     <>
                         {/* Raindrops */}
                         {raindrops.map(drop => (
-                             <div key={drop.id} className="absolute top-0 animate-fall-roof" style={{ left: `${drop.x}%`}}>
+                             <div key={drop.id} className="absolute top-0 z-30" style={{ left: `${drop.x}%`}}>
                                 <RaindropEl y={drop.y} />
                             </div>
                         ))}
                         {/* Bucket */}
                         <Bucket x={bucketPosition} />
-
-                        <p className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/80 text-xs font-semibold">
-                            Collect rainwater to understand the importance of Water Conservation!
-                        </p>
                     </>
                 ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-black/30">
-                        <h2 className="text-3xl font-bold text-white mb-4">Water Conservation</h2>
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-black/30 z-40 relative">
+                        <h2 className="text-3xl font-bold text-white mb-4">Water Conservation Quest</h2>
                         <ul className="list-disc list-inside text-white/90 mb-6">
                             <li>Drag the bucket to collect falling rainwater.</li>
-                            <li>Each drop you collect saves water.</li>
+                            <li>Each drop helps the hero on their quest to the castle.</li>
                             <li>Collect as much as you can in 30 seconds!</li>
                         </ul>
                          <Button onClick={startGame} size="lg">Start Game</Button>

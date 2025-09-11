@@ -89,35 +89,10 @@ export default {
             height: '0',
           },
         },
-        drip: {
-          '0%': { transform: 'translateY(0)', opacity: '1' },
-          '100%': { transform: 'translateY(20px)', opacity: '0' },
-        },
-        fall: {
-            '0%': { transform: 'translateY(-20px)', opacity: '1' },
-            '100%': { transform: 'translateY(calc(100vh - 50px))', opacity: '0' }
-        },
-        'fall-roof': {
-            '0%': { transform: 'translateY(0)', opacity: '1' },
-            '100%': { transform: 'translateY(500px)', opacity: '1' }
-        },
-        'cloud-move-1': {
-            '0%': { transform: 'translateX(-150%)' },
-            '100%': { transform: 'translateX(250%)' },
-        },
-        'cloud-move-2': {
-            '0%': { transform: 'translateX(150%)' },
-            '100%': { transform: 'translateX(-250%)' },
-        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'drip': 'drip 1s infinite',
-        'fall': 'fall 2s linear infinite',
-        'fall-roof': 'fall-roof 2s linear forwards',
-        'cloud-move-1': 'cloud-move-1 30s linear infinite',
-        'cloud-move-2': 'cloud-move-2 40s linear infinite alternate',
       },
     },
   },
