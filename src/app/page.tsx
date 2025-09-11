@@ -19,11 +19,7 @@ import {
   BookOpen,
   ArrowRight,
   Trophy,
-  Castle,
-  User,
   Cloud,
-  Mountain,
-  Bird,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
 import { quotes } from '@/lib/mock-data';
@@ -33,7 +29,6 @@ import Image from 'next/image';
 
 export default function HomePage() {
   const ecoPoints = 1250;
-  const progress = Math.min(100, (ecoPoints / 5000) * 100);
   const [randomQuote, setRandomQuote] = useState<Quote | null>(null);
 
   useEffect(() => {
@@ -43,32 +38,14 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8">
-      <section className="relative w-full rounded-lg overflow-hidden border bg-card text-card-foreground shadow-sm min-h-[350px] md:min-h-[400px] flex flex-col justify-between p-6">
-        {/* Realistic Background Scene */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://picsum.photos/seed/realistic-landscape/1200/800"
-            alt="A beautiful landscape with a path leading to distant mountains."
-            fill
-            className="object-cover"
-            data-ai-hint="realistic landscape path"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-          
-           {/* Animated Birds */}
-          <Bird className="absolute top-16 left-1/4 h-6 w-6 text-white/80 animate-cloud-slow" style={{ animationDelay: '0s' }} />
-          <Bird className="absolute top-24 left-1/3 h-4 w-4 text-white/70 animate-cloud-medium" style={{ animationDelay: '2s' }} />
-          <Bird className="absolute top-20 left-1/2 h-5 w-5 text-white/90 animate-cloud-fast" style={{ animationDelay: '5s' }} />
-
-          {/* Character */}
-          <div className="absolute bottom-[20%] transition-all duration-1000 ease-in-out z-10" style={{ left: `calc(${progress * 0.7 + 10}%)` }}>
-              <User className="h-16 w-16 text-white drop-shadow-lg" />
-          </div>
-           {/* Destination */}
-           <div className="absolute bottom-[22%] right-[10%]">
-              <Mountain className="h-32 w-32 text-white/70 drop-shadow-lg" />
-          </div>
+      <section className="relative w-full rounded-lg overflow-hidden border bg-sky-200 dark:bg-sky-900/50 text-card-foreground shadow-sm min-h-[350px] md:min-h-[400px] flex flex-col justify-between p-6">
+        {/* Animated Cloud Background */}
+        <div className="absolute inset-0 z-0 opacity-80">
+            <Cloud className="absolute top-16 left-1/4 h-16 w-24 text-white/80 animate-cloud-slow" />
+            <Cloud className="absolute top-24 left-3/4 h-20 w-32 text-white/70 animate-cloud-fast" />
+            <Cloud className="absolute top-5 left-1/2 h-12 w-20 text-white/90 animate-cloud-medium" />
+            <Cloud className="absolute bottom-16 left-1/3 h-16 w-24 text-white/60 animate-cloud-medium" style={{animationDelay: '8s'}} />
+            <Cloud className="absolute bottom-24 left-2/3 h-20 w-32 text-white/50 animate-cloud-slow" style={{animationDelay: '15s'}} />
         </div>
         
         {/* Foreground Content */}
