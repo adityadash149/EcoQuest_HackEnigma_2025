@@ -15,6 +15,7 @@ import {
   HelpCircle,
   Gamepad2,
   Cpu,
+  Building2,
 } from 'lucide-react';
 import type {
   Lesson,
@@ -311,9 +312,7 @@ export const ngos: Ngo[] = [
 ];
 
 export const externalGames: ExternalGame[] = [
-    { id: '1', title: 'NASA Climate Kids', description: 'Play games and learn about Earth\'s climate.', href: '#', image: 'https://picsum.photos/seed/game1/300/200' },
-    { id: '2', title: 'National Geographic Kids', description: 'Explore the world with fun games and quizzes.', href: '#', image: 'https://picsum.photos/seed/game2/300/200' },
-    { id: '3', title: 'PBS Kids Nature Games', description: 'Go on adventures with your favorite characters.', href: '#', image: 'https://picsum.photos/seed/game3/300/200' },
+    { id: '1', title: 'NASA Climate Kids', description: 'Play games and learn about Earth\'s climate.', href: 'https://climatekids.nasa.gov/menu/play/', image: 'https://picsum.photos/seed/game1/300/200' },
 ]
 
 export const recyclingItems: RecyclingItem[] = [
@@ -340,5 +339,7 @@ export const bins: Bin[] = [
     { id: 'bin-3', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-black' },
     { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
 ];
+
+    
 
     
