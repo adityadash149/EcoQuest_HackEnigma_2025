@@ -34,6 +34,12 @@ export interface QuizQuestion {
   explanation: string;
 }
 
+export interface CityBuildingQuestion {
+    question: string;
+    options: string[];
+    correctAnswer: string;
+}
+
 export interface Quiz {
   id: string;
   title: string;

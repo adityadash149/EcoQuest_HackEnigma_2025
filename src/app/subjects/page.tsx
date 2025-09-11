@@ -35,10 +35,10 @@ const subjects = [
         ]
     },
     {
-        name: "Technology / Computer Science",
+        name: "Technology",
         icon: Cpu,
         topics: [
-            { name: "Green Technology", details: "EVs, solar panels, AI in climate prediction" },
+            { name: "Green Technology", details: "EVs, solar panels, AI in climate prediction", gameHref: "/games/green-tech", gameId: "green-tech" },
         ]
     },
     {

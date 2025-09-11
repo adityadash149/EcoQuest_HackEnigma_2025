@@ -14,6 +14,7 @@ import {
   Leaf,
   HelpCircle,
   Gamepad2,
+  Cpu,
 } from 'lucide-react';
 import type {
   Lesson,
@@ -25,6 +26,7 @@ import type {
   RecyclingItem,
   Bin,
   QuizQuestion,
+  CityBuildingQuestion,
 } from './types';
 
 export const lessons: Lesson[] = [
@@ -133,6 +135,7 @@ export const games: Game[] = [
   { id: 'tree-planting', title: 'Tree Planting Challenge', description: 'Answer questions to plant and grow a tree!', subject: 'Environmental Studies', icon: TreePine, href: '/games/tree-planting' },
   { id: 'water-conservation', title: 'Water Conservation', description: 'Fix leaks and collect rainwater to save water.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
   { id: 'eco-slogans', title: 'Eco Slogan Creator', description: 'Craft catchy slogans for environmental topics.', subject: 'Arts & Creativity', icon: Paintbrush, href: '/games/eco-slogans' },
+  { id: 'green-tech', title: 'Green Tech City', description: 'Build a sustainable city with green technology.', subject: 'Technology', icon: Cpu, href: '/games/green-tech' },
 ];
 
 export const quizzes: Quiz[] = [
@@ -191,6 +194,24 @@ export const quizzes: Quiz[] = [
     ]
   },
 ];
+
+export const cityBuildingQuestions: CityBuildingQuestion[] = [
+    {
+      question: "What is a major benefit of using solar panels for energy?",
+      options: ["They work at night", "They don't produce greenhouse gases", "They are very cheap to make", "They use a lot of water"],
+      correctAnswer: "They don't produce greenhouse gases",
+    },
+    {
+      question: "Which of these is a form of 'public transit'?",
+      options: ["Personal Car", "Bicycle", "Electric Bus", "Motorcycle"],
+      correctAnswer: "Electric Bus",
+    },
+    {
+      question: "What does 'EV' in 'EV Charging Station' stand for?",
+      options: ["Eco Vehicle", "Electric Vehicle", "Energy Vehicle", "Efficient Vehicle"],
+      correctAnswer: "Electric Vehicle",
+    }
+]
 
 export const ecoSlogans: string[] = [
   "Don’t be a drip, save every drop.",
@@ -297,20 +318,20 @@ export const externalGames: ExternalGame[] = [
 
 export const recyclingItems: RecyclingItem[] = [
     { id: 'item-1', name: 'Plastic Bottle', type: 'recycling', image: 'https://picsum.photos/seed/bottle/100/100' },
-    { id: 'item-2', name: 'Apple Core', type: 'compost', image: 'https://picsum.photos/seed/apple/100/100' },
+    { id: 'item-2', name: 'Apple Core', type: 'compost', image: 'https://picsum.photos/seed/apple-core/100/100' },
     { id: 'item-3', name: 'Newspaper', type: 'recycling', image: 'https://picsum.photos/seed/newspaper/100/100' },
-    { id: 'item-4', name: 'Styrofoam Cup', type: 'trash', image: 'https://picsum.photos/seed/styrofoam/100/100' },
-    { id: 'item-5', name: 'Glass Jar', type: 'recycling', image: 'https://picsum.photos/seed/jar/100/100' },
-    { id: 'item-6', name: 'Banana Peel', type: 'compost', image: 'https://picsum.photos/seed/banana/100/100' },
-    { id: 'item-7', name: 'Chip Bag', type: 'trash', image: 'https://picsum.photos/seed/chips/100/100' },
-    { id: 'item-8', name: 'Aluminum Can', type: 'recycling', image: 'https://picsum.photos/seed/can/100/100' },
-    { id: 'item-9', name: 'Cardboard Box', type: 'recycling', image: 'https://picsum.photos/seed/box/100/100' },
-    { id: 'item-10', name: 'Egg Shells', type: 'compost', image: 'https://picsum.photos/seed/eggs/100/100' },
-    { id: 'item-11', name: 'Used Battery', type: 'hazardous', image: 'https://picsum.photos/seed/battery/100/100' },
-    { id: 'item-12', name: 'Plastic Bag', type: 'trash', image: 'https://picsum.photos/seed/bag/100/100' },
-    { id: 'item-13', name: 'Light Bulb', type: 'hazardous', image: 'https://picsum.photos/seed/bulb/100/100' },
-    { id: 'item-14', name: 'Coffee Grounds', type: 'compost', image: 'https://picsum.photos/seed/coffee/100/100' },
-    { id: 'item-15', name: 'Pizza Box', type: 'trash', image: 'https://picsum.photos/seed/pizza/100/100' },
+    { id: 'item-4', name: 'Styrofoam Cup', type: 'trash', image: 'https://picsum.photos/seed/styrofoam-cup/100/100' },
+    { id: 'item-5', name: 'Glass Jar', type: 'recycling', image: 'https://picsum.photos/seed/glass-jar/100/100' },
+    { id: 'item-6', name: 'Banana Peel', type: 'compost', image: 'https://picsum.photos/seed/banana-peel/100/100' },
+    { id: 'item-7', name: 'Chip Bag', type: 'trash', image: 'https://picsum.photos/seed/chip-bag/100/100' },
+    { id: 'item-8', name: 'Aluminum Can', type: 'recycling', image: 'https://picsum.photos/seed/aluminum-can/100/100' },
+    { id: 'item-9', name: 'Cardboard Box', type: 'recycling', image: 'https://picsum.photos/seed/cardboard-box/100/100' },
+    { id: 'item-10', name: 'Egg Shells', type: 'compost', image: 'https://picsum.photos/seed/egg-shells/100/100' },
+    { id: 'item-11', name: 'Used Battery', type: 'hazardous', image: 'https://picsum.photos/seed/used-battery/100/100' },
+    { id: 'item-12', name: 'Plastic Bag', type: 'trash', image: 'https://picsum.photos/seed/plastic-bag/100/100' },
+    { id: 'item-13', name: 'Light Bulb', type: 'hazardous', image: 'https://picsum.photos/seed/light-bulb/100/100' },
+    { id: 'item-14', name: 'Coffee Grounds', type: 'compost', image: 'https://picsum.photos/seed/coffee-grounds/100/100' },
+    { id: 'item-15', name: 'Pizza Box', type: 'trash', image: 'https://picsum.photos/seed/pizza-box/100/100' },
 ];
 
 export const bins: Bin[] = [
