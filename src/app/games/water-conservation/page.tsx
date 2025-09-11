@@ -4,29 +4,45 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Droplet, ArrowLeft, Award, Cloud } from 'lucide-react';
+import { Droplet, ArrowLeft, Award, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 const GAME_DURATION = 30000; // 30 seconds
 const RAINDROP_INTERVAL = 300; // New raindrop every 0.3 seconds
+const MAX_SCORE = 100; // Represents the bucket being full
 
 type Raindrop = {
   id: number;
   x: number;
   y: number;
+  splashed: boolean;
 };
 
 const RaindropEl = ({ y }: { y: number }) => (
-    <div className="w-1 h-4 bg-blue-400 rounded-full" style={{ transform: `translateY(${y}px)` }} />
+    <div className="w-0.5 h-4 bg-gradient-to-b from-blue-200/50 to-blue-400/80 rounded-full" style={{ transform: `translateY(${y}px)` }} />
 );
 
-const Bucket = ({ x }: { x: number }) => (
+const SplashEl = () => (
+    <div className="w-4 h-4 rounded-full border-2 border-blue-300/80 bg-transparent animate-splash" />
+)
+
+const Bucket = ({ x, waterLevel }: { x: number, waterLevel: number }) => (
     <div 
-        className="absolute bottom-4 h-20 w-28 bg-gray-400 border-4 border-gray-600 rounded-t-lg"
-        style={{ left: `${x}%`, transform: 'translateX(-50%)' }}
+        className="absolute bottom-4 h-24 w-32 rounded-t-lg shadow-lg"
+        style={{ 
+            left: `${x}%`, 
+            transform: 'translateX(-50%)',
+            background: 'linear-gradient(to top, #888, #ccc, #888)'
+        }}
     >
-        <div className="w-full h-2 bg-gray-600 rounded-t-sm" />
+        <div className="absolute top-0 w-full h-3 bg-gradient-to-b from-gray-600 to-gray-500 rounded-t-md" />
+        <div 
+            className="absolute bottom-0 w-full bg-blue-500/70 transition-all duration-300 ease-out"
+            style={{ height: `${waterLevel}%` }}
+        >
+             <div className="absolute top-0 w-full h-1 bg-blue-400/80 animate-ripple" />
+        </div>
     </div>
 );
 
@@ -41,6 +57,8 @@ export default function WaterConservationPage() {
   
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>();
+  
+  const waterLevel = (score / MAX_SCORE) * 100;
 
   const startGame = () => {
     setScore(0);
@@ -51,7 +69,6 @@ export default function WaterConservationPage() {
     setIsGameOver(false);
   };
   
-  // Game Timer
   useEffect(() => {
     if (!isGameActive) return;
     if (timeLeft <= 0) {
@@ -72,49 +89,52 @@ export default function WaterConservationPage() {
       }
   }, [isGameOver]);
 
-  // Raindrop generator
   useEffect(() => {
     if (!isGameActive) return;
     const dropGenerator = setInterval(() => {
-        setRaindrops(prev => [...prev, { id: Date.now(), x: Math.random() * 95 + 2.5, y: -20 }]);
+        setRaindrops(prev => [...prev, { id: Date.now(), x: Math.random() * 95 + 2.5, y: -20, splashed: false }]);
     }, RAINDROP_INTERVAL);
     return () => clearInterval(dropGenerator);
   }, [isGameActive]);
 
-  // Main game loop for animations and collision
   const gameLoop = useCallback(() => {
     if (!isGameActive || !gameAreaRef.current) return;
     
     const gameAreaHeight = gameAreaRef.current.offsetHeight;
-    const bucketWidth = 7; // 7% of game area width approx.
+    const bucketWidth = 7; 
 
     setRaindrops(prevDrops => {
         let updatedDrops = prevDrops.map(drop => {
-            let newY = drop.y + 5; // Rain speed
+            if (drop.splashed) return drop;
+            let newY = drop.y + 6; // Rain speed
             return { ...drop, y: newY };
-        }).filter(drop => drop.y < gameAreaHeight); // Remove drops that are off-screen
+        });
 
-        // Collision detection
         const bucketBottom = gameAreaHeight - 16;
-        const bucketTop = bucketBottom - 80;
+        const bucketTop = bucketBottom - 96;
 
-        const dropsInBucket = updatedDrops.filter(drop => {
+        let collectedCount = 0;
+        updatedDrops = updatedDrops.map(drop => {
+            if (drop.splashed || drop.y < bucketTop) return drop;
+
             if (drop.y >= bucketTop && drop.y <= bucketBottom) {
                 const dropX = drop.x;
                 const bucketLeft = bucketPosition - bucketWidth / 2;
                 const bucketRight = bucketPosition + bucketWidth / 2;
-                return dropX >= bucketLeft && dropX <= bucketRight;
+                if (dropX >= bucketLeft && dropX <= bucketRight) {
+                    collectedCount++;
+                    return { ...drop, splashed: true };
+                }
             }
-            return false;
+            return drop;
         });
 
-        if (dropsInBucket.length > 0) {
-            setScore(s => s + dropsInBucket.length);
-            // Remove collected drops
-            updatedDrops = updatedDrops.filter(drop => !dropsInBucket.find(d => d.id === drop.id));
+        if (collectedCount > 0) {
+            setScore(s => Math.min(s + collectedCount, MAX_SCORE + 20)); // Allow some overflow for feel
         }
-
-        return updatedDrops;
+        
+        // Filter out drops that are off-screen or have finished their splash animation
+        return updatedDrops.filter(drop => drop.y < gameAreaHeight + 50);
     });
 
     requestRef.current = requestAnimationFrame(gameLoop);
@@ -167,7 +187,7 @@ export default function WaterConservationPage() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground mb-4">You did a great job saving water!</p>
-                    <p className="text-4xl font-bold text-primary mb-2">{score} Liters Saved</p>
+                    <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-600 mb-2">{score} Liters Saved</p>
                     <p className="text-sm text-muted-foreground">Way to go, Eco-Hero!</p>
                 </CardContent>
                  <CardFooter>
@@ -179,6 +199,15 @@ export default function WaterConservationPage() {
         </div>
     )
   }
+  
+  const FluffyCloud = ({ className }: { className?: string }) => (
+    <div className={cn("absolute w-40 h-24", className)}>
+        <div className="absolute w-20 h-20 bg-white/90 rounded-full bottom-0 left-5 shadow-inner" />
+        <div className="absolute w-24 h-24 bg-white/90 rounded-full bottom-0 left-12 shadow-inner" />
+        <div className="absolute w-16 h-16 bg-white/80 rounded-full bottom-0 left-0 shadow-inner" />
+        <div className="absolute w-16 h-16 bg-white/80 rounded-full bottom-0 right-0 shadow-inner" />
+    </div>
+  )
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -189,15 +218,17 @@ export default function WaterConservationPage() {
             Back to Games
           </Link>
         </Button>
-        {!isGameActive && (
+        {!isGameActive && !isGameOver && (
             <Button onClick={startGame} size="lg">Start Game</Button>
         )}
         {isGameActive && (
-            <div className="text-right">
-                <div className="text-2xl font-bold text-primary flex items-center gap-2">
-                    <Droplet className="h-6 w-6"/> {score} Liters
+            <div className="flex items-center gap-6">
+                <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-600 flex items-center gap-2">
+                    <Droplet className="h-6 w-6 fill-current"/> {score}
                 </div>
-                <div className="text-sm text-muted-foreground">Time Left: {timeLeft}s</div>
+                <div className="text-2xl font-mono bg-gray-900 text-cyan-300 p-2 rounded-md border-2 border-gray-700 shadow-inner">
+                    {`0:${timeLeft.toString().padStart(2, '0')}`}
+                </div>
             </div>
         )}
       </div>
@@ -205,27 +236,30 @@ export default function WaterConservationPage() {
         <CardContent className="p-0">
             <div 
                 ref={gameAreaRef} 
-                className="relative w-full h-[500px] bg-sky-300 dark:bg-sky-800 rounded-lg overflow-hidden cursor-pointer" 
+                className="relative w-full h-[600px] bg-gradient-to-b from-blue-300 to-cyan-100 rounded-lg overflow-hidden cursor-pointer shadow-inner" 
                 onMouseMove={handleMouseMove}
                 onTouchMove={handleTouchMove}
             >
                 {isGameActive ? (
                     <>
-                        <Cloud className="absolute top-10 left-1/4 h-16 w-24 text-white/80 animate-cloud-slow" />
-                        <Cloud className="absolute top-20 left-3/4 h-20 w-32 text-white/70 animate-cloud-fast" />
-                        <Cloud className="absolute top-5 left-1/2 h-12 w-20 text-white/90 animate-cloud-medium" />
+                        <div className="absolute inset-0 bg-black/10 vignette"/>
+                        <Sun className="absolute top-10 left-1/2 -translate-x-1/2 h-20 w-20 text-yellow-300/80 animate-glow" />
+                        <FluffyCloud className="top-10 left-[10%] animate-drift-slow" />
+                        <FluffyCloud className="top-20 left-[70%] animate-drift-fast" />
+                        <FluffyCloud className="top-5 left-[40%] animate-drift-medium" />
+
                         {raindrops.map(drop => (
                              <div key={drop.id} className="absolute top-0 z-10" style={{ left: `${drop.x}%`}}>
-                                <RaindropEl y={drop.y} />
+                                {drop.splashed ? <SplashEl /> : <RaindropEl y={drop.y} />}
                             </div>
                         ))}
-                        <Bucket x={bucketPosition} />
+                        <Bucket x={bucketPosition} waterLevel={waterLevel} />
                     </>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-black/30 z-20 relative">
                         <h2 className="text-3xl font-bold text-white mb-4">Water Conservation Quest</h2>
                         <ul className="list-disc list-inside text-white/90 mb-6">
-                            <li>Drag the bucket to collect falling rainwater.</li>
+                            <li>Move the bucket to collect falling rainwater.</li>
                             <li>Collect as much as you can in 30 seconds!</li>
                         </ul>
                          <Button onClick={startGame} size="lg">Start Game</Button>
@@ -237,5 +271,7 @@ export default function WaterConservationPage() {
     </div>
   );
 }
+
+    
 
     

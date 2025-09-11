@@ -89,12 +89,44 @@ export default {
             height: '0',
           },
         },
+        'drift-slow': {
+          '0%, 100%': { transform: 'translateX(-10%)' },
+          '50%': { transform: 'translateX(10%)' },
+        },
+        'drift-medium': {
+            '0%, 100%': { transform: 'translateX(5%)' },
+            '50%': { transform: 'translateX(-5%)' },
+        },
+        'drift-fast': {
+            '0%, 100%': { transform: 'translateX(-5%)' },
+            '50%': { transform: 'translateX(5%)' },
+        },
+        glow: {
+          '0%, 100%': { filter: 'drop-shadow(0 0 15px rgba(255, 255, 150, 0.6))' },
+          '50%': { filter: 'drop-shadow(0 0 25px rgba(255, 255, 150, 1))' },
+        },
+        splash: {
+            '0%': { transform: 'scale(0)', opacity: '1' },
+            '100%': { transform: 'scale(1.5)', opacity: '0' },
+        },
+        ripple: {
+            '0%, 100%': { transform: 'scaleX(1) scaleY(1)', opacity: '0.7' },
+            '50%': { transform: 'scaleX(1.05) scaleY(0.95)', opacity: '1' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'drift-slow': 'drift-slow 25s ease-in-out infinite',
+        'drift-medium': 'drift-medium 20s ease-in-out infinite',
+        'drift-fast': 'drift-fast 15s ease-in-out infinite',
+        'glow': 'glow 5s ease-in-out infinite',
+        'splash': 'splash 0.3s ease-out forwards',
+        'ripple': 'ripple 2s ease-in-out infinite'
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
+
+    
