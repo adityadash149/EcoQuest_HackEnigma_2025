@@ -117,7 +117,7 @@ export default function GreenTechCityPage() {
     setSelectedBuilding(null);
 
     // Trigger quiz event
-    if (grid.length % 3 === 0) {
+    if ((grid.length + 1) % 3 === 0 && grid.length > 0) {
         const randomQuestion = cityBuildingQuestions[Math.floor(Math.random() * cityBuildingQuestions.length)];
         setQuiz({
             question: randomQuestion,
