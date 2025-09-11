@@ -16,14 +16,6 @@ import {
   Trophy,
 } from 'lucide-react';
 
-const subjects = [
-  { name: 'Science', icon: Atom, href: '/lessons' },
-  { name: 'Environmental Studies', icon: Users, href: '/lessons' },
-  { name: 'Technology', icon: Cpu, href: '/lessons' },
-  { name: 'Arts & Creativity', icon: Palette, href: '/lessons' },
-  { name: 'Current Affairs', icon: Newspaper, href: '/lessons' },
-];
-
 export default function HomePage() {
   return (
     <div className="space-y-8">
@@ -123,26 +115,6 @@ export default function HomePage() {
             <p className="text-xs text-muted-foreground">In your class</p>
           </CardContent>
         </Card>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-bold font-headline mb-4">
-          Choose a Subject
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {subjects.map((subject) => (
-            <Link href={subject.href} key={subject.name}>
-              <Card className="text-center p-6 hover:bg-card/80 transition-colors hover:shadow-lg">
-                <div className="flex justify-center mb-2">
-                  <div className="bg-accent/50 rounded-full p-3">
-                    <subject.icon className="h-8 w-8 text-accent-foreground" />
-                  </div>
-                </div>
-                <h3 className="font-semibold">{subject.name}</h3>
-              </Card>
-            </Link>
-          ))}
-        </div>
       </section>
     </div>
   );
