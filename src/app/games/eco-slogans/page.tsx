@@ -83,7 +83,7 @@ export default function EcoSloganScramblePage() {
   const [jumbledWords, setJumbledWords] = useState<{id: string, word: string}[]>([]);
   const [arrangedWords, setArrangedWords] = useState<{id: string, word: string}[]>([]);
   const [attempts, setAttempts] = useState(0);
-  const [feedback, setFeedback] =<'correct' | 'wrong' | null>(null);
+  const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
