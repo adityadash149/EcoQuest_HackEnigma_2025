@@ -24,7 +24,7 @@ const subjects = [
         ]
     },
     {
-        name: "Social Studies",
+        name: "Environmental Studies",
         icon: Users,
         topics: [
             { name: "Deforestation & Afforestation", details: "Learn about the importance of forests and how to restore them.", gameHref: "/games/tree-planting", gameId: "tree-planting" },

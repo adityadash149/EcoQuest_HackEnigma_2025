@@ -18,7 +18,7 @@ import {
 
 const subjects = [
   { name: 'Science', icon: Atom, href: '/lessons' },
-  { name: 'Social Studies', icon: Users, href: '/lessons' },
+  { name: 'Environmental Studies', icon: Users, href: '/lessons' },
   { name: 'Technology', icon: Cpu, href: '/lessons' },
   { name: 'Arts & Creativity', icon: Palette, href: '/lessons' },
   { name: 'Current Affairs', icon: Newspaper, href: '/lessons' },
