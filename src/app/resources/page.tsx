@@ -122,10 +122,16 @@ export default function ResourcesPage() {
                 {filteredNgos.map((ngo, index) => {
                     const mapQuery = encodeURIComponent(`${ngo.name}, ${ngo.address}`);
                     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+                    const embedMapUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed&z=15`;
                     return (
                         <Card key={index} className="flex flex-col overflow-hidden">
-                            <div className="relative h-40 w-full">
-                                <Image src={`https://picsum.photos/seed/ngo${index}/300/200`} alt={ngo.name} fill className="object-cover" data-ai-hint="environmental organization" />
+                            <div className="relative h-48 w-full">
+                                <iframe
+                                    className="absolute inset-0 w-full h-full border-0"
+                                    loading="lazy"
+                                    allowFullScreen
+                                    src={embedMapUrl}>
+                                </iframe>
                             </div>
                             <CardHeader>
                                 <CardTitle>{ngo.name}</CardTitle>
