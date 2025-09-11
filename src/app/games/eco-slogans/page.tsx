@@ -83,7 +83,7 @@ export default function EcoSloganScramblePage() {
   const [jumbledWords, setJumbledWords] = useState<{id: string, word: string}[]>([]);
   const [arrangedWords, setArrangedWords] = useState<{id: string, word: string}[]>([]);
   const [attempts, setAttempts] = useState(0);
-  const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [feedback, setFeedback] =<'correct' | 'wrong' | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -138,8 +138,11 @@ export default function EcoSloganScramblePage() {
     // Reordering within the arranged zone
     else if (over.id === 'dropzone' && arrangedWords.some(w => w.id === active.id)) {
         const oldIndex = arrangedWords.findIndex(w => w.id === active.id);
-        const newIndex = arrangedWords.length; // simplified: just append, real sort is complex
-        setArrangedWords(prev => arrayMove(prev, oldIndex, newIndex > oldIndex ? newIndex - 1 : newIndex));
+        const overIndex = arrangedWords.findIndex(w => w.id === over.id);
+        
+        if (oldIndex !== overIndex) {
+            setArrangedWords(prev => arrayMove(prev, oldIndex, overIndex));
+        }
     }
   };
 

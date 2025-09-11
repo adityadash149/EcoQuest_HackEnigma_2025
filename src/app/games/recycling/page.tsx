@@ -33,7 +33,7 @@ const DraggableItem = ({ item, isDropped }: { item: RecyclingItem; isDropped: bo
       top: `${Math.random() * 80}%`,
       left: `${Math.random() * 80}%`,
     });
-  }, [item.id]);
+  }, []);
 
   if (isDropped || !position) return null;
 

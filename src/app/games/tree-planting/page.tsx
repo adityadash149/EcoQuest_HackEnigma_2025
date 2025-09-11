@@ -54,7 +54,7 @@ export default function TreePlantingPage() {
       const options = [
         ...currentQuestion.options
       ];
-      setShuffledOptions(options.sort(() => Math.random() - 0.5));
+      setShuffledOptions(shuffleArray(options));
     }
   }, [currentQuestion]);
 
