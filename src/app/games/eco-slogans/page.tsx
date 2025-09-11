@@ -80,8 +80,8 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 export default function EcoSloganScramblePage() {
   const [sloganIndex, setSloganIndex] = useState(0);
-  const [jumbledWords, setJumbledWords] = useState<string[]>([]);
-  const [arrangedWords, setArrangedWords] = useState<string[]>([]);
+  const [jumbledWords, setJumbledWords] = useState<{id: string, word: string}[]>([]);
+  const [arrangedWords, setArrangedWords] = useState<{id: string, word: string}[]>([]);
   const [attempts, setAttempts] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -96,7 +96,7 @@ export default function EcoSloganScramblePage() {
 
   useEffect(() => {
     if (isClient && currentSlogan) {
-      const words = currentSlogan.split(' ');
+      const words = currentSlogan.split(' ').map((word, index) => ({ id: `jumbled-${word}-${index}`, word }));
       setJumbledWords(shuffleArray([...words]));
       setArrangedWords([]);
       setFeedback(null);
@@ -119,34 +119,38 @@ export default function EcoSloganScramblePage() {
     setActiveId(null);
     const { over, active } = event;
 
-    if (over && over.id === 'dropzone' && active.data.current?.word) {
-      const word = active.data.current.word as string;
-      const wordId = active.id as string;
-      setArrangedWords((prev) => [...prev, word]);
-      setJumbledWords((prev) => prev.filter((w, i) => `${w}-${i}` !== wordId));
-    } else if (over && over.id === 'jumblezone' && active.data.current?.word) {
-      const word = active.data.current.word as string;
-      const wordId = active.id as string;
-      
-      const originalIndex = parseInt(wordId.split('-').pop() || '0', 10);
-      
-      setArrangedWords((prev) => prev.filter((w, i) => `${w}-${i}` !== wordId));
-      
-      setJumbledWords((prev) => {
-          const newJumbled = [...prev, word];
-          return newJumbled;
-      });
+    if (!over) return;
+    
+    const activeWord = jumbledWords.find(w => w.id === active.id) || arrangedWords.find(w => w.id === active.id);
+
+    if (!activeWord) return;
+
+    // Moving from jumbled to arranged
+    if (over.id === 'dropzone' && jumbledWords.some(w => w.id === active.id)) {
+        setJumbledWords(prev => prev.filter(w => w.id !== active.id));
+        setArrangedWords(prev => [...prev, activeWord]);
+    } 
+    // Moving from arranged back to jumbled
+    else if (over.id === 'jumblezone' && arrangedWords.some(w => w.id === active.id)) {
+        setArrangedWords(prev => prev.filter(w => w.id !== active.id));
+        setJumbledWords(prev => [...prev, activeWord]);
+    }
+    // Reordering within the arranged zone
+    else if (over.id === 'dropzone' && arrangedWords.some(w => w.id === active.id)) {
+        const oldIndex = arrangedWords.findIndex(w => w.id === active.id);
+        const newIndex = arrangedWords.length; // simplified: just append, real sort is complex
+        setArrangedWords(prev => arrayMove(prev, oldIndex, newIndex > oldIndex ? newIndex - 1 : newIndex));
     }
   };
 
   const handleResetAttempt = () => {
-    const words = currentSlogan.split(' ');
+    const words = currentSlogan.split(' ').map((word, index) => ({ id: `jumbled-${word}-${index}`, word }));
     setJumbledWords(shuffleArray([...words]));
     setArrangedWords([]);
   }
 
   const handleSubmit = () => {
-    const userAnswer = arrangedWords.join(' ');
+    const userAnswer = arrangedWords.map(w => w.word).join(' ');
     if (userAnswer === currentSlogan) {
       setFeedback('correct');
     } else {
@@ -212,8 +216,8 @@ export default function EcoSloganScramblePage() {
           </CardHeader>
           <CardContent className="space-y-4">
              <DropZone id="jumblezone">
-                {jumbledWords.map((word, index) => (
-                    <Word key={`${word}-${index}`} id={`${word}-${index}`} word={word} />
+                {jumbledWords.map(({id, word}) => (
+                    <Word key={id} id={id} word={word} />
                 ))}
                  {!jumbledWords.length && <p className="text-muted-foreground">Well done!</p>}
              </DropZone>
@@ -221,10 +225,8 @@ export default function EcoSloganScramblePage() {
             <p className="text-center text-muted-foreground">Drag the words into the box below</p>
             
             <DropZone id="dropzone">
-                {arrangedWords.map((word, index) => (
-                   <div key={index} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg shadow">
-                        {word}
-                    </div>
+                {arrangedWords.map(({id, word}) => (
+                   <Word key={id} id={id} word={word} />
                 ))}
                 {!arrangedWords.length && <p className="text-muted-foreground">Drop words here</p>}
             </DropZone>
@@ -269,7 +271,7 @@ export default function EcoSloganScramblePage() {
         )}
       </div>
       <DragOverlay>
-        {activeId ? <Word id="overlay" word={activeId.split('-')[0]} isDragging /> : null}
+        {activeId ? <Word id="overlay" word={activeId.split('-')[1]} isDragging /> : null}
       </DragOverlay>
     </DndContext>
   );

@@ -95,7 +95,7 @@ export default function GreenTechCityPage() {
        setGameOverMessage({ title: 'Out of Funds!', description: "You've run out of budget before reaching the city's goals. Plan more carefully next time!" });
        setIsGameOver(true);
     }
-  }, [population, pollution, power, budget, cheapestBuildingCost, isGameOver]);
+  }, [population, pollution, power.generated, power.demand, budget, cheapestBuildingCost, isGameOver]);
 
   const calculateStats = useCallback(() => {
     let newPopulation = 0;
@@ -139,10 +139,6 @@ export default function GreenTechCityPage() {
       ...position
     };
     
-    setGrid(prev => [...prev, newBuilding]);
-    setBudget(prev => prev - buildingInfo.cost);
-    setSelectedBuilding(null);
-
     // Trigger quiz event
     if ((grid.length + 1) % 3 === 0 && grid.length > 0) {
         const randomQuestion = cityBuildingQuestions[Math.floor(Math.random() * cityBuildingQuestions.length)];
@@ -151,6 +147,10 @@ export default function GreenTechCityPage() {
             onCorrect: () => setBudget(b => b + 1000)
         });
     }
+
+    setGrid(prev => [...prev, newBuilding]);
+    setBudget(prev => prev - buildingInfo.cost);
+    setSelectedBuilding(null);
   };
 
   const isOccupied = (row: number, col: number) => {
