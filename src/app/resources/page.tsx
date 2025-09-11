@@ -122,7 +122,7 @@ export default function ResourcesPage() {
                 {filteredNgos.map((ngo, index) => {
                     const mapQuery = encodeURIComponent(`${ngo.name}, ${ngo.address}`);
                     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-                    const embedMapUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed&z=15`;
+                    const embedMapUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed&z=15&t=k`;
                     return (
                         <Card key={index} className="flex flex-col overflow-hidden">
                             <div className="relative h-48 w-full">
