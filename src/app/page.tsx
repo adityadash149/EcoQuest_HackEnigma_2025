@@ -39,7 +39,7 @@ export default function HomePage() {
         <div className="absolute top-0 left-0 w-full h-full z-0 overflow-hidden">
             <iframe 
                 className="absolute top-1/2 left-1/2 w-full h-full min-w-[200%] min-h-[200%] transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                src="https://www.youtube.com/embed/G_H3j8EZCvs?autoplay=1&mute=1&loop=1&playlist=G_H3j8EZCvs&controls=0&showinfo=0&modestbranding=1&iv_load_policy=3&rel=0"
+                src="https://www.youtube.com/embed/k4sSo2csris?autoplay=1&mute=1&loop=1&playlist=k4sSo2csris&controls=0&showinfo=0&modestbranding=1&iv_load_policy=3&rel=0"
                 frameBorder="0"
                 allow="autoplay; encrypted-media"
             ></iframe>
