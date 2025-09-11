@@ -89,3 +89,8 @@ export interface Bin {
     icon: any;
     color: string;
 }
+
+export interface Quote {
+    text: string;
+    author: string;
+}

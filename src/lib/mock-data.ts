@@ -28,6 +28,7 @@ import type {
   Bin,
   QuizQuestion,
   CityBuildingQuestion,
+  Quote,
 } from './types';
 
 export const lessons: Lesson[] = [
@@ -340,6 +341,25 @@ export const bins: Bin[] = [
     { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
 ];
 
-    
-
-    
+export const quotes: Quote[] = [
+    {
+        text: "The Earth is what we all have in common.",
+        author: "Wendell Berry",
+    },
+    {
+        text: "He that plants trees loves others besides himself.",
+        author: "Thomas Fuller",
+    },
+    {
+        text: "The environment is where we all meet; where we all have a mutual interest; it is the one thing all of us share.",
+        author: "Lady Bird Johnson",
+    },
+    {
+        text: "To leave the world a bit better, whether by a healthy child, a garden patch, or a redeemed social condition... to know even one life has breathed easier because you have lived. This is to have succeeded.",
+        author: "Ralph Waldo Emerson",
+    },
+    {
+        text: "What we are doing to the forests of the world is but a mirror reflection of what we are doing to ourselves and to one another.",
+        author: "Mahatma Gandhi",
+    }
+];

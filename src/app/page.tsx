@@ -1,5 +1,7 @@
 
+'use client';
 
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,10 +24,19 @@ import {
   Cloud,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
+import { quotes } from '@/lib/mock-data';
+import type { Quote } from '@/lib/types';
+
 
 export default function HomePage() {
   const ecoPoints = 1250;
   const progress = Math.min(100, (ecoPoints / 5000) * 100);
+  const [randomQuote, setRandomQuote] = useState<Quote | null>(null);
+
+  useEffect(() => {
+    // Select a random quote on component mount (client-side)
+    setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -72,14 +83,16 @@ export default function HomePage() {
               EcoQuest
             </h1>
           </div>
-          <blockquote className="border-l-4 border-primary bg-background/80 p-4 rounded-r-lg max-w-md">
-            <p className="text-lg italic text-foreground/80">
-              "The Earth is what we all have in common."
-            </p>
-            <footer className="text-sm text-muted-foreground mt-2">
-              — Wendell Berry
-            </footer>
-          </blockquote>
+          {randomQuote && (
+            <blockquote className="border-l-4 border-primary bg-background/80 p-4 rounded-r-lg max-w-md">
+              <p className="text-lg italic text-foreground/80">
+                "{randomQuote.text}"
+              </p>
+              <footer className="text-sm text-muted-foreground mt-2">
+                — {randomQuote.author}
+              </footer>
+            </blockquote>
+          )}
         </div>
       </section>
 
@@ -170,5 +183,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
