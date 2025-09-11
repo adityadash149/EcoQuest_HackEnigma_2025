@@ -85,7 +85,7 @@ export default function EcoSloganScramblePage() {
   const [arrangedWords, setArrangedWords] = useState<{id: string, word: string}[]>([]);
   const [attempts, setAttempts] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
-  const [activeWord, setActiveWord] = useState<string | null>(null);
+  const [activeWord, setActiveWord] = useState<{id: string, word: string} | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
 
@@ -113,39 +113,46 @@ export default function EcoSloganScramblePage() {
   );
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveWord(event.active.data.current?.word);
+    const {active} = event;
+    const wordData = jumbledWords.find(w => w.id === active.id) || arrangedWords.find(w => w.id === active.id);
+    if (wordData) {
+        setActiveWord(wordData);
+    }
   };
   
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveWord(null);
     const { over, active } = event;
-
+  
     if (!over) return;
-    
-    const activeWordData = jumbledWords.find(w => w.id === active.id) || arrangedWords.find(w => w.id === active.id);
-
+  
+    const activeId = active.id;
+    const overId = over.id;
+  
+    const activeWordData = jumbledWords.find(w => w.id === activeId) || arrangedWords.find(w => w.id === activeId);
+  
     if (!activeWordData) return;
-
+  
+    const isMovingFromJumbled = jumbledWords.some(w => w.id === activeId);
+    const isMovingFromArranged = arrangedWords.some(w => w.id === activeId);
+  
     // Moving from jumbled to arranged
-    if (over.id === 'dropzone' && jumbledWords.some(w => w.id === active.id)) {
-        setJumbledWords(prev => prev.filter(w => w.id !== active.id));
-        setArrangedWords(prev => [...prev, activeWordData]);
+    if (overId === 'dropzone' && isMovingFromJumbled) {
+      setJumbledWords(prev => prev.filter(w => w.id !== activeId));
+      setArrangedWords(prev => [...prev, activeWordData]);
     } 
     // Moving from arranged back to jumbled
-    else if (over.id === 'jumblezone' && arrangedWords.some(w => w.id === active.id)) {
-        setArrangedWords(prev => prev.filter(w => w.id !== active.id));
-        setJumbledWords(prev => [...prev, activeWordData]);
+    else if (overId === 'jumblezone' && isMovingFromArranged) {
+      setArrangedWords(prev => prev.filter(w => w.id !== activeId));
+      setJumbledWords(prev => [...prev, activeWordData]);
     }
     // Reordering within the arranged zone
-    else if (over.id === 'dropzone' && arrangedWords.some(w => w.id === active.id)) {
-        const oldIndex = arrangedWords.findIndex(w => w.id === active.id);
-        const overItem = arrangedWords.find(w => w.id === over.id);
-        if (overItem) {
-          const newIndex = arrangedWords.findIndex(w => w.id === over.id);
-          if (oldIndex !== newIndex) {
-              setArrangedWords(prev => arrayMove(prev, oldIndex, newIndex));
-          }
-        }
+    else if (isMovingFromArranged && arrangedWords.some(w => w.id === overId)) {
+      const oldIndex = arrangedWords.findIndex(w => w.id === activeId);
+      const newIndex = arrangedWords.findIndex(w => w.id === overId);
+      if (oldIndex !== newIndex) {
+        setArrangedWords(prev => arrayMove(prev, oldIndex, newIndex));
+      }
     }
   };
 
@@ -228,7 +235,7 @@ export default function EcoSloganScramblePage() {
                 {jumbledWords.map(({id, word}) => (
                     <Word key={id} id={id} word={word} />
                 ))}
-                 {!jumbledWords.length && <p className="text-muted-foreground">Well done! Drag words to the box below.</p>}
+                 {!jumbledWords.length && <p className="text-muted-foreground">Well done! All words have been moved.</p>}
              </DropZone>
             
             <p className="text-center text-muted-foreground">Drag the words into the box below</p>
@@ -280,10 +287,8 @@ export default function EcoSloganScramblePage() {
         )}
       </div>
       <DragOverlay>
-        {activeWord ? <Word id="overlay" word={activeWord} isDragging /> : null}
+        {activeWord ? <Word id={activeWord.id} word={activeWord.word} isDragging /> : null}
       </DragOverlay>
     </DndContext>
   );
 }
-
-    
