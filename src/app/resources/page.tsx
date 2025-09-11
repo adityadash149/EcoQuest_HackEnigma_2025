@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { externalGames } from "@/lib/mock-data";
 import { MapPin, Search, ArrowRight, BookHeart, Loader } from "lucide-react";
@@ -19,36 +18,50 @@ interface Ngo {
 }
 
 export default function ResourcesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
   const [filteredNgos, setFilteredNgos] = useState<Ngo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const { toast } = useToast();
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      toast({ title: 'Please enter a location.', variant: 'destructive' });
+  const handleSearch = () => {
+    if (!navigator.geolocation) {
+      toast({
+        title: 'Geolocation Not Supported',
+        description: 'Your browser does not support geolocation.',
+        variant: 'destructive',
+      });
       return;
     }
+
     setIsLoading(true);
     setHasSearched(true);
-    try {
-      const result = await findNearbyNgos({ location: searchQuery });
-      setFilteredNgos(result.ngos);
-    } catch (error) {
-      console.error("Failed to find NGOs:", error);
-      toast({ title: 'Error', description: 'Could not fetch NGO information. Please try again.', variant: 'destructive' });
-      setFilteredNgos([]);
-    } finally {
-      setIsLoading(false);
-    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const result = await findNearbyNgos({ location: `${latitude},${longitude}` });
+          setFilteredNgos(result.ngos);
+        } catch (error) {
+          console.error("Failed to find NGOs:", error);
+          toast({ title: 'Error', description: 'Could not fetch NGO information. Please try again.', variant: 'destructive' });
+          setFilteredNgos([]);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        toast({
+          title: 'Location Error',
+          description: 'Could not retrieve your location. Please ensure location services are enabled.',
+          variant: 'destructive',
+        });
+        setFilteredNgos([]);
+        setIsLoading(false);
+      }
+    );
   };
-  
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  }
 
   return (
     <div className="space-y-12">
@@ -64,20 +77,9 @@ export default function ResourcesPage() {
         </div>
         <div className="max-w-xl">
             <div className="flex gap-2 mb-8">
-                <div className="relative flex-grow">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input 
-                        placeholder="Enter your city or zip code" 
-                        className="pl-10 h-12 text-lg" 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        disabled={isLoading}
-                    />
-                </div>
-                <Button size="lg" className="h-12" onClick={handleSearch} disabled={isLoading}>
-                    {isLoading ? <Loader className="mr-2 h-5 w-5 animate-spin" /> : <Search className="mr-2 h-5 w-5" />}
-                    Find
+                <Button size="lg" className="h-12 w-full text-lg" onClick={handleSearch} disabled={isLoading}>
+                    {isLoading ? <Loader className="mr-2 h-5 w-5 animate-spin" /> : <MapPin className="mr-2 h-5 w-5" />}
+                    Find NGOs Near Me
                 </Button>
             </div>
         </div>

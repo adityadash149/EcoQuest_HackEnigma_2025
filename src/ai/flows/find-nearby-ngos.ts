@@ -11,7 +11,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
 const FindNearbyNgosInputSchema = z.object({
-  location: z.string().describe('The city or zip code to search for NGOs.'),
+  location: z.string().describe('The city, zip code, or "latitude,longitude" to search for NGOs.'),
 });
 export type FindNearbyNgosInput = z.infer<typeof FindNearbyNgosInputSchema>;
 
@@ -38,6 +38,8 @@ const findNearbyNgosPrompt = ai.definePrompt({
     prompt: `You are an expert at finding local organizations. The user wants to find NGOs related to book donations or environmental protection near them.
 
     Find 3-5 real NGOs near the following location: {{{location}}}.
+    
+    The location may be provided as a city name, zip code, or as latitude and longitude coordinates.
     
     For each NGO, provide the name, a real or plausible full address, and a brief description of their work.
     `,
