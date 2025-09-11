@@ -172,7 +172,7 @@ export const quizzes: Quiz[] = [
         {
             question: 'Which award is often referred to as the "Nobel Prize for the Environment"?',
             options: ['The Goldman Environmental Prize', 'The Blue Planet Prize', 'Champions of the Earth', 'The Tyler Prize for Environmental Achievement'],
-            correctAnswer: 'The Goldman Environmental Prize',
+            correctAnswer: 'The Goldman EnvironmentalPrize',
             explanation: 'The Goldman Environmental Prize is a prestigious award given annually to grassroots environmental activists, one from each of the world\'s six geographic regions.'
         }
     ]
@@ -305,9 +305,9 @@ export const classLeaderboard: LeaderboardEntry[] = [
 
 
 export const ngos: Ngo[] = [
-    { id: '1', name: 'Books for All', city: 'New York', website: '#', image: 'https://picsum.photos/seed/ngo1/300/200' },
-    { id: '2', name: 'Readers Future', city: 'London', website: '#', image: 'https://picsum.photos/seed/ngo2/300/200' },
-    { id: '3', name: 'The Book Bridge', city: 'Toronto', website: '#', image: 'https://picsum.photos/seed/ngo3/300/200' },
+    { id: '1', name: 'Books for All', city: 'New York', address: '123 Literacy Lane, New York, NY 10001', website: '#', image: 'https://picsum.photos/seed/ngo1/300/200' },
+    { id: '2', name: 'Readers Future', city: 'London', address: '45 Bookworm Boulevard, London, UK W1A 1AA', website: '#', image: 'https://picsum.photos/seed/ngo2/300/200' },
+    { id: '3', name: 'The Book Bridge', city: 'Toronto', address: '789 Chapter Crescent, Toronto, ON M5V 2H1', website: '#', image: 'https://picsum.photos/seed/ngo3/300/200' },
 ];
 
 export const externalGames: ExternalGame[] = [

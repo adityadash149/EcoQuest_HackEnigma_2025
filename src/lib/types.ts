@@ -62,6 +62,7 @@ export interface Ngo {
   id: string;
   name: string;
   city: string;
+  address: string;
   website: string;
   image: string;
 }

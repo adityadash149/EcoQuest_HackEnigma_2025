@@ -33,27 +33,31 @@ export default function ResourcesPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {ngos.map((ngo) => (
-            <Card key={ngo.id} className="flex flex-col overflow-hidden">
-                <div className="relative h-40 w-full">
-                    <Image src={ngo.image} alt={ngo.name} fill className="object-cover" data-ai-hint="charity organization" />
-                </div>
-                <CardHeader>
-                    <CardTitle>{ngo.name}</CardTitle>
-                    <CardDescription className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {ngo.city}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                    {/* Add a short description if available */}
-                </CardContent>
-                <CardFooter>
-                    <Button asChild variant="outline" className="w-full">
-                        <Link href={ngo.website} target="_blank">
-                            Visit Website <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                    </Button>
-                </CardFooter>
-            </Card>
-          ))}
+          {ngos.map((ngo) => {
+            const mapQuery = encodeURIComponent(`${ngo.name}, ${ngo.address}`);
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+            return (
+                <Card key={ngo.id} className="flex flex-col overflow-hidden">
+                    <div className="relative h-40 w-full">
+                        <Image src={ngo.image} alt={ngo.name} fill className="object-cover" data-ai-hint="charity organization" />
+                    </div>
+                    <CardHeader>
+                        <CardTitle>{ngo.name}</CardTitle>
+                        <CardDescription className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {ngo.city}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                        {/* Add a short description if available */}
+                    </CardContent>
+                    <CardFooter>
+                        <Button asChild variant="outline" className="w-full">
+                            <Link href={mapUrl} target="_blank">
+                                Visit <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                    </CardFooter>
+                </Card>
+            )
+          })}
         </div>
       </section>
 
