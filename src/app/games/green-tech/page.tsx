@@ -20,10 +20,12 @@ import {
   Car,
   Bus,
   Building,
+  Building2,
   DollarSign,
   Mountain,
   Users,
-  Info
+  Info,
+  XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
@@ -35,16 +37,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 const buildingTypes = {
-    'solar': { icon: Sun, name: 'Solar Farm', cost: 1500, power: 20, pollution: -5, requires: [] },
-    'wind': { icon: Wind, name: 'Wind Turbine', cost: 2000, power: 30, pollution: -8, requires: [] },
+    'solar': { icon: Sun, name: 'Solar Farm', cost: 1500, power: 25, pollution: -5, requires: [] },
+    'wind': { icon: Wind, name: 'Wind Turbine', cost: 2000, power: 35, pollution: -8, requires: [] },
     'residential': { icon: Building, name: 'Residential Zone', cost: 1000, population: 100, powerDemand: 10, pollution: 5 },
-    'commercial': { icon: Building, name: 'Commercial Zone', cost: 1200, population: 50, powerDemand: 15, pollution: 8 },
+    'commercial': { icon: Building2, name: 'Commercial Zone', cost: 1200, population: 50, powerDemand: 15, pollution: 8 },
     'ev': { icon: Car, name: 'EV Charging Station', cost: 800, pollution: -5, requires: ['residential'] },
     'bus': { icon: Bus, name: 'Public Transit Hub', cost: 2500, pollution: -10, requires: ['residential', 'commercial'] }
 };
@@ -58,21 +60,44 @@ interface PlacedBuilding {
   left: number;
 }
 
-const initialGridSize = 12;
+const initialGridSize = 10;
+const initialBudget = 12000;
+const populationGoal = 700;
+const pollutionMax = 25;
 
 export default function GreenTechCityPage() {
   const [grid, setGrid] = useState<PlacedBuilding[]>([]);
-  const [budget, setBudget] = useState(10000);
+  const [budget, setBudget] = useState(initialBudget);
   const [population, setPopulation] = useState(0);
   const [power, setPower] = useState({ generated: 0, demand: 0 });
   const [pollution, setPollution] = useState(0);
   const [selectedBuilding, setSelectedBuilding] = useState<BuildingType | null>(null);
   const [quiz, setQuiz] = useState<{question: CityBuildingQuestion, onCorrect: () => void} | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
+  const [gameOverMessage, setGameOverMessage] = useState({title: '', description: ''});
 
   const { toast } = useToast();
 
-  const calculateStats = () => {
+  const cheapestBuildingCost = Math.min(...Object.values(buildingTypes).map(b => b.cost));
+
+  const checkEndGameConditions = useCallback(() => {
+    // Win condition
+    if (population >= populationGoal && pollution < pollutionMax && power.generated >= power.demand) {
+        setGameOverMessage({ title: 'Sustainable City Built!', description: "You've successfully built a thriving, green city. You're an Eco-Planner!" });
+        setIsGameOver(true);
+        localStorage.setItem('game-green-tech-completed', 'true');
+        return;
+    }
+
+    // Lose condition
+    if (budget < cheapestBuildingCost && !isGameOver) {
+       setGameOverMessage({ title: 'Out of Funds!', description: "You've run out of budget before reaching the city's goals. Plan more carefully next time!" });
+       setIsGameOver(true);
+    }
+  }, [population, pollution, power, budget, cheapestBuildingCost, isGameOver]);
+
+  const calculateStats = useCallback(() => {
     let newPopulation = 0;
     let newPowerDemand = 0;
     let newPowerGenerated = 0;
@@ -88,14 +113,16 @@ export default function GreenTechCityPage() {
     setPopulation(newPopulation);
     setPower({ generated: newPowerGenerated, demand: newPowerDemand });
     setPollution(newPollution);
-
-    if (newPopulation >= 500 && newPollution < 20 && newPowerGenerated >= newPowerDemand) {
-        setIsGameOver(true);
-        localStorage.setItem('game-green-tech-completed', 'true');
-    }
-  };
+  }, [grid]);
   
-  useEffect(calculateStats, [grid]);
+  useEffect(() => {
+    calculateStats();
+  }, [grid, calculateStats]);
+
+  useEffect(() => {
+    // Check end game conditions after each stat update.
+    checkEndGameConditions();
+  }, [population, pollution, power.generated, power.demand, budget, checkEndGameConditions]);
 
   const handlePlaceBuilding = (rowIndex: number, colIndex: number) => {
     if (!selectedBuilding) return;
@@ -117,11 +144,11 @@ export default function GreenTechCityPage() {
     setSelectedBuilding(null);
 
     // Trigger quiz event
-    if ((grid.length + 1) % 3 === 0 && grid.length > 0) {
+    if ((grid.length + 1) % 4 === 0 && grid.length > 0) {
         const randomQuestion = cityBuildingQuestions[Math.floor(Math.random() * cityBuildingQuestions.length)];
         setQuiz({
             question: randomQuestion,
-            onCorrect: () => setBudget(b => b + 500)
+            onCorrect: () => setBudget(b => b + 1000)
         });
     }
   };
@@ -145,11 +172,24 @@ export default function GreenTechCityPage() {
   const handleQuizAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
         quiz?.onCorrect();
-        toast({ title: "Correct!", description: "You've earned a budget bonus!", variant: 'default'});
+        toast({ title: "Correct!", description: "You've earned a $1000 budget bonus!", variant: 'default'});
     } else {
         toast({ title: "Not quite!", description: "That's okay, let's keep building.", variant: 'destructive'});
     }
     setQuiz(null);
+  }
+  
+  const resetGame = () => {
+    setGrid([]);
+    setBudget(initialBudget);
+    setPopulation(0);
+    setPower({ generated: 0, demand: 0 });
+    setPollution(0);
+    setSelectedBuilding(null);
+    setQuiz(null);
+    setIsGameOver(false);
+    setGameOverMessage({title: '', description: ''});
+    setIsWelcomeOpen(true);
   }
 
   const renderGrid = () => {
@@ -176,21 +216,22 @@ export default function GreenTechCityPage() {
   }
   
   if(isGameOver) {
+      const isWin = gameOverMessage.title.includes('Sustainable');
       return (
         <div className="max-w-md mx-auto text-center">
             <Card>
                 <CardHeader>
                     <div className="flex justify-center">
-                        <Award className="h-16 w-16 text-yellow-500" />
+                        {isWin ? <Award className="h-16 w-16 text-yellow-500" /> : <XCircle className="h-16 w-16 text-red-500" />}
                     </div>
-                    <CardTitle className="text-2xl">Sustainable City Built!</CardTitle>
+                    <CardTitle className="text-2xl">{gameOverMessage.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground mb-4">You've successfully built a thriving, green city. You're an Eco-Planner!</p>
+                    <p className="text-muted-foreground mb-4">{gameOverMessage.description}</p>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={() => window.location.reload()} className="w-full">
-                        Build Another City
+                    <Button onClick={resetGame} className="w-full">
+                        Play Again
                     </Button>
                 </CardFooter>
             </Card>
@@ -200,6 +241,22 @@ export default function GreenTechCityPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
+        <Dialog open={isWelcomeOpen} onOpenChange={setIsWelcomeOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle className="text-2xl">Welcome to Green Tech City Builder!</DialogTitle>
+                    <DialogDescription className="text-base py-4 space-y-2">
+                        <p>Your mission is to build a sustainable city. You'll need to balance budget, population growth, power needs, and pollution.</p>
+                        <p><strong>Goal:</strong> Reach a population of <strong>{populationGoal}</strong>, keep pollution below <strong>{pollutionMax}</strong>, and generate enough power for your citizens!</p>
+                        <p>Select buildings from the panel and place them on the grid. Keep an eye on your stats, and answer pop quizzes correctly for budget boosts. Good luck, Eco-Planner!</p>
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button onClick={() => setIsWelcomeOpen(false)}>Let's Build!</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+
         <div className="mb-4">
             <Button asChild variant="ghost">
                 <Link href="/games">
@@ -226,15 +283,22 @@ export default function GreenTechCityPage() {
                         <CardTitle>City Stats</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        <div className="p-3 bg-blue-900/10 rounded-lg border border-blue-500/20 text-center">
+                            <p className="font-bold text-blue-300">GOAL</p>
+                            <p className="text-sm text-muted-foreground">
+                                Pop: {populationGoal} | Power: Positive | Pollution: &lt; {pollutionMax}
+                            </p>
+                        </div>
+
                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2 text-lg"><DollarSign /> Budget:</span>
                             <span className="font-bold text-green-500">${budget}</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2"><Users /> Population:</span>
-                            <span className="font-bold">{population} / 500</span>
+                            <span className="font-bold">{population} / {populationGoal}</span>
                         </div>
-                         <Progress value={(population / 500) * 100} />
+                         <Progress value={(population / populationGoal) * 100} />
 
                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2"><Zap /> Power:</span>
@@ -244,13 +308,10 @@ export default function GreenTechCityPage() {
                         
                         <div className="flex justify-between items-center">
                             <span className="flex items-center gap-2"><Mountain /> Pollution:</span>
-                            <span className={cn("font-bold", pollution > 20 ? 'text-red-500': 'text-green-400')}>{pollution} units</span>
+                            <span className={cn("font-bold", pollution > pollutionMax ? 'text-red-500': 'text-green-400')}>{pollution} / {pollutionMax}</span>
                         </div>
-                         <Progress value={(pollution / 40) * 100} className="[&>div]:bg-red-500" />
+                         <Progress value={(pollution / (pollutionMax * 1.5)) * 100} className="[&>div]:bg-red-500" />
                     </CardContent>
-                    <CardFooter>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1"><Info className="h-4 w-4" /> Goal: 500 population, positive power, & under 20 pollution.</p>
-                    </CardFooter>
                 </Card>
                 <Card>
                     <CardHeader><CardTitle>Building Panel</CardTitle></CardHeader>
