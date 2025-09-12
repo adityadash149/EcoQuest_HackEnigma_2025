@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -43,7 +44,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
-  const [scenarioImage, setScenarioImage] = useState("https://picsum.photos/seed/scenario1/600/400");
+  const [scenarioImage, setScenarioImage] = useState(`https://picsum.photos/seed/${lesson.id}/600/400`);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
@@ -52,8 +53,8 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
 
   useEffect(() => {
     // Reset image on new scenario
-    setScenarioImage(`https://picsum.photos/seed/scenario${currentScenarioIndex + 1}/600/400`);
-  }, [currentScenarioIndex]);
+    setScenarioImage(`https://picsum.photos/seed/${lesson.id}${currentScenarioIndex + 1}/600/400`);
+  }, [currentScenarioIndex, lesson.id]);
 
 
   const shuffledAnswers = useMemo(() => {
@@ -234,3 +235,4 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     </div>
   );
 }
+
