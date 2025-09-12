@@ -46,6 +46,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [isLessonComplete, setIsLessonComplete] = useState(false);
   const [scenarioImage, setScenarioImage] = useState(`https://picsum.photos/seed/${lesson.id}/600/400`);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
   const { toast } = useToast();
 
   const currentScenario = lesson.scenarios[currentScenarioIndex];
@@ -57,10 +58,11 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   }, [currentScenarioIndex, lesson.id]);
 
 
-  const shuffledAnswers = useMemo(() => {
-    if (!currentScenario) return [];
-    const answers = [...currentScenario.incorrectAnswers, currentScenario.correctAnswer];
-    return answers.sort(() => Math.random() - 0.5);
+  useEffect(() => {
+    if (currentScenario) {
+      const answers = [...currentScenario.incorrectAnswers, currentScenario.correctAnswer];
+      setShuffledAnswers(answers.sort(() => Math.random() - 0.5));
+    }
   }, [currentScenario]);
 
   const handleAnswer = async (answer: string) => {
@@ -235,4 +237,3 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     </div>
   );
 }
-
