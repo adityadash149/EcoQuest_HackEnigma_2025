@@ -87,6 +87,8 @@ export default function RecyclingGamePage() {
   const [overBinId, setOverBinId] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
 
+  const { setNodeRef: itemAreaRef } = useDroppable({ id: 'item-area' });
+
   useEffect(() => {
     setIsClient(true);
     setItems(shuffleArray(initialItems));
@@ -219,7 +221,7 @@ export default function RecyclingGamePage() {
         </div>
 
         <div 
-          ref={useDroppable({ id: 'item-area' }).setNodeRef}
+          ref={itemAreaRef}
           className="relative min-h-[300px] w-full bg-green-200/50 dark:bg-green-900/30 rounded-lg p-4 border-2 border-dashed border-green-600/50 flex flex-wrap gap-4 items-center justify-center"
         >
           <h2 className="absolute top-4 left-4 text-lg font-bold text-green-800 dark:text-green-200">Drag Items from Here</h2>
