@@ -20,7 +20,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { generateLessonAnimation } from '@/ai/flows/generate-lesson-animation';
 
 interface LessonPlayerProps {
   lesson: Lesson;
@@ -33,7 +32,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
-  const [scenarioImage, setScenarioImage] = useState(lesson.image);
+  const [scenarioImage, setScenarioImage] = useState(lesson.coverImage || lesson.image);
   const [isGenerating, setIsGenerating] = useState(false);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
   const { toast } = useToast();

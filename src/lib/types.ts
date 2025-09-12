@@ -17,6 +17,7 @@ export interface Lesson {
   scenarios: Scenario[];
   image: string;
   imageType?: 'image' | 'video';
+  coverImage?: string;
 }
 
 export interface Game {
