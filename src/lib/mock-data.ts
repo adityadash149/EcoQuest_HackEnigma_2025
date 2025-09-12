@@ -38,7 +38,7 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
     gradeLevel: 'Middle School',
-    image: 'https://storage.googleapis.com/studiostoragetesting/amazon-fire-lessons.jpg',
+    image: 'https://cdn.cfr.org/sites/default/files/styles/immersive_image_3_2_xl/public/image/2023/07/RTX1AN2Z8.jpg',
     imageType: 'image',
     scenarios: [
       {
@@ -552,4 +552,5 @@ export const quotes: Quote[] = [
     
 
     
+
 
