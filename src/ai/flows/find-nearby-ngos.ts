@@ -18,7 +18,7 @@ export type FindNearbyNgosInput = z.infer<typeof FindNearbyNgosInputSchema>;
 
 const NgoSchema = z.object({
     name: z.string().describe('The name of the organization.'),
-    address: z.string().describe('The full address of the organization.'),
+    address: z.string().describe('The city and state of the organization.'),
     description: z.string().describe('A brief description of the organization and its mission.'),
 });
 
@@ -42,7 +42,7 @@ const findNearbyNgosPrompt = ai.definePrompt({
     
     The location may be provided as a city name, zip code, or as latitude and longitude coordinates.
     
-    For each organization, provide the name, a real or plausible full address, and a brief description of their work.
+    For each organization, provide the name, the city and state for its address, and a brief description of their work. Do not provide a street address.
     `,
 });
 
