@@ -16,6 +16,7 @@ export interface Lesson {
   gradeLevel: string;
   scenarios: Scenario[];
   image: string;
+  imageType?: 'image' | 'video';
 }
 
 export interface Game {

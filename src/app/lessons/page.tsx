@@ -19,13 +19,24 @@ export default function LessonsPage() {
         {lessons.map((lesson) => (
           <Card key={lesson.id} className="flex flex-col overflow-hidden">
             <div className="relative h-48 w-full">
-              <Image
-                src={lesson.image}
-                alt={lesson.title}
-                fill
-                className="object-cover"
-                data-ai-hint="environmental topic"
-              />
+              {lesson.imageType === 'video' ? (
+                 <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src={lesson.image}
+                    title={lesson.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                ></iframe>
+              ) : (
+                <Image
+                    src={lesson.image}
+                    alt={lesson.title}
+                    fill
+                    className="object-cover"
+                    data-ai-hint="environmental topic"
+                />
+              )}
             </div>
             <CardHeader>
               <div className="flex justify-between items-start">
