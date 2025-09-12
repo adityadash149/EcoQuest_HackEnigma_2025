@@ -38,7 +38,7 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
     gradeLevel: 'Middle School',
-    image: 'https://youtube.com/shorts/tDOswhAUwKI?si=n_Vcbdkjn4H9o60Q',
+    image: 'https://www.youtube.com/embed/tDOswhAUwKI',
     imageType: 'video',
     scenarios: [
       {
@@ -180,6 +180,7 @@ export const lessons: Lesson[] = [
     description: 'Understand the journey of plastic from our homes to the ocean and its impact on marine life.',
     gradeLevel: 'Elementary',
     image: 'https://picsum.photos/seed/lesson2/600/400',
+    imageType: 'image',
     scenarios: [
       {
         scenarioTitle: 'The Single-Use Choice',
@@ -546,3 +547,6 @@ export const quotes: Quote[] = [
         author: "Mahatma Gandhi",
     }
 ];
+
+
+    
