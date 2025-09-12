@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'cdn.cfr.org',
+        hostname: 'www.greenpeace.org',
         port: '',
         pathname: '/**',
       }
