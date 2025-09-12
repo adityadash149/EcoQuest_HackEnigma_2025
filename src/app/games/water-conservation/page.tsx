@@ -19,7 +19,7 @@ import { waterGameQuestions } from '@/lib/mock-data';
 import type { WaterGameQuestion } from '@/lib/types';
 
 
-const GAME_DURATION = 10000; // 10 seconds
+const GAME_DURATION = 20000; // 20 seconds
 const RAINDROP_INTERVAL = 300; // New raindrop every 0.3 seconds
 const MAX_SCORE = 100; // Represents the bucket being full
 
@@ -105,7 +105,7 @@ export default function WaterConservationPage() {
     const timer = setTimeout(() => {
       const newTimeLeft = timeLeft - 1;
       setTimeLeft(newTimeLeft);
-      // Trigger quiz every 10 seconds (or other interval)
+      // Trigger quiz every 5 seconds
       if ((GAME_DURATION / 1000 - newTimeLeft) % 5 === 0 && newTimeLeft > 0 && newTimeLeft < (GAME_DURATION / 1000 - 1) && !quiz) {
         const nextQuestion = shuffledQuizQuestions[quizQuestionIndex % shuffledQuizQuestions.length];
         setQuiz({
@@ -141,10 +141,11 @@ export default function WaterConservationPage() {
   }, [isGameActive, quiz]);
 
   const gameLoop = useCallback(() => {
-    if (!isGameActive || !gameAreaRef.current || !!quiz) {
-      if(requestRef.current) cancelAnimationFrame(requestRef.current);
+    if (!isGameActive || !!quiz) {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
       return;
-    };
+    }
+    if (!gameAreaRef.current) return;
     
     const gameAreaHeight = gameAreaRef.current.offsetHeight;
     const bucketWidth = 7; 
@@ -214,7 +215,7 @@ export default function WaterConservationPage() {
   
   const handleQuizAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
-        setScore(s => s + 20);
+        setScore(s => Math.min(s + 20, MAX_SCORE));
         toast({ title: "Correct!", description: "You've earned 20 bonus points!", variant: 'default'});
     } else {
         toast({ title: "Not quite!", description: "That's okay, let's keep saving water.", variant: 'destructive'});
@@ -316,7 +317,7 @@ export default function WaterConservationPage() {
                         <h2 className="text-3xl font-bold text-white mb-4">Rain Water Harvesting</h2>
                         <ul className="list-disc list-inside text-white/90 mb-6">
                             <li>Move the bucket to collect falling rainwater.</li>
-                            <li>Collect as much as you can in 10 seconds!</li>
+                            <li>Fill the bucket as fast as you can!</li>
                             <li>Answer pop quizzes to earn bonus points.</li>
                         </ul>
                          <Button onClick={startGame} size="lg">Start Game</Button>
@@ -327,7 +328,7 @@ export default function WaterConservationPage() {
       </Card>
       
         {quiz && (
-            <Dialog open={!!quiz} onOpenChange={(open) => { if (!open) setQuiz(null) }}>
+            <Dialog open={!!quiz} onOpenChange={(open) => { if (!open) { setQuiz(null); } }}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Pop Quiz!</DialogTitle>
