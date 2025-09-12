@@ -44,7 +44,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
-  const [scenarioImage, setScenarioImage] = useState(`https://picsum.photos/seed/${lesson.id}/600/400`);
+  const [scenarioImage, setScenarioImage] = useState(lesson.image);
   const [isGenerating, setIsGenerating] = useState(false);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
   const { toast } = useToast();
@@ -53,17 +53,19 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const progress = ((currentScenarioIndex + 1) / lesson.scenarios.length) * 100;
 
   useEffect(() => {
-    // Reset image on new scenario
-    setScenarioImage(`https://picsum.photos/seed/${lesson.id}${currentScenarioIndex + 1}/600/400`);
-  }, [currentScenarioIndex, lesson.id]);
-
-
-  useEffect(() => {
+    // This effect ensures shuffling only happens on the client-side
+    // to prevent hydration mismatches.
     if (currentScenario) {
       const answers = [...currentScenario.incorrectAnswers, currentScenario.correctAnswer];
       setShuffledAnswers(answers.sort(() => Math.random() - 0.5));
     }
   }, [currentScenario]);
+
+  useEffect(() => {
+    // Reset state for the new scenario, but keep the main lesson image.
+    setScenarioImage(lesson.image);
+  }, [currentScenarioIndex, lesson.image]);
+
 
   const handleAnswer = async (answer: string) => {
     if (showExplanation) return;
