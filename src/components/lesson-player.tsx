@@ -26,17 +26,6 @@ interface LessonPlayerProps {
   lesson: Lesson;
 }
 
-async function toDataURI(url: string) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-}
-
 export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -63,11 +52,6 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     }
   }, [currentScenario]);
 
-  useEffect(() => {
-    // Reset state for the new scenario, but keep the main lesson image.
-    setScenarioImage(`https://picsum.photos/seed/${lesson.id}-${currentScenarioIndex}/600/400`);
-  }, [currentScenarioIndex, lesson.id]);
-
 
   const handleAnswer = async (answer: string) => {
     if (showExplanation) return;
@@ -78,31 +62,6 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
 
     if (correct) {
       setScore(score + 10);
-      toast({
-        title: "Correct!",
-        description: "Generating new scene... this may take a moment.",
-        variant: "default",
-      });
-
-      setIsGenerating(true);
-      try {
-        const baseImageDataUri = await toDataURI(scenarioImage);
-        const result = await generateLessonAnimation({
-            baseImage: baseImageDataUri,
-            animationUpdate: currentScenario.animationUpdate,
-        });
-        setScenarioImage(result.imageUrl);
-      } catch (error) {
-        console.error("Failed to generate animation", error);
-        toast({
-            title: "Animation Error",
-            description: "Could not generate the updated scene. Showing the original instead.",
-            variant: "destructive",
-        })
-      } finally {
-        setIsGenerating(false);
-      }
-
     } else {
         toast({
             title: "Not quite...",
