@@ -38,8 +38,8 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
     gradeLevel: 'Middle School',
-    image: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
-    imageType: 'image',
+    image: 'https://www.youtube.com/embed/tDOswhAUwKI',
+    imageType: 'video',
     scenarios: [
       {
         scenarioTitle: 'The Underlying Cause',
@@ -552,6 +552,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 
