@@ -29,6 +29,7 @@ import type {
   QuizQuestion,
   CityBuildingQuestion,
   Quote,
+  WaterGameQuestion,
 } from './types';
 
 export const lessons: Lesson[] = [
@@ -38,7 +39,7 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     gradeLevel: 'Middle School',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
-    image: 'https://youtube.com/shorts/tDOswhAUwKI?si=DZg5iMwPN3Qt2xmc',
+    image: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
     coverImage: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
     imageType: 'video',
     scenarios: [
@@ -401,6 +402,24 @@ export const cityBuildingQuestions: CityBuildingQuestion[] = [
     }
 ]
 
+export const waterGameQuestions: WaterGameQuestion[] = [
+    {
+        question: "What percentage of the Earth's water is fresh water?",
+        options: ["10%", "3%", "25%", "50%"],
+        correctAnswer: "3%",
+    },
+    {
+        question: "Which of these household activities uses the most water?",
+        options: ["Washing dishes by hand", "Taking a 10-minute shower", "Flushing a toilet", "Brushing your teeth"],
+        correctAnswer: "Taking a 10-minute shower",
+    },
+    {
+        question: "What is the main benefit of rainwater harvesting?",
+        options: ["It cleans the rain", "It provides a free source of water", "It makes the garden look nice", "It cools down the house"],
+        correctAnswer: "It provides a free source of water",
+    }
+];
+
 export const ecoSlogans: string[] = [
   "Don’t be a drip, save every drop.",
   "Waste water today, live in a desert tomorrow.",
@@ -554,6 +573,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 

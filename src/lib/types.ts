@@ -96,3 +96,9 @@ export interface Quote {
     text: string;
     author: string;
 }
+
+export interface WaterGameQuestion {
+    question: string;
+    options: string[];
+    correctAnswer: string;
+}

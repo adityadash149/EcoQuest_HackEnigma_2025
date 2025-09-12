@@ -7,6 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Droplet, ArrowLeft, Award, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { waterGameQuestions } from '@/lib/mock-data';
+import type { WaterGameQuestion } from '@/lib/types';
+
 
 const GAME_DURATION = 30000; // 30 seconds
 const RAINDROP_INTERVAL = 300; // New raindrop every 0.3 seconds
@@ -20,7 +31,7 @@ type Raindrop = {
 };
 
 const RaindropEl = ({ y }: { y: number }) => (
-    <div className="w-0.5 h-4 bg-gradient-to-b from-blue-200/50 to-blue-400/80 rounded-full" style={{ transform: `translateY(${y}px)` }} />
+    <div className="w-1 h-6 bg-blue-400 rounded-full" style={{ transform: `translateY(${y}px)` }} />
 );
 
 const SplashEl = () => (
@@ -46,6 +57,9 @@ const Bucket = ({ x, waterLevel }: { x: number, waterLevel: number }) => (
     </div>
 );
 
+const shuffleArray = <T,>(array: T[]): T[] => {
+    return [...array].sort(() => Math.random() - 0.5);
+};
 
 export default function WaterConservationPage() {
   const [score, setScore] = useState(0);
@@ -54,11 +68,19 @@ export default function WaterConservationPage() {
   const [bucketPosition, setBucketPosition] = useState(50);
   const [isGameActive, setIsGameActive] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [quiz, setQuiz] = useState<WaterGameQuestion | null>(null);
+  const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<WaterGameQuestion[]>([]);
+  const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
+  const { toast } = useToast();
   
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>();
   
   const waterLevel = (score / MAX_SCORE) * 100;
+  
+  useEffect(() => {
+    setShuffledQuizQuestions(shuffleArray(waterGameQuestions));
+  }, []);
 
   const startGame = () => {
     setScore(0);
@@ -67,6 +89,9 @@ export default function WaterConservationPage() {
     setBucketPosition(50);
     setIsGameActive(true);
     setIsGameOver(false);
+    setQuiz(null);
+    setQuizQuestionIndex(0);
+    setShuffledQuizQuestions(shuffleArray(waterGameQuestions));
   };
   
   useEffect(() => {
@@ -78,10 +103,16 @@ export default function WaterConservationPage() {
         return;
     }
     const timer = setTimeout(() => {
-      setTimeLeft(timeLeft - 1);
+      const newTimeLeft = timeLeft - 1;
+      setTimeLeft(newTimeLeft);
+      // Trigger quiz every 10 seconds
+      if ((GAME_DURATION / 1000 - newTimeLeft) % 10 === 0 && newTimeLeft > 0) {
+        setQuiz(shuffledQuizQuestions[quizQuestionIndex % shuffledQuizQuestions.length]);
+        setQuizQuestionIndex(p => p + 1);
+      }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isGameActive]);
+  }, [timeLeft, isGameActive, quizQuestionIndex, shuffledQuizQuestions]);
 
   useEffect(() => {
       if(isGameOver) {
@@ -98,7 +129,7 @@ export default function WaterConservationPage() {
   }, [isGameActive]);
 
   const gameLoop = useCallback(() => {
-    if (!isGameActive || !gameAreaRef.current) return;
+    if (!isGameActive || !gameAreaRef.current || !!quiz) return;
     
     const gameAreaHeight = gameAreaRef.current.offsetHeight;
     const bucketWidth = 7; 
@@ -138,16 +169,16 @@ export default function WaterConservationPage() {
     });
 
     requestRef.current = requestAnimationFrame(gameLoop);
-  }, [isGameActive, bucketPosition]);
+  }, [isGameActive, bucketPosition, quiz]);
 
   useEffect(() => {
-    if (isGameActive) {
+    if (isGameActive && !quiz) {
       requestRef.current = requestAnimationFrame(gameLoop);
       return () => {
         if(requestRef.current) cancelAnimationFrame(requestRef.current)
       };
     }
-  }, [isGameActive, gameLoop]);
+  }, [isGameActive, gameLoop, quiz]);
 
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -164,6 +195,16 @@ export default function WaterConservationPage() {
       const x = e.touches[0].clientX - rect.left;
       const newPosition = (x / rect.width) * 100;
       setBucketPosition(Math.max(5, Math.min(95, newPosition)));
+  }
+  
+  const handleQuizAnswer = (isCorrect: boolean) => {
+    if (isCorrect) {
+        setScore(s => s + 20);
+        toast({ title: "Correct!", description: "You've earned 20 bonus points!", variant: 'default'});
+    } else {
+        toast({ title: "Not quite!", description: "That's okay, let's keep saving water.", variant: 'destructive'});
+    }
+    setQuiz(null);
   }
 
 
@@ -257,10 +298,11 @@ export default function WaterConservationPage() {
                     </>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-black/30 z-20 relative">
-                        <h2 className="text-3xl font-bold text-white mb-4">Water Conservation Quest</h2>
+                        <h2 className="text-3xl font-bold text-white mb-4">Rain Water Harvesting</h2>
                         <ul className="list-disc list-inside text-white/90 mb-6">
                             <li>Move the bucket to collect falling rainwater.</li>
                             <li>Collect as much as you can in 30 seconds!</li>
+                            <li>Answer pop quizzes to earn bonus points.</li>
                         </ul>
                          <Button onClick={startGame} size="lg">Start Game</Button>
                     </div>
@@ -268,10 +310,24 @@ export default function WaterConservationPage() {
             </div>
         </CardContent>
       </Card>
+      
+        {quiz && (
+            <Dialog open={!!quiz} onOpenChange={() => setQuiz(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Pop Quiz!</DialogTitle>
+                        <DialogDescription>{quiz.question}</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-2">
+                        {shuffleArray(quiz.options).map(option => (
+                             <Button key={option} variant="outline" onClick={() => handleQuizAnswer(option === quiz.correctAnswer)}>
+                                {option}
+                            </Button>
+                        ))}
+                    </div>
+                </DialogContent>
+            </Dialog>
+        )}
     </div>
   );
 }
-
-    
-
-    
