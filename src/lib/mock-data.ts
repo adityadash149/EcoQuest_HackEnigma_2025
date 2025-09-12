@@ -322,7 +322,7 @@ export const lessons: Lesson[] = [
 export const games: Game[] = [
   { id: 'recycling', title: 'Recycling Game', description: 'Drag & drop waste into the correct bins.', subject: 'Science', icon: Recycle, href: '/games/recycling' },
   { id: 'tree-planting', title: 'Tree Planting Challenge', description: 'Answer questions to plant and grow a tree!', subject: 'Environmental Studies', icon: TreePine, href: '/games/tree-planting' },
-  { id: 'water-conservation', title: 'Rain water harvesting', description: 'Fix leaks and collect rainwater to save water.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
+  { id: 'water-conservation', title: 'Rain Water Harvesting', description: 'Fix leaks and collect rainwater to save water.', subject: 'Science', icon: Droplet, href: '/games/water-conservation' },
   { id: 'eco-slogans', title: 'Eco Slogan Creator', description: 'Craft catchy slogans for environmental topics.', subject: 'Arts & Creativity', icon: Paintbrush, href: '/games/eco-slogans' },
   { id: 'green-tech', title: 'Green Tech City', description: 'Build a sustainable city with green technology.', subject: 'Technology', icon: Cpu, href: '/games/green-tech' },
 ];
@@ -522,26 +522,26 @@ export const externalGames: ExternalGame[] = [
 ]
 
 export const recyclingItems: RecyclingItem[] = [
-    { id: 'item-1', name: 'Plastic Bottle', type: 'recycling', image: 'https://picsum.photos/seed/bottle/100/100' },
-    { id: 'item-2', name: 'Apple Core', type: 'compost', image: 'https://picsum.photos/seed/apple-core/100/100' },
-    { id: 'item-3', name: 'Newspaper', type: 'recycling', image: 'https://picsum.photos/seed/newspaper/100/100' },
-    { id: 'item-4', name: 'Styrofoam Cup', type: 'trash', image: 'https://picsum.photos/seed/styrofoam-cup/100/100' },
-    { id: 'item-5', name: 'Glass Jar', type: 'recycling', image: 'https://picsum.photos/seed/glass-jar/100/100' },
-    { id: 'item-6', name: 'Banana Peel', type: 'compost', image: 'https://picsum.photos/seed/banana-peel/100/100' },
-    { id: 'item-7', name: 'Chip Bag', type: 'trash', image: 'https://picsum.photos/seed/chip-bag/100/100' },
-    { id: 'item-8', name: 'Aluminum Can', type: 'recycling', image: 'https://picsum.photos/seed/aluminum-can/100/100' },
-    { id: 'item-9', name: 'Cardboard Box', type: 'recycling', image: 'https://picsum.photos/seed/cardboard-box/100/100' },
-    { id: 'item-10', name: 'Egg Shells', type: 'compost', image: 'https://picsum.photos/seed/egg-shells/100/100' },
-    { id: 'item-11', name: 'Used Battery', type: 'hazardous', image: 'https://picsum.photos/seed/used-battery/100/100' },
-    { id: 'item-12', name: 'Plastic Bag', type: 'trash', image: 'https://picsum.photos/seed/plastic-bag/100/100' },
-    { id: 'item-13', name: 'Light Bulb', type: 'hazardous', image: 'https://picsum.photos/seed/light-bulb/100/100' },
-    { id: 'item-14', name: 'Coffee Grounds', type: 'compost', image: 'https://picsum.photos/seed/coffee-grounds/100/100' },
-    { id: 'item-15', name: 'Pizza Box', type: 'trash', image: 'https://picsum.photos/seed/pizza-box/100/100' },
+    { id: 'item-1', name: 'Plastic Bottle', type: 'recycling', image: '' },
+    { id: 'item-2', name: 'Apple Core', type: 'compost', image: '' },
+    { id: 'item-3', name: 'Newspaper', type: 'recycling', image: '' },
+    { id: 'item-4', name: 'Styrofoam Cup', type: 'trash', image: '' },
+    { id: 'item-5', name: 'Glass Jar', type: 'recycling', image: '' },
+    { id: 'item-6', name: 'Banana Peel', type: 'compost', image: '' },
+    { id: 'item-7', name: 'Chip Bag', type: 'trash', image: '' },
+    { id: 'item-8', name: 'Aluminum Can', type: 'recycling', image: '' },
+    { id: 'item-9', name: 'Cardboard Box', type: 'recycling', image: '' },
+    { id: 'item-10', name: 'Egg Shells', type: 'compost', image: '' },
+    { id: 'item-11', name: 'Used Battery', type: 'hazardous', image: '' },
+    { id: 'item-12', name: 'Plastic Bag', type: 'trash', image: '' },
+    { id: 'item-13', name: 'Light Bulb', type: 'hazardous', image: '' },
+    { id: 'item-14', name: 'Coffee Grounds', type: 'compost', image: '' },
+    { id: 'item-15', name: 'Pizza Box', type: 'trash', image: '' },
 ];
 
 export const bins: Bin[] = [
-    { id: 'bin-recycling', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-blue-600' },
-    { id: 'bin-compost', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-green-700' },
+    { id: 'bin-recycling', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-green-800' },
+    { id: 'bin-compost', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-purple-700' },
     { id: 'bin-trash', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-black' },
     { id: 'bin-hazardous', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
 ];
@@ -573,6 +573,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 

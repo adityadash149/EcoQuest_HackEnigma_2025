@@ -10,7 +10,6 @@ import { recyclingItems as initialItems, bins as binData } from '@/lib/mock-data
 import type { RecyclingItem, Bin } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const DraggableItem = ({ item, isDragging }: { item: RecyclingItem; isDragging?: boolean }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -31,14 +30,12 @@ const DraggableItem = ({ item, isDragging }: { item: RecyclingItem; isDragging?:
       style={style}
       {...listeners}
       {...attributes}
-      className={cn("touch-none cursor-grab", isDragging && 'opacity-50')}
+      className={cn(
+        "touch-none cursor-grab px-3 py-1.5 bg-background text-foreground rounded-lg shadow-md hover:scale-105 transition-transform",
+        isDragging && 'opacity-50'
+      )}
     >
-      <div className="relative group p-2 bg-white/80 rounded-lg shadow-md hover:scale-110 transition-transform backdrop-blur-sm">
-        <Image src={item.image} alt={item.name} width={80} height={80} className="rounded-lg" data-ai-hint="recyclable item" />
-        <div className="absolute -bottom-2 w-full flex justify-center">
-          <p className="text-black text-xs text-center font-bold bg-white/70 px-2 py-0.5 rounded-full">{item.name}</p>
-        </div>
-      </div>
+      <p className="text-sm font-medium select-none">{item.name}</p>
     </div>
   );
 };
@@ -50,13 +47,13 @@ const DroppableBin = ({ bin, children, isOver }: { bin: Bin; children: React.Rea
     <div
       ref={setNodeRef}
       className={cn(
-        'w-full min-h-[12rem] rounded-lg flex flex-col items-center justify-between p-4 transition-all duration-300',
+        'w-full min-h-[12rem] rounded-lg flex flex-col items-center p-4 transition-all duration-300',
         bin.color,
         isOver ? 'scale-105 shadow-2xl' : 'shadow-md'
       )}
     >
       <h3 className="text-white font-bold text-xl uppercase tracking-wider">{bin.name}</h3>
-      <div className="mt-2 w-full h-full relative grid grid-cols-4 gap-2 items-center">
+      <div className="mt-2 w-full h-full relative grid grid-cols-3 gap-2 items-start content-start">
         {children}
       </div>
     </div>
@@ -65,10 +62,10 @@ const DroppableBin = ({ bin, children, isOver }: { bin: Bin; children: React.Rea
 
 const DroppedItemFeedback = ({ item, isCorrect }: { item: RecyclingItem, isCorrect: boolean | null }) => {
   return (
-    <div className="relative w-12 h-12">
-      <Image src={item.image} alt={item.name} width={48} height={48} className="rounded-full border-2 border-white" data-ai-hint="sorted item" />
-      {isCorrect === true && <CheckCircle className="absolute -bottom-1 -right-1 h-5 w-5 text-green-400 bg-white rounded-full" />}
-      {isCorrect === false && <XCircle className="absolute -bottom-1 -right-1 h-5 w-5 text-red-500 bg-white rounded-full" />}
+    <div className="relative bg-white/20 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1">
+      <span>{item.name}</span>
+      {isCorrect === true && <CheckCircle className="h-3 w-3 text-green-400" />}
+      {isCorrect === false && <XCircle className="h-3 w-3 text-red-400" />}
     </div>
   )
 }
