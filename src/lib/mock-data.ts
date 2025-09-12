@@ -38,7 +38,7 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
     gradeLevel: 'Middle School',
-    image: 'https://www.youtube.com/embed/tDOswhAUwKI',
+    image: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
     imageType: 'video',
     scenarios: [
       {
@@ -284,7 +284,7 @@ export const lessons: Lesson[] = [
           'By building bigger ships to dump more trash.',
         ],
         explanation: 'Innovations like giant ocean cleanup systems, river barriers, and even trash-collecting drones are being developed to help remove the vast amount of plastic already in our waterways.',
-        animationUpdate: 'A large, floating barrier is shown in the ocean, and floating plastic debris is being funneled towards it and collected.',
+        animationUpdate: 'A large, floating barrier is shown in the ocean, and floating plastic debris is being funneled towards it and being collected.',
       },
       {
         scenarioTitle: 'The Power of Recycling',
@@ -552,6 +552,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 

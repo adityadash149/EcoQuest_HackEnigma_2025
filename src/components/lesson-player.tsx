@@ -48,6 +48,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
   const { toast } = useToast();
+  const [hydrated, setHydrated] = useState(false);
 
   const currentScenario = lesson.scenarios[currentScenarioIndex];
   const progress = ((currentScenarioIndex + 1) / lesson.scenarios.length) * 100;
@@ -58,13 +59,14 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     if (currentScenario) {
       const answers = [...currentScenario.incorrectAnswers, currentScenario.correctAnswer];
       setShuffledAnswers(answers.sort(() => Math.random() - 0.5));
+      setHydrated(true);
     }
   }, [currentScenario]);
 
   useEffect(() => {
     // Reset state for the new scenario, but keep the main lesson image.
-    setScenarioImage(lesson.image);
-  }, [currentScenarioIndex, lesson.image]);
+    setScenarioImage(`https://picsum.photos/seed/${lesson.id}-${currentScenarioIndex}/600/400`);
+  }, [currentScenarioIndex, lesson.id]);
 
 
   const handleAnswer = async (answer: string) => {
@@ -121,8 +123,8 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     }
   };
 
-  if (!currentScenario) {
-    return null;
+  if (!currentScenario || !hydrated) {
+    return null; // or a loading skeleton
   }
 
   return (

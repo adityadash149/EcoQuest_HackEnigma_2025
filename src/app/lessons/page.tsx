@@ -22,10 +22,10 @@ export default function LessonsPage() {
               {lesson.imageType === 'video' ? (
                  <iframe
                     className="absolute top-0 left-0 w-full h-full"
-                    src={lesson.image}
+                    src={`https://www.youtube.com/embed/${lesson.id === 'amazon-fire-2024' ? 'tDOswhAUwKI' : '70G0kG1S_zE'}`}
                     title={lesson.title}
                     frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                 ></iframe>
               ) : (
@@ -63,5 +63,3 @@ export default function LessonsPage() {
     </div>
   );
 }
-
-    
