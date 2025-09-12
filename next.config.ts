@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
         hostname: 'www.greenpeace.org',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ocean.si.edu',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

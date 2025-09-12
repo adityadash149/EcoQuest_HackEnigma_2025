@@ -36,6 +36,7 @@ export const lessons: Lesson[] = [
     id: 'amazon-fire-2024',
     title: 'The Amazon Rainforest Fire',
     subject: 'Science',
+    gradeLevel: 'Middle School',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
     image: 'https://youtube.com/shorts/tDOswhAUwKI?si=DZg5iMwPN3Qt2xmc',
     coverImage: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
@@ -177,9 +178,10 @@ export const lessons: Lesson[] = [
     id: 'ocean-plastic',
     title: 'Plastic Pollution in Our Oceans',
     subject: 'Environmental Studies',
+    gradeLevel: 'Elementary',
     description: 'Understand the journey of plastic from our homes to the ocean and its impact on marine life.',
     image: 'https://www.youtube.com/embed/70G0kG1S_zE',
-    coverImage: 'https://picsum.photos/seed/ocean-plastic/1200/800',
+    coverImage: 'https://ocean.si.edu/sites/default/files/styles/full_width_overview/public/2023-11/sargassum-oil-deepwater-horizon.jpg.webp?itok=yeTdGfWP',
     imageType: 'video',
     scenarios: [
       {
@@ -552,6 +554,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 
