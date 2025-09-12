@@ -179,8 +179,8 @@ export const lessons: Lesson[] = [
     subject: 'Environmental Studies',
     description: 'Understand the journey of plastic from our homes to the ocean and its impact on marine life.',
     gradeLevel: 'Elementary',
-    image: 'https://picsum.photos/seed/lesson2/600/400',
-    imageType: 'image',
+    image: 'https://www.youtube.com/embed/70G0kG1S_zE',
+    imageType: 'video',
     scenarios: [
       {
         scenarioTitle: 'The Single-Use Choice',
@@ -548,5 +548,7 @@ export const quotes: Quote[] = [
     }
 ];
 
+
+    
 
     
