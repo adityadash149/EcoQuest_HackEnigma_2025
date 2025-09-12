@@ -22,7 +22,7 @@ import {
   Search,
   Gamepad2,
 } from 'lucide-react';
-import { EcoQuestLogo, UserIcon } from '@/components/icons';
+import { EcoQuestLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -35,6 +35,7 @@ import {
 import Link from 'next/link';
 import { Toaster } from '@/components/ui/toaster';
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'EcoQuest',
@@ -154,7 +155,13 @@ export default function RootLayout({
                     size="icon"
                     className="overflow-hidden rounded-full"
                   >
-                    <UserIcon className="h-5 w-5" />
+                    <Image
+                        src="https://images.pexels.com/photos/31683335/pexels-photo-31683335.jpeg"
+                        alt="User profile picture"
+                        width={36}
+                        height={36}
+                        className="object-cover"
+                    />
                     <span className="sr-only">Toggle user menu</span>
                   </Button>
                 </DropdownMenuTrigger>
