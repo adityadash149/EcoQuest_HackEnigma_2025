@@ -19,7 +19,7 @@ import { waterGameQuestions } from '@/lib/mock-data';
 import type { WaterGameQuestion } from '@/lib/types';
 
 
-const GAME_DURATION = 30000; // 30 seconds
+const GAME_DURATION = 10000; // 10 seconds
 const RAINDROP_INTERVAL = 300; // New raindrop every 0.3 seconds
 const MAX_SCORE = 100; // Represents the bucket being full
 
@@ -105,8 +105,8 @@ export default function WaterConservationPage() {
     const timer = setTimeout(() => {
       const newTimeLeft = timeLeft - 1;
       setTimeLeft(newTimeLeft);
-      // Trigger quiz every 10 seconds
-      if ((GAME_DURATION / 1000 - newTimeLeft) % 10 === 0 && newTimeLeft > 0 && !quiz) {
+      // Trigger quiz every 10 seconds (or other interval)
+      if ((GAME_DURATION / 1000 - newTimeLeft) % 5 === 0 && newTimeLeft > 0 && newTimeLeft < (GAME_DURATION / 1000 - 1) && !quiz) {
         const nextQuestion = shuffledQuizQuestions[quizQuestionIndex % shuffledQuizQuestions.length];
         setQuiz({
             question: nextQuestion,
@@ -117,6 +117,14 @@ export default function WaterConservationPage() {
     }, 1000);
     return () => clearTimeout(timer);
   }, [timeLeft, isGameActive, quizQuestionIndex, shuffledQuizQuestions, quiz]);
+
+    useEffect(() => {
+        if (score >= MAX_SCORE && isGameActive) {
+            setIsGameActive(false);
+            setIsGameOver(true);
+            if(requestRef.current) cancelAnimationFrame(requestRef.current);
+        }
+    }, [score, isGameActive]);
 
   useEffect(() => {
       if(isGameOver) {
@@ -168,7 +176,7 @@ export default function WaterConservationPage() {
         });
 
         if (collectedCount > 0) {
-            setScore(s => Math.min(s + collectedCount, MAX_SCORE + 20)); // Allow some overflow for feel
+            setScore(s => Math.min(s + collectedCount, MAX_SCORE));
         }
         
         // Filter out drops that are off-screen or have finished their splash animation
@@ -231,7 +239,7 @@ export default function WaterConservationPage() {
                     <div className="flex justify-center">
                         <Award className="h-16 w-16 text-yellow-500" />
                     </div>
-                    <CardTitle className="text-2xl">Time's Up!</CardTitle>
+                    <CardTitle className="text-2xl">{score >= MAX_SCORE ? 'Bucket Full!' : "Time's Up!"}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground mb-4">You did a great job saving water!</p>
@@ -308,7 +316,7 @@ export default function WaterConservationPage() {
                         <h2 className="text-3xl font-bold text-white mb-4">Rain Water Harvesting</h2>
                         <ul className="list-disc list-inside text-white/90 mb-6">
                             <li>Move the bucket to collect falling rainwater.</li>
-                            <li>Collect as much as you can in 30 seconds!</li>
+                            <li>Collect as much as you can in 10 seconds!</li>
                             <li>Answer pop quizzes to earn bonus points.</li>
                         </ul>
                          <Button onClick={startGame} size="lg">Start Game</Button>
@@ -319,7 +327,7 @@ export default function WaterConservationPage() {
       </Card>
       
         {quiz && (
-            <Dialog open={!!quiz} onOpenChange={(open) => !open && setQuiz(null)}>
+            <Dialog open={!!quiz} onOpenChange={(open) => { if (!open) setQuiz(null) }}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Pop Quiz!</DialogTitle>
@@ -338,3 +346,5 @@ export default function WaterConservationPage() {
     </div>
   );
 }
+
+    
