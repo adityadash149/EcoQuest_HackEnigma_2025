@@ -222,7 +222,7 @@ export const lessons: Lesson[] = [
           'It falls from airplanes.',
         ],
         explanation: 'Rivers are like highways for plastic pollution. They collect litter from land and carry it over long distances, eventually depositing it into the ocean.',
-        animationUpdate: 'The plastic bottle is shown floating in a river along with other trash, moving towards a wide-open ocean.',
+        animationUpdate: 'The plastic bottle is now shown floating in a river along with other trash, moving towards a wide-open ocean.',
       },
       {
         scenarioTitle: 'Into the Ocean',
@@ -540,10 +540,10 @@ export const recyclingItems: RecyclingItem[] = [
 ];
 
 export const bins: Bin[] = [
-    { id: 'bin-1', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-blue-600' },
-    { id: 'bin-2', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-green-700' },
-    { id: 'bin-3', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-black' },
-    { id: 'bin-4', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
+    { id: 'bin-recycling', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-blue-600' },
+    { id: 'bin-compost', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-green-700' },
+    { id: 'bin-trash', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-black' },
+    { id: 'bin-hazardous', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
 ];
 
 export const quotes: Quote[] = [
@@ -573,6 +573,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 
