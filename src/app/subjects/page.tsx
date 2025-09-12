@@ -28,7 +28,7 @@ const subjects = [
         icon: Users,
         topics: [
             { name: "Deforestation & Afforestation", details: "Learn about the importance of forests and how to restore them.", gameHref: "/games/tree-planting", gameId: "tree-planting" },
-            { name: "Water Conservation", details: "Saving water, rainwater harvesting, watershed management", gameHref: "/games/water-conservation", gameId: "water-conservation" },
+            { name: "Rain water harvesting", details: "Saving water, rainwater harvesting, watershed management", gameHref: "/games/water-conservation", gameId: "water-conservation" },
             { name: "Cultural Practices & Nature", details: "How traditions protect the environment" },
             { name: "Sustainable Development Goals (SDGs)", details: "" },
             { name: "Environmental Laws & Policies", details: "Clean India Mission, Paris Agreement basics" },
