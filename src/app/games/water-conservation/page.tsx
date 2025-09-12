@@ -68,7 +68,7 @@ export default function WaterConservationPage() {
   const [bucketPosition, setBucketPosition] = useState(50);
   const [isGameActive, setIsGameActive] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [quiz, setQuiz] = useState<WaterGameQuestion | null>(null);
+  const [quiz, setQuiz] = useState<{question: WaterGameQuestion, options: string[]} | null>(null);
   const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<WaterGameQuestion[]>([]);
   const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
   const { toast } = useToast();
@@ -106,13 +106,17 @@ export default function WaterConservationPage() {
       const newTimeLeft = timeLeft - 1;
       setTimeLeft(newTimeLeft);
       // Trigger quiz every 10 seconds
-      if ((GAME_DURATION / 1000 - newTimeLeft) % 10 === 0 && newTimeLeft > 0) {
-        setQuiz(shuffledQuizQuestions[quizQuestionIndex % shuffledQuizQuestions.length]);
+      if ((GAME_DURATION / 1000 - newTimeLeft) % 10 === 0 && newTimeLeft > 0 && !quiz) {
+        const nextQuestion = shuffledQuizQuestions[quizQuestionIndex % shuffledQuizQuestions.length];
+        setQuiz({
+            question: nextQuestion,
+            options: shuffleArray(nextQuestion.options)
+        });
         setQuizQuestionIndex(p => p + 1);
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isGameActive, quizQuestionIndex, shuffledQuizQuestions]);
+  }, [timeLeft, isGameActive, quizQuestionIndex, shuffledQuizQuestions, quiz]);
 
   useEffect(() => {
       if(isGameOver) {
@@ -121,15 +125,18 @@ export default function WaterConservationPage() {
   }, [isGameOver]);
 
   useEffect(() => {
-    if (!isGameActive) return;
+    if (!isGameActive || quiz) return;
     const dropGenerator = setInterval(() => {
         setRaindrops(prev => [...prev, { id: Date.now(), x: Math.random() * 95 + 2.5, y: -20, splashed: false }]);
     }, RAINDROP_INTERVAL);
     return () => clearInterval(dropGenerator);
-  }, [isGameActive]);
+  }, [isGameActive, quiz]);
 
   const gameLoop = useCallback(() => {
-    if (!isGameActive || !gameAreaRef.current || !!quiz) return;
+    if (!isGameActive || !gameAreaRef.current || !!quiz) {
+      if(requestRef.current) cancelAnimationFrame(requestRef.current);
+      return;
+    };
     
     const gameAreaHeight = gameAreaRef.current.offsetHeight;
     const bucketWidth = 7; 
@@ -312,15 +319,15 @@ export default function WaterConservationPage() {
       </Card>
       
         {quiz && (
-            <Dialog open={!!quiz} onOpenChange={() => setQuiz(null)}>
+            <Dialog open={!!quiz} onOpenChange={(open) => !open && setQuiz(null)}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Pop Quiz!</DialogTitle>
-                        <DialogDescription>{quiz.question}</DialogDescription>
+                        <DialogDescription>{quiz.question.question}</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-2">
-                        {shuffleArray(quiz.options).map(option => (
-                             <Button key={option} variant="outline" onClick={() => handleQuizAnswer(option === quiz.correctAnswer)}>
+                        {quiz.options.map(option => (
+                             <Button key={option} variant="outline" onClick={() => handleQuizAnswer(option === quiz.question.correctAnswer)}>
                                 {option}
                             </Button>
                         ))}
