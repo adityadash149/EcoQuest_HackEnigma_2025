@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { DndContext, useDraggable, useDroppable, closestCenter, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Card, CardHeader, CardTitle, CardFooter, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CheckCircle, XCircle, Award } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Award, Recycle, Leaf, Trash2 } from 'lucide-react';
 import { recyclingItems as initialItems, bins as binData } from '@/lib/mock-data';
 import type { RecyclingItem, Bin } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -46,6 +46,7 @@ const DraggableItem = ({ item, isDragging }: { item: RecyclingItem; isDragging?:
 
 const DroppableBin = ({ bin, children, isOver }: { bin: Bin; children: React.ReactNode; isOver: boolean }) => {
   const { setNodeRef } = useDroppable({ id: bin.id, data: { type: 'bin', accepts: bin.accepts } });
+  const Icon = bin.icon;
 
   return (
     <div
@@ -56,7 +57,10 @@ const DroppableBin = ({ bin, children, isOver }: { bin: Bin; children: React.Rea
         isOver ? 'scale-105 shadow-2xl' : 'shadow-md'
       )}
     >
-      <h3 className="text-white font-bold text-xl uppercase tracking-wider">{bin.name}</h3>
+      <div className='flex items-center gap-2'>
+        <Icon className="h-6 w-6 text-white" />
+        <h3 className="text-white font-bold text-xl uppercase tracking-wider">{bin.name}</h3>
+      </div>
       <div className="mt-2 w-full h-full relative grid grid-cols-3 gap-2 items-start content-start">
         {children}
       </div>
@@ -88,7 +92,7 @@ export default function RecyclingGamePage() {
   const [isClient, setIsClient] = useState(false);
   const [isGameComplete, setIsGameComplete] = useState(false);
 
-  const { addPoints, resetPoints } = useUserData();
+  const { addPoints, resetPoints, points } = useUserData();
   const { toast } = useToast();
   const { setNodeRef: itemAreaRef } = useDroppable({ id: 'item-area' });
 
@@ -111,12 +115,11 @@ export default function RecyclingGamePage() {
   useEffect(() => {
     if (gameFinished && !isGameComplete) {
       if (allSortedCorrectly) {
-        addPoints(score);
-        toast({ title: "Perfectly Sorted!", description: `You earned ${score} points!` });
+        toast({ title: "Perfectly Sorted!", description: `You earned a total of ${points} points!` });
         setIsGameComplete(true);
       }
     }
-  }, [gameFinished, allSortedCorrectly, score, addPoints, toast, isGameComplete]);
+  }, [gameFinished, allSortedCorrectly, points, toast, isGameComplete]);
 
   const handleDragStart = (event: any) => {
     const activeItem = items.find(i => i.id === event.active.id);
@@ -135,22 +138,44 @@ export default function RecyclingGamePage() {
     setActiveDragItem(null);
     setOverBinId(null);
 
+    const item = items.find(i => i.id === active.id) as RecyclingItem;
+
     if (over && over.id !== 'item-area') {
-      const item = items.find(i => i.id === active.id) as RecyclingItem;
       const binId = over.id as string;
       const binAccepts = over.data.current?.accepts as string[];
 
       const isCorrect = binAccepts.includes(item.type);
+      
+      const alreadyPlaced = Object.values(droppedItems).flat().some(i => i.id === item.id);
+      const previousPlacement = Object.keys(droppedItems).find(key => droppedItems[key].some(i => i.id === item.id));
+
+      // If it was already placed and now it's wrong, deduct points.
+      // If it's correct now, add points.
+      if (alreadyPlaced && previousPlacement !== binId) {
+        const previousBinAccepts = binData.find(b => b.id === previousPlacement)?.accepts || [];
+        const wasCorrect = previousBinAccepts.includes(item.type);
+        if (wasCorrect && !isCorrect) { // Was correct, now wrong
+            addPoints(-5);
+            setScore(s => Math.max(0, s - 5));
+        } else if (!wasCorrect && isCorrect) { // Was wrong, now correct
+            addPoints(10);
+            setScore(s => s + 10);
+        } else if (!wasCorrect && !isCorrect) {
+            // still wrong, no change
+        } else { // still correct, no change
+        }
+      } else if (!alreadyPlaced) { // First time placement
+         if (isCorrect) {
+            addPoints(10);
+            setScore(s => s + 10);
+        } else {
+            addPoints(-5);
+            setScore(s => Math.max(0, s - 5));
+        }
+      }
+
 
       setFeedback(prev => ({ ...prev, [item.id]: isCorrect }));
-
-      if (isCorrect) {
-        const points = 5;
-        setScore(s => s + points);
-        addPoints(points);
-      } else {
-        // No points deduction, just no gain
-      }
 
       setDroppedItems(prev => {
         const newDroppedItems = { ...prev };
@@ -164,9 +189,23 @@ export default function RecyclingGamePage() {
         newDroppedItems[binId] = [...newDroppedItems[binId], item];
         return newDroppedItems;
       });
-    } else { // Dragged back to the item area
+    } else if (over && over.id === 'item-area') { // Dragged back to the item area
         const item = items.find(i => i.id === active.id);
         if (!item) return;
+
+        const previousBinId = Object.keys(droppedItems).find(key => droppedItems[key].some(i => i.id === item.id));
+        if(previousBinId) {
+            const previousBin = binData.find(b => b.id === previousBinId);
+            if(previousBin?.accepts.includes(item.type)){
+                // It was correct, now removed
+                addPoints(-10);
+                setScore(s => Math.max(0, s-10));
+            } else {
+                // It was incorrect, now removed (points back)
+                addPoints(5);
+                setScore(s => s + 5);
+            }
+        }
 
         setDroppedItems(prev => {
             const newDroppedItems = { ...prev };
@@ -184,12 +223,12 @@ export default function RecyclingGamePage() {
   };
   
   const handlePlayAgain = () => {
+    resetPoints();
     setItems(shuffleArray(initialItems));
     setDroppedItems({});
     setFeedback({});
     setScore(0);
     setIsGameComplete(false);
-    resetPoints();
   }
   
   if (!isClient) return null;
@@ -206,7 +245,7 @@ export default function RecyclingGamePage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground mb-4">You've sorted all the items correctly. You're a Recycling Pro!</p>
-            <p className="text-4xl font-bold text-primary mb-6">{score} Points</p>
+            <p className="text-4xl font-bold text-primary mb-6">{points} Points</p>
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button onClick={handlePlayAgain} className="w-full">Play Again</Button>
@@ -228,7 +267,7 @@ export default function RecyclingGamePage() {
             </Link>
           </Button>
           <div className='text-right'>
-            <p className="text-2xl font-bold text-primary">{score} Points</p>
+            <p className="text-2xl font-bold text-primary">{points} Points</p>
             <p className="text-sm text-muted-foreground">{remainingItems.length} items left</p>
           </div>
         </div>
@@ -246,7 +285,7 @@ export default function RecyclingGamePage() {
             )}
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {binData.map(bin => (
             <DroppableBin key={bin.id} bin={bin} isOver={overBinId === bin.id}>
               {droppedItems[bin.id]?.map(item => (

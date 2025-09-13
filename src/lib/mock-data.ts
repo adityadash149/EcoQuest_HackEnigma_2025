@@ -830,18 +830,17 @@ export const recyclingItems: RecyclingItem[] = [
     { id: 'item-8', name: 'Aluminum Can', type: 'recycling', image: '' },
     { id: 'item-9', name: 'Cardboard Box', type: 'recycling', image: '' },
     { id: 'item-10', name: 'Egg Shells', type: 'compost', image: '' },
-    { id: 'item-11', name: 'Used Battery', type: 'hazardous', image: '' },
+    { id: 'item-11', name: 'Used Battery', type: 'trash', image: '' },
     { id: 'item-12', name: 'Plastic Bag', type: 'trash', image: '' },
-    { id: 'item-13', name: 'Light Bulb', type: 'hazardous', image: '' },
+    { id: 'item-13', name: 'Light Bulb', type: 'trash', image: '' },
     { id: 'item-14', name: 'Coffee Grounds', type: 'compost', image: '' },
     { id: 'item-15', name: 'Pizza Box', type: 'trash', image: '' },
 ];
 
 export const bins: Bin[] = [
     { id: 'bin-recycling', name: 'Recycle', accepts: ['recycling'], icon: Recycle, color: 'bg-green-800' },
-    { id: 'bin-compost', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-purple-700' },
-    { id: 'bin-trash', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-black' },
-    { id: 'bin-hazardous', name: 'Hazardous', accepts: ['hazardous'], icon: HelpCircle, color: 'bg-red-600' },
+    { id: 'bin-compost', name: 'Compost', accepts: ['compost'], icon: Leaf, color: 'bg-black' },
+    { id: 'bin-trash', name: 'Trash', accepts: ['trash'], icon: Trash2, color: 'bg-red-600' },
 ];
 
 export const quotes: Quote[] = [
