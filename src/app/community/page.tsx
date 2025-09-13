@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Wrench } from 'lucide-react';
+import { ArrowLeft, Wrench, Bell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function CommunityPage() {
@@ -23,8 +23,12 @@ export default function CommunityPage() {
             Our team is working hard to bring this feature to you. Please check back later!
           </p>
         </CardContent>
-        <CardFooter>
-          <Button onClick={() => router.back()} className="w-full">
+        <CardFooter className="flex-col gap-2">
+            <Button className="w-full">
+                <Bell className="mr-2 h-4 w-4" />
+                Notify Me
+            </Button>
+          <Button onClick={() => router.back()} variant="ghost" className="w-full">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Go Back
           </Button>
