@@ -22,6 +22,7 @@ import { EcoQuestLogo } from '@/components/icons';
 import { quotes, badges as allBadges } from '@/lib/mock-data';
 import type { Quote } from '@/lib/types';
 import { useUserData } from '@/hooks/use-user-data';
+import { useLastQuest } from '@/hooks/use-last-quest';
 import {
   Tooltip,
   TooltipContent,
@@ -33,6 +34,7 @@ import { cn } from '@/lib/utils';
 export default function HomePage() {
   const [randomQuote, setRandomQuote] = useState<Quote | null>(null);
   const { points, currentBadge } = useUserData();
+  const { lastQuestUrl } = useLastQuest();
 
   useEffect(() => {
     // Select a random quote on component mount (client-side)
@@ -154,7 +156,7 @@ export default function HomePage() {
                     Continue Your Quest
                   </h3>
                   <Button asChild>
-                    <Link href="/lessons">
+                    <Link href={lastQuestUrl}>
                       Latest Lesson <ArrowRight className="ml-2" />
                     </Link>
                   </Button>

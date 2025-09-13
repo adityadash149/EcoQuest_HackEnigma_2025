@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Droplet, ArrowLeft, Award, Sun } from 'lucide-react';
@@ -18,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { waterGameQuestions } from '@/lib/mock-data';
 import type { WaterGameQuestion } from '@/lib/types';
 import { useUserData } from '@/hooks/use-user-data';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 
 const GAME_DURATION = 20000; // 20 seconds
@@ -77,6 +79,9 @@ export default function WaterConservationPage() {
   
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>();
+
+  const pathname = usePathname();
+  useLastQuest(pathname);
   
   const waterLevel = (score / MAX_SCORE) * 100;
   

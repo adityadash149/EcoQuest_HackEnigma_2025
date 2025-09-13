@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -26,6 +27,7 @@ import { treePlantingQuestions as allQuestions } from '@/lib/mock-data';
 import type { QuizQuestion } from '@/lib/types';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
@@ -42,6 +44,9 @@ export default function TreePlantingPage() {
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
+
+  const pathname = usePathname();
+  useLastQuest(pathname);
 
   useEffect(() => {
     setShuffledQuestions(shuffleArray(allQuestions));

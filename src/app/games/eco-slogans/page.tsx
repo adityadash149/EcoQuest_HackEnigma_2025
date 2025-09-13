@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
 import {
   DndContext,
   closestCenter,
@@ -34,6 +35,7 @@ import { cn } from '@/lib/utils';
 import { ecoSlogans } from '@/lib/mock-data';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 const Word = ({ word, id, isDragging }: { word: string; id: string, isDragging?: boolean }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -92,6 +94,9 @@ export default function EcoSloganScramblePage() {
   const [isGameOver, setIsGameOver] = useState(false);
   const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
+
+  const pathname = usePathname();
+  useLastQuest(pathname);
 
   useEffect(() => {
     setIsClient(true);

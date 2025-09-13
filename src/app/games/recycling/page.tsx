@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { DndContext, useDraggable, useDroppable, closestCenter, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Card, CardHeader, CardTitle, CardFooter, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 const DraggableItem = ({ item, isDragging }: { item: RecyclingItem; isDragging?: boolean }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -89,6 +91,9 @@ export default function RecyclingGamePage() {
   const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
   const { setNodeRef: itemAreaRef } = useDroppable({ id: 'item-area' });
+
+  const pathname = usePathname();
+  useLastQuest(pathname);
 
   useEffect(() => {
     setIsClient(true);

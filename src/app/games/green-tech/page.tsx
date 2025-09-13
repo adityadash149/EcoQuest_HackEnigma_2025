@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -42,6 +43,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useUserData } from '@/hooks/use-user-data';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 const buildingTypes = {
     'solar': { icon: Sun, name: 'Solar Farm', cost: 1500, power: 25, pollution: -5, requires: [] },
@@ -86,6 +88,9 @@ export default function GreenTechCityPage() {
 
   const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
+
+  const pathname = usePathname();
+  useLastQuest(pathname);
 
   useEffect(() => {
     setShuffledQuizQuestions(shuffleArray(cityBuildingQuestions));

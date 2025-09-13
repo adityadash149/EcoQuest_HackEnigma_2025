@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, usePathname } from 'next/navigation';
 import { quizzes } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,11 +12,15 @@ import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 export default function QuizPage() {
   const params = useParams();
   const quizId = params.quizId as string;
   const quiz = quizzes.find((q) => q.id === quizId);
+
+  const pathname = usePathname();
+  useLastQuest(pathname);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});

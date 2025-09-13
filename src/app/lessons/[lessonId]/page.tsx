@@ -1,15 +1,20 @@
 
+'use client';
+
 import { lessons } from '@/lib/mock-data';
-import { notFound } from 'next/navigation';
+import { notFound, usePathname } from 'next/navigation';
 import { LessonPlayer } from '@/components/lesson-player';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLastQuest } from '@/hooks/use-last-quest';
 
 export default function LessonPage({ params }: { params: { lessonId: string } }) {
   const lesson = lessons.find((l) => l.id === params.lessonId);
+  const pathname = usePathname();
+  useLastQuest(pathname);
 
   if (!lesson) {
     notFound();
