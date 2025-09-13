@@ -52,9 +52,17 @@ const nextConfig: NextConfig = {
         hostname: 'yale-threesixty.transforms.svdcdn.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.toiimg.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
 };
 
 export default nextConfig;
+
+    
