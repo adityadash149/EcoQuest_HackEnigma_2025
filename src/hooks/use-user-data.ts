@@ -7,7 +7,7 @@ import type { BadgeInfo } from '@/lib/types';
 
 const POINTS_KEY = 'eco-quest-points';
 
-const getInitialPoints = (): number => {
+const getPointsFromStorage = (): number => {
     if (typeof window === 'undefined') return 0;
     try {
         const item = window.localStorage.getItem(POINTS_KEY);
@@ -19,18 +19,21 @@ const getInitialPoints = (): number => {
 };
 
 export function useUserData() {
-  const [points, setPoints] = useState(getInitialPoints);
+  const [points, setPoints] = useState(0);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Sync state if localStorage changes in another tab
+    // On component mount, set the state to be hydrated and get the points.
+    // This ensures the server renders 0 initially, and the client also renders 0 initially.
+    // Then, the client re-renders with the actual points from localStorage.
+    setPoints(getPointsFromStorage());
+    setIsHydrated(true);
+    
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === POINTS_KEY) {
-        setPoints(getInitialPoints());
+        setPoints(getPointsFromStorage());
       }
     };
-    
-    // Set initial points on client-side mount
-    setPoints(getInitialPoints());
 
     window.addEventListener('storage', handleStorageChange);
     return () => {
@@ -40,7 +43,7 @@ export function useUserData() {
 
   const addPoints = useCallback((amount: number) => {
     try {
-      const newPoints = getInitialPoints() + amount;
+      const newPoints = getPointsFromStorage() + amount;
       window.localStorage.setItem(POINTS_KEY, newPoints.toString());
       setPoints(newPoints);
     } catch (error) {
@@ -74,5 +77,9 @@ export function useUserData() {
       return badges.filter(badge => points >= badge.minPoints);
   }
 
-  return { points, addPoints, resetPoints, currentBadge: getCurrentBadge(), earnedBadges: getEarnedBadges() };
+  // Return 0 points until the component is hydrated on the client
+  // to prevent hydration mismatch.
+  const displayPoints = isHydrated ? points : 0;
+
+  return { points: displayPoints, addPoints, resetPoints, currentBadge: getCurrentBadge(), earnedBadges: getEarnedBadges() };
 }
