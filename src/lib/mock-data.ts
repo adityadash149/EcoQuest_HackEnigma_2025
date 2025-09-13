@@ -513,7 +513,7 @@ export const schoolLeaderboard: LeaderboardEntry[] = [
   { rank: 1, name: 'Delhi Public School, R.K. Puram', avatar: 'https://picsum.photos/seed/school1/40/40', points: 15400, school: 'Delhi Public School, R.K. Puram' },
   { rank: 2, name: 'The Doon School, Dehradun', avatar: 'https://picsum.photos/seed/school2/40/40', points: 12800, school: 'The Doon School, Dehradun' },
   { rank: 3, name: 'Bombay Scottish School, Mahim', avatar: 'https://picsum.photos/seed/school3/40/40', points: 11950, school: 'Bombay Scottish School, Mahim' },
-  { rank: 4, name: 'La Martiniere for Boys, Kolkata', avatar: 'https://picsum.photos/seed/school4/40/40', points: 9800, school: 'La Martiniere for Boys, Kolkata' },
+  { rank: 4, name: 'ODM Public School', avatar: 'https://picsum.photos/seed/school4/40/40', points: 9800, school: 'ODM Public School' },
 ];
 
 export const classLeaderboard: LeaderboardEntry[] = [
@@ -587,6 +587,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 
