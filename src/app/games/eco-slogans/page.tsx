@@ -179,7 +179,7 @@ export default function EcoSloganScramblePage() {
     const userAnswer = arrangedWords.map(w => w.word).join(' ');
     if (userAnswer === currentSlogan) {
       setFeedback('correct');
-      const points = 10;
+      const points = 5;
       addPoints(points);
       toast({ title: 'Correct!', description: `You earned ${points} points!` });
     } else {

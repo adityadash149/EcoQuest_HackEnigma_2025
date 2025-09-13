@@ -53,7 +53,7 @@ export default function TreePlantingPage() {
   }, []);
 
   const currentQuestion = useMemo(() => shuffledQuestions[currentQuestionIndex], [currentQuestionIndex, shuffledQuestions]);
-  const questionsCorrect = score / 10;
+  const questionsCorrect = score / 5;
   const totalQuestions = shuffledQuestions.length;
   const progress = totalQuestions > 0 ? (questionsCorrect / totalQuestions) * 100 : 0;
 
@@ -76,7 +76,7 @@ export default function TreePlantingPage() {
     setShowExplanation(true);
 
     if (correct) {
-      const points = 10;
+      const points = 5;
       setScore((prev) => prev + points);
       addPoints(points);
       toast({ title: "Correct!", description: `+${points} points!` });

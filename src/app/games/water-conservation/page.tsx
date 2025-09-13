@@ -186,7 +186,10 @@ export default function WaterConservationPage() {
         });
 
         if (collectedCount > 0) {
-            setScore(s => Math.min(s + collectedCount, MAX_SCORE));
+            const pointsPerDrop = 1; // Not 5, as this is continuous
+            const totalPoints = collectedCount * pointsPerDrop;
+            setScore(s => Math.min(s + totalPoints, MAX_SCORE));
+            addPoints(totalPoints);
         }
         
         // Filter out drops that are off-screen or have finished their splash animation
@@ -194,7 +197,7 @@ export default function WaterConservationPage() {
     });
 
     requestRef.current = requestAnimationFrame(gameLoop);
-  }, [isGameActive, bucketPosition, quiz]);
+  }, [isGameActive, bucketPosition, quiz, addPoints]);
 
   useEffect(() => {
     if (isGameActive && !quiz) {
@@ -224,8 +227,11 @@ export default function WaterConservationPage() {
   
   const handleQuizAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
-        setScore(s => Math.min(s + 20, MAX_SCORE));
-        toast({ title: "Correct!", description: "You've collected 20 bonus liters!", variant: 'default'});
+        const bonusLiters = 20;
+        const points = 2;
+        setScore(s => Math.min(s + bonusLiters, MAX_SCORE));
+        addPoints(points);
+        toast({ title: "Correct!", description: `You've collected ${bonusLiters} bonus liters and earned ${points} points!`, variant: 'default'});
     } else {
         toast({ title: "Not quite!", description: "That's okay, let's keep saving water.", variant: 'destructive'});
     }
@@ -246,7 +252,7 @@ export default function WaterConservationPage() {
                 <CardContent>
                     <p className="text-muted-foreground mb-4">You did a great job saving water!</p>
                     <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-600 mb-2">{score} Liters Saved</p>
-                    <p className="text-sm text-muted-foreground">You earned {score} points!</p>
+                    <p className="text-sm text-muted-foreground">You earned points for every drop saved!</p>
                 </CardContent>
                  <CardFooter className="flex-col gap-2">
                     <Button onClick={startGame} className="w-full">

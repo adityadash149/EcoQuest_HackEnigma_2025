@@ -145,9 +145,11 @@ export default function RecyclingGamePage() {
       setFeedback(prev => ({ ...prev, [item.id]: isCorrect }));
 
       if (isCorrect) {
-        setScore(s => s + 10);
+        const points = 5;
+        setScore(s => s + points);
+        addPoints(points);
       } else {
-        setScore(s => s > 0 ? s - 5 : 0);
+        // No points deduction, just no gain
       }
 
       setDroppedItems(prev => {

@@ -104,7 +104,7 @@ export default function GreenTechCityPage() {
     if (population >= populationGoal && pollution < pollutionMax && power.generated >= power.demand) {
         setGameOverMessage({ title: 'Sustainable City Built!', description: "You've successfully built a thriving, green city. You're an Eco-Planner!" });
         setIsGameOver(true);
-        const points = 100; // Win bonus
+        const points = 5; // Win bonus
         addPoints(points);
         toast({ title: 'City Complete!', description: `You earned ${points} bonus points!`});
         return;
@@ -193,7 +193,7 @@ export default function GreenTechCityPage() {
   const handleQuizAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
         quiz?.onCorrect();
-        const points = 15;
+        const points = 2;
         addPoints(points);
         toast({ title: "Correct!", description: `You've earned a $1000 budget bonus and ${points} points!`, variant: 'default'});
     } else {
