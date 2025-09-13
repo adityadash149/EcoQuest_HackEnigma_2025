@@ -21,6 +21,7 @@ import {
   Menu,
   Search,
   Gamepad2,
+  Users,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -128,6 +129,14 @@ export default function RootLayout({
                     <Link href="/resources">
                       <Globe />
                       <span>Resources</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip="Community">
+                    <Link href="/community">
+                      <Users />
+                      <span>Community</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
