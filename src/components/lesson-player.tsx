@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import type { Lesson, Scenario } from '@/lib/types';
+import type { Lesson } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
@@ -19,7 +19,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { useUserData } from '@/hooks/use-user-data';
 
 interface LessonPlayerProps {
   lesson: Lesson;
@@ -36,6 +37,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
   const { toast } = useToast();
+  const { addPoints } = useUserData();
   const [hydrated, setHydrated] = useState(false);
 
   const currentScenario = lesson.scenarios[currentScenarioIndex];
@@ -60,7 +62,10 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     setShowExplanation(true);
 
     if (correct) {
-      setScore(score + 10);
+      const points = 10;
+      setScore(s => s + points);
+      addPoints(points);
+      toast({ title: 'Correct!', description: `You earned ${points} points!`});
     } else {
         toast({
             title: "Not quite...",
@@ -182,11 +187,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
             <div className="flex justify-center items-center gap-4 my-4">
                 <div className="flex items-center gap-2 text-lg font-semibold text-primary">
                     <Leaf className="h-6 w-6"/>
-                    <span>+{score} Points</span>
-                </div>
-                <div className="flex items-center gap-2 text-lg font-semibold text-yellow-500">
-                    <Award className="h-6 w-6"/>
-                    <span>+1 Badge</span>
+                    <span>+{score} Points Earned</span>
                 </div>
             </div>
             <AlertDialogFooter>

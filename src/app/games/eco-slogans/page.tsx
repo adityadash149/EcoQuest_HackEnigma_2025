@@ -32,6 +32,8 @@ import { ArrowLeft, Lightbulb, CheckCircle, XCircle, Award } from 'lucide-react'
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { ecoSlogans } from '@/lib/mock-data';
+import { useUserData } from '@/hooks/use-user-data';
+import { useToast } from '@/hooks/use-toast';
 
 const Word = ({ word, id, isDragging }: { word: string; id: string, isDragging?: boolean }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -88,6 +90,8 @@ export default function EcoSloganScramblePage() {
   const [activeWord, setActiveWord] = useState<{id: string, word: string} | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const { addPoints } = useUserData();
+  const { toast } = useToast();
 
   useEffect(() => {
     setIsClient(true);
@@ -166,6 +170,9 @@ export default function EcoSloganScramblePage() {
     const userAnswer = arrangedWords.map(w => w.word).join(' ');
     if (userAnswer === currentSlogan) {
       setFeedback('correct');
+      const points = 10;
+      addPoints(points);
+      toast({ title: 'Correct!', description: `You earned ${points} points!` });
     } else {
       setAttempts(prev => prev + 1);
       setFeedback('wrong');
@@ -177,7 +184,6 @@ export default function EcoSloganScramblePage() {
       setSloganIndex(prev => prev + 1);
     } else {
       setIsGameOver(true);
-      localStorage.setItem('game-eco-slogans-completed', 'true');
     }
   };
 
@@ -211,7 +217,7 @@ export default function EcoSloganScramblePage() {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto p-4">
         <div className="mb-4">
           <Button asChild variant="ghost">
             <Link href="/games">

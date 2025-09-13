@@ -1,3 +1,4 @@
+
 export interface Scenario {
   scenarioTitle: string;
   scenarioDescription: string;
@@ -12,7 +13,7 @@ export interface Lesson {
   id: string;
   title: string;
   subject: string;
-  description: string;
+  description:string;
   gradeLevel: string;
   scenarios: Scenario[];
   image: string;
@@ -101,4 +102,10 @@ export interface WaterGameQuestion {
     question: string;
     options: string[];
     correctAnswer: string;
+}
+
+export interface BadgeInfo {
+    name: string;
+    minPoints: number;
+    icon: any;
 }

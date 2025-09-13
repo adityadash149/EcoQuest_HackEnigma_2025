@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useUserData } from '@/hooks/use-user-data';
 
 const buildingTypes = {
     'solar': { icon: Sun, name: 'Solar Farm', cost: 1500, power: 25, pollution: -5, requires: [] },
@@ -83,12 +84,12 @@ export default function GreenTechCityPage() {
   const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<CityBuildingQuestion[]>([]);
   const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
 
+  const { addPoints } = useUserData();
+  const { toast } = useToast();
 
   useEffect(() => {
     setShuffledQuizQuestions(shuffleArray(cityBuildingQuestions));
   }, []);
-
-  const { toast } = useToast();
 
   const cheapestBuildingCost = Math.min(...Object.values(buildingTypes).map(b => b.cost));
 
@@ -98,7 +99,9 @@ export default function GreenTechCityPage() {
     if (population >= populationGoal && pollution < pollutionMax && power.generated >= power.demand) {
         setGameOverMessage({ title: 'Sustainable City Built!', description: "You've successfully built a thriving, green city. You're an Eco-Planner!" });
         setIsGameOver(true);
-        localStorage.setItem('game-green-tech-completed', 'true');
+        const points = 100; // Win bonus
+        addPoints(points);
+        toast({ title: 'City Complete!', description: `You earned ${points} bonus points!`});
         return;
     }
 
@@ -107,7 +110,7 @@ export default function GreenTechCityPage() {
        setGameOverMessage({ title: 'Out of Funds!', description: "You've run out of budget before reaching the city's goals. Plan more carefully next time!" });
        setIsGameOver(true);
     }
-  }, [population, pollution, power.generated, power.demand, budget, cheapestBuildingCost, isGameOver, grid.length]);
+  }, [population, pollution, power.generated, power.demand, budget, cheapestBuildingCost, isGameOver, grid.length, addPoints, toast]);
 
   const calculateStats = useCallback(() => {
     let newPopulation = 0;
@@ -185,7 +188,9 @@ export default function GreenTechCityPage() {
   const handleQuizAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
         quiz?.onCorrect();
-        toast({ title: "Correct!", description: "You've earned a $1000 budget bonus!", variant: 'default'});
+        const points = 15;
+        addPoints(points);
+        toast({ title: "Correct!", description: `You've earned a $1000 budget bonus and ${points} points!`, variant: 'default'});
     } else {
         toast({ title: "Not quite!", description: "That's okay, let's keep building.", variant: 'destructive'});
     }
@@ -233,8 +238,8 @@ export default function GreenTechCityPage() {
   if(isGameOver) {
       const isWin = gameOverMessage.title.includes('Sustainable');
       return (
-        <div className="max-w-md mx-auto text-center">
-            <Card>
+        <div className="flex items-center justify-center min-h-screen p-4">
+            <Card className="max-w-md mx-auto text-center">
                 <CardHeader>
                     <div className="flex justify-center">
                         {isWin ? <Award className="h-16 w-16 text-yellow-500" /> : <XCircle className="h-16 w-16 text-red-500" />}
@@ -244,9 +249,12 @@ export default function GreenTechCityPage() {
                 <CardContent>
                     <p className="text-muted-foreground mb-4">{gameOverMessage.description}</p>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex-col gap-2">
                     <Button onClick={resetGame} className="w-full">
                         Play Again
+                    </Button>
+                    <Button asChild variant="ghost" className="w-full">
+                        <Link href="/games">Back to Games</Link>
                     </Button>
                 </CardFooter>
             </Card>
@@ -255,7 +263,7 @@ export default function GreenTechCityPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto p-4">
         <Dialog open={isWelcomeOpen} onOpenChange={setIsWelcomeOpen}>
             <DialogContent>
                 <DialogHeader>

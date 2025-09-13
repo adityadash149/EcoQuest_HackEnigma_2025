@@ -24,6 +24,8 @@ import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
 import { treePlantingQuestions as allQuestions } from '@/lib/mock-data';
 import type { QuizQuestion } from '@/lib/types';
+import { useUserData } from '@/hooks/use-user-data';
+import { useToast } from '@/hooks/use-toast';
 
 const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
@@ -38,6 +40,8 @@ export default function TreePlantingPage() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+  const { addPoints } = useUserData();
+  const { toast } = useToast();
 
   useEffect(() => {
     setShuffledQuestions(shuffleArray(allQuestions));
@@ -58,13 +62,6 @@ export default function TreePlantingPage() {
     }
   }, [currentQuestion]);
 
-  useEffect(() => {
-    if (gameComplete) {
-        localStorage.setItem('game-tree-planting-completed', 'true');
-    }
-  }, [gameComplete]);
-
-
   const handleAnswerSelect = (answer: string) => {
     if (showExplanation) return;
 
@@ -74,7 +71,10 @@ export default function TreePlantingPage() {
     setShowExplanation(true);
 
     if (correct) {
-      setScore((prev) => prev + 10);
+      const points = 10;
+      setScore((prev) => prev + points);
+      addPoints(points);
+      toast({ title: "Correct!", description: `+${points} points!` });
     }
   };
 
@@ -102,16 +102,8 @@ export default function TreePlantingPage() {
 
   if (gameComplete) {
     return (
-      <div className="max-w-md mx-auto text-center">
-         <div className="mb-4">
-          <Button asChild variant="ghost">
-            <Link href="/games">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Games
-            </Link>
-          </Button>
-        </div>
-        <Card>
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <Card className="max-w-md mx-auto text-center">
           <CardHeader>
             <div className="flex justify-center">
               <Award className="h-16 w-16 text-yellow-500" />
@@ -125,13 +117,18 @@ export default function TreePlantingPage() {
             <div className="flex justify-center items-center gap-4 my-4">
               <div className="flex items-center gap-2 text-lg font-semibold text-primary">
                 <Leaf className="h-6 w-6" />
-                <span>Your Score: {score} Points</span>
+                <span>Final Score: {score} Points</span>
               </div>
             </div>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
             <Button onClick={handlePlayAgain} className="w-full">
               Plant Another
             </Button>
-          </CardContent>
+            <Button asChild variant="ghost" className="w-full">
+                <Link href="/games">Back to Games</Link>
+            </Button>
+          </CardFooter>
         </Card>
       </div>
     );
@@ -142,7 +139,7 @@ export default function TreePlantingPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-4">
       <div className="mb-4">
         <Button asChild variant="ghost">
           <Link href="/games">

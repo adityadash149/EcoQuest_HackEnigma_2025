@@ -17,6 +17,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { waterGameQuestions } from '@/lib/mock-data';
 import type { WaterGameQuestion } from '@/lib/types';
+import { useUserData } from '@/hooks/use-user-data';
 
 
 const GAME_DURATION = 20000; // 20 seconds
@@ -72,6 +73,7 @@ export default function WaterConservationPage() {
   const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<WaterGameQuestion[]>([]);
   const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
   const { toast } = useToast();
+  const { addPoints } = useUserData();
   
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>();
@@ -93,13 +95,22 @@ export default function WaterConservationPage() {
     setQuizQuestionIndex(0);
     setShuffledQuizQuestions(shuffleArray(waterGameQuestions));
   };
+
+  const endGame = useCallback(() => {
+    if (isGameOver) return;
+    setIsGameActive(false);
+    setIsGameOver(true);
+    if (score > 0) {
+        addPoints(score);
+        toast({ title: "Game Over!", description: `You saved ${score} liters and earned ${score} points!`});
+    }
+    if(requestRef.current) cancelAnimationFrame(requestRef.current);
+  }, [isGameOver, score, addPoints, toast]);
   
   useEffect(() => {
     if (!isGameActive) return;
     if (timeLeft <= 0) {
-        setIsGameActive(false);
-        setIsGameOver(true);
-        if(requestRef.current) cancelAnimationFrame(requestRef.current);
+        endGame();
         return;
     }
     const timer = setTimeout(() => {
@@ -116,21 +127,13 @@ export default function WaterConservationPage() {
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isGameActive, quizQuestionIndex, shuffledQuizQuestions, quiz]);
+  }, [timeLeft, isGameActive, quizQuestionIndex, shuffledQuizQuestions, quiz, endGame]);
 
     useEffect(() => {
         if (score >= MAX_SCORE && isGameActive) {
-            setIsGameActive(false);
-            setIsGameOver(true);
-            if(requestRef.current) cancelAnimationFrame(requestRef.current);
+            endGame();
         }
-    }, [score, isGameActive]);
-
-  useEffect(() => {
-      if(isGameOver) {
-          localStorage.setItem('game-water-conservation-completed', 'true');
-      }
-  }, [isGameOver]);
+    }, [score, isGameActive, endGame]);
 
   useEffect(() => {
     if (!isGameActive || quiz) return;
@@ -216,7 +219,7 @@ export default function WaterConservationPage() {
   const handleQuizAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
         setScore(s => Math.min(s + 20, MAX_SCORE));
-        toast({ title: "Correct!", description: "You've earned 20 bonus points!", variant: 'default'});
+        toast({ title: "Correct!", description: "You've collected 20 bonus liters!", variant: 'default'});
     } else {
         toast({ title: "Not quite!", description: "That's okay, let's keep saving water.", variant: 'destructive'});
     }
@@ -226,16 +229,8 @@ export default function WaterConservationPage() {
 
   if (isGameOver) {
     return (
-        <div className="max-w-md mx-auto text-center">
-             <div className="mb-4">
-                <Button asChild variant="ghost">
-                    <Link href="/games">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Games
-                    </Link>
-                </Button>
-            </div>
-            <Card>
+        <div className="flex items-center justify-center min-h-screen p-4">
+            <Card className="max-w-md mx-auto text-center">
                 <CardHeader>
                     <div className="flex justify-center">
                         <Award className="h-16 w-16 text-yellow-500" />
@@ -245,11 +240,14 @@ export default function WaterConservationPage() {
                 <CardContent>
                     <p className="text-muted-foreground mb-4">You did a great job saving water!</p>
                     <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-600 mb-2">{score} Liters Saved</p>
-                    <p className="text-sm text-muted-foreground">Way to go, Eco-Hero!</p>
+                    <p className="text-sm text-muted-foreground">You earned {score} points!</p>
                 </CardContent>
-                 <CardFooter>
+                 <CardFooter className="flex-col gap-2">
                     <Button onClick={startGame} className="w-full">
                         Play Again
+                    </Button>
+                    <Button asChild variant="ghost" className="w-full">
+                        <Link href="/games">Back to Games</Link>
                     </Button>
                 </CardFooter>
             </Card>
@@ -267,7 +265,7 @@ export default function WaterConservationPage() {
   )
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-4">
        <div className="mb-4 flex justify-between items-center">
         <Button asChild variant="ghost">
           <Link href="/games">
@@ -347,5 +345,3 @@ export default function WaterConservationPage() {
     </div>
   );
 }
-
-    

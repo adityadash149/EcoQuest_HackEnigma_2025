@@ -16,6 +16,11 @@ import {
   Gamepad2,
   Cpu,
   Building2,
+  Shield,
+  Star,
+  Trophy,
+  Sun,
+  Sprout
 } from 'lucide-react';
 import type {
   Lesson,
@@ -30,7 +35,16 @@ import type {
   CityBuildingQuestion,
   Quote,
   WaterGameQuestion,
+  BadgeInfo,
 } from './types';
+
+export const badges: BadgeInfo[] = [
+    { name: 'Eco Enthusiast', minPoints: 0, icon: Sprout },
+    { name: 'Green Volunteer', minPoints: 100, icon: Leaf },
+    { name: 'Environment Champion', minPoints: 200, icon: Shield },
+    { name: 'Conservation Leader', minPoints: 300, icon: Star },
+    { name: 'Eco Visionary', minPoints: 400, icon: Trophy },
+];
 
 export const lessons: Lesson[] = [
   {
@@ -361,7 +375,7 @@ export const quizzes: Quiz[] = [
         {
             question: 'Which award is often referred to as the "Nobel Prize for the Environment"?',
             options: ['The Goldman Environmental Prize', 'The Blue Planet Prize', 'Champions of the Earth', 'The Tyler Prize for Environmental Achievement'],
-            correctAnswer: 'The Goldman EnvironmentalPrize',
+            correctAnswer: 'The Goldman Environmental Prize',
             explanation: 'The Goldman Environmental Prize is a prestigious award given annually to grassroots environmental activists, one from each of the world\'s six geographic regions.'
         }
     ]
@@ -573,6 +587,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 

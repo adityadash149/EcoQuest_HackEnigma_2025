@@ -15,18 +15,23 @@ import Link from 'next/link';
 import {
   Award,
   Leaf,
-  Droplet,
-  BookOpen,
   ArrowRight,
   Trophy,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
 import { quotes } from '@/lib/mock-data';
 import type { Quote } from '@/lib/types';
+import { useUserData } from '@/hooks/use-user-data';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function HomePage() {
-  const ecoPoints = 1250;
   const [randomQuote, setRandomQuote] = useState<Quote | null>(null);
+  const { points, currentBadge, earnedBadges } = useUserData();
 
   useEffect(() => {
     // Select a random quote on component mount (client-side)
@@ -86,9 +91,9 @@ export default function HomePage() {
                   <Leaf className="h-4 w-4 text-primary" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{ecoPoints}</div>
-                  <p className="text-xs text-muted-foreground">
-                    +120 this month
+                  <div className="text-2xl font-bold">{points}</div>
+                   <p className="text-xs text-muted-foreground">
+                    Your eco-journey score
                   </p>
                 </CardContent>
               </Card>
@@ -100,27 +105,26 @@ export default function HomePage() {
                   <Award className="h-4 w-4 text-accent-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="flex -space-x-2">
-                    <Badge
-                      variant="default"
-                      className="rounded-full p-2 border-2 border-background"
-                    >
-                      <Leaf className="h-4 w-4" />
-                    </Badge>
-                    <Badge
-                      variant="default"
-                      className="rounded-full p-2 border-2 border-background"
-                    >
-                      <Droplet className="h-4 w-4" />
-                    </Badge>
-                    <Badge
-                      variant="default"
-                      className="rounded-full p-2 border-2 border-background"
-                    >
-                      <BookOpen className="h-4 w-4" />
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">3 badges total</p>
+                    <TooltipProvider>
+                        <div className="flex -space-x-2">
+                            {earnedBadges.map(badge => (
+                                <Tooltip key={badge.name}>
+                                    <TooltipTrigger>
+                                        <Badge
+                                            variant="default"
+                                            className="rounded-full p-2 border-2 border-background"
+                                        >
+                                            <badge.icon className="h-4 w-4" />
+                                        </Badge>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{badge.name}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            ))}
+                        </div>
+                    </TooltipProvider>
+                    <p className="text-xs text-muted-foreground">{currentBadge.name}</p>
                 </CardContent>
               </Card>
               <Card>

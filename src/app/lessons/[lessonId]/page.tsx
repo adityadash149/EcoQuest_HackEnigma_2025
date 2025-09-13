@@ -1,3 +1,4 @@
+
 import { lessons } from '@/lib/mock-data';
 import { notFound } from 'next/navigation';
 import { LessonPlayer } from '@/components/lesson-player';
@@ -15,7 +16,7 @@ export default function LessonPage({ params }: { params: { lessonId: string } })
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
             <Button asChild variant="ghost">
                 <Link href="/lessons">

@@ -1,16 +1,17 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import { quizzes } from '@/lib/mock-data';
-import type { QuizQuestion } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import { useUserData } from '@/hooks/use-user-data';
+import { useToast } from '@/hooks/use-toast';
 
 export default function QuizPage() {
   const params = useParams();
@@ -20,6 +21,17 @@ export default function QuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+
+  const { addPoints } = useUserData();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (quiz) {
+      const initialOptions = quiz.questions[currentQuestionIndex].options;
+      setShuffledOptions([...initialOptions].sort(() => Math.random() - 0.5));
+    }
+  }, [quiz, currentQuestionIndex]);
 
   if (!quiz) {
     notFound();
@@ -47,6 +59,12 @@ export default function QuizPage() {
   };
 
   const handleSubmit = () => {
+    const score = getScore();
+    const totalPoints = score * 10;
+    if (totalPoints > 0) {
+        addPoints(totalPoints);
+        toast({ title: "Quiz Submitted!", description: `You earned ${totalPoints} points!`});
+    }
     setSubmitted(true);
   };
 
@@ -56,11 +74,10 @@ export default function QuizPage() {
     }, 0);
   };
   
-  const score = getScore();
-
   if (submitted) {
+    const score = getScore();
     return (
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto p-4">
              <div className="mb-4">
                 <Button asChild variant="ghost">
                     <Link href="/quizzes">
@@ -99,7 +116,7 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto p-4">
        <div className="mb-4">
         <Button asChild variant="ghost">
           <Link href="/quizzes">
@@ -122,7 +139,7 @@ export default function QuizPage() {
             onValueChange={(value) => handleAnswerSelect(currentQuestionIndex, value)}
             className="space-y-2"
           >
-            {currentQuestion.options.map((option) => (
+            {shuffledOptions.map((option) => (
               <div key={option} className="flex items-center space-x-2">
                 <RadioGroupItem value={option} id={`${currentQuestionIndex}-${option}`} />
                 <Label htmlFor={`${currentQuestionIndex}-${option}`}>{option}</Label>
@@ -137,7 +154,7 @@ export default function QuizPage() {
           {currentQuestionIndex < quiz.questions.length - 1 ? (
             <Button onClick={handleNext}>Next</Button>
           ) : (
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button onClick={handleSubmit} disabled={Object.keys(selectedAnswers).length !== quiz.questions.length}>Submit</Button>
           )}
         </CardFooter>
       </Card>

@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { DndContext, useDraggable, useDroppable, closestCenter, DragEndEvent, DragOverlay, Active } from '@dnd-kit/core';
+import { DndContext, useDraggable, useDroppable, closestCenter, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Card, CardHeader, CardTitle, CardFooter, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, CheckCircle, XCircle, Award } from 'lucide-react';
@@ -10,6 +10,8 @@ import { recyclingItems as initialItems, bins as binData } from '@/lib/mock-data
 import type { RecyclingItem, Bin } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { useUserData } from '@/hooks/use-user-data';
+import { useToast } from '@/hooks/use-toast';
 
 const DraggableItem = ({ item, isDragging }: { item: RecyclingItem; isDragging?: boolean }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -74,7 +76,6 @@ const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
 };
 
-
 export default function RecyclingGamePage() {
   const [items, setItems] = useState<RecyclingItem[]>([]);
   const [droppedItems, setDroppedItems] = useState<Record<string, RecyclingItem[]>>({});
@@ -83,7 +84,10 @@ export default function RecyclingGamePage() {
   const [activeDragItem, setActiveDragItem] = useState<RecyclingItem | null>(null);
   const [overBinId, setOverBinId] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [isGameComplete, setIsGameComplete] = useState(false);
 
+  const { addPoints } = useUserData();
+  const { toast } = useToast();
   const { setNodeRef: itemAreaRef } = useDroppable({ id: 'item-area' });
 
   useEffect(() => {
@@ -92,19 +96,22 @@ export default function RecyclingGamePage() {
   }, []);
   
   const remainingItems = useMemo(() => items.filter(item => !Object.values(droppedItems).flat().some(dropped => dropped.id === item.id)), [items, droppedItems]);
-  const isGameComplete = remainingItems.length === 0 && Object.values(droppedItems).flat().length > 0;
+  const gameFinished = remainingItems.length === 0 && Object.values(droppedItems).flat().length > 0;
   
   const allSortedCorrectly = useMemo(() => {
-      if (!isGameComplete) return false;
+      if (!gameFinished) return false;
       return Object.values(feedback).every(f => f === true);
-  }, [isGameComplete, feedback]);
-
+  }, [gameFinished, feedback]);
 
   useEffect(() => {
-    if (isGameComplete) {
-      localStorage.setItem('game-recycling-completed', 'true');
+    if (gameFinished && !isGameComplete) {
+      if (allSortedCorrectly) {
+        addPoints(score);
+        toast({ title: "Perfectly Sorted!", description: `You earned ${score} points!` });
+        setIsGameComplete(true);
+      }
     }
-  }, [isGameComplete]);
+  }, [gameFinished, allSortedCorrectly, score, addPoints, toast, isGameComplete]);
 
   const handleDragStart = (event: any) => {
     const activeItem = items.find(i => i.id === event.active.id);
@@ -174,14 +181,15 @@ export default function RecyclingGamePage() {
     setDroppedItems({});
     setFeedback({});
     setScore(0);
+    setIsGameComplete(false);
   }
   
   if (!isClient) return null;
 
-  if (isGameComplete && allSortedCorrectly) {
+  if (isGameComplete) {
     return (
-      <div className="max-w-md mx-auto text-center p-4">
-        <Card>
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <Card className="max-w-md mx-auto text-center">
           <CardHeader>
             <div className="flex justify-center">
               <Award className="h-16 w-16 text-yellow-500" />
@@ -234,13 +242,13 @@ export default function RecyclingGamePage() {
           {binData.map(bin => (
             <DroppableBin key={bin.id} bin={bin} isOver={overBinId === bin.id}>
               {droppedItems[bin.id]?.map(item => (
-                <DroppedItemFeedback key={item.id} item={item} isCorrect={isGameComplete ? feedback[item.id] : null} />
+                <DroppedItemFeedback key={item.id} item={item} isCorrect={gameFinished ? feedback[item.id] : null} />
               ))}
             </DroppableBin>
           ))}
         </div>
         
-        {isGameComplete && !allSortedCorrectly && (
+        {gameFinished && !allSortedCorrectly && (
              <Card className="border-red-500">
                 <CardHeader>
                     <CardTitle className="text-red-500 flex items-center gap-2"><XCircle /> Not Quite!</CardTitle>
