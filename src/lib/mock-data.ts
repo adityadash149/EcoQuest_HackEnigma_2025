@@ -510,18 +510,18 @@ export const treePlantingQuestions: QuizQuestion[] = [
 ];
 
 export const schoolLeaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: 'Greenwood High', avatar: 'https://picsum.photos/seed/school1/40/40', points: 15400, school: 'Greenwood High' },
-  { rank: 2, name: 'Riverside Academy', avatar: 'https://picsum.photos/seed/school2/40/40', points: 12800, school: 'Riverside Academy' },
-  { rank: 3, name: 'Oakridge International', avatar: 'https://picsum.photos/seed/school3/40/40', points: 11950, school: 'Oakridge International' },
-  { rank: 4, name: 'Valley Public School', avatar: 'https://picsum.photos/seed/school4/40/40', points: 9800, school: 'Valley Public School' },
+  { rank: 1, name: 'Delhi Public School, R.K. Puram', avatar: 'https://picsum.photos/seed/school1/40/40', points: 15400, school: 'Delhi Public School, R.K. Puram' },
+  { rank: 2, name: 'The Doon School, Dehradun', avatar: 'https://picsum.photos/seed/school2/40/40', points: 12800, school: 'The Doon School, Dehradun' },
+  { rank: 3, name: 'Bombay Scottish School, Mahim', avatar: 'https://picsum.photos/seed/school3/40/40', points: 11950, school: 'Bombay Scottish School, Mahim' },
+  { rank: 4, name: 'La Martiniere for Boys, Kolkata', avatar: 'https://picsum.photos/seed/school4/40/40', points: 9800, school: 'La Martiniere for Boys, Kolkata' },
 ];
 
 export const classLeaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: 'Emily', avatar: 'https://picsum.photos/seed/student1/40/40', points: 1850, school: 'Greenwood High' },
-  { rank: 2, name: 'David', avatar: 'https://picsum.photos/seed/student2/40/40', points: 1720, school: 'Greenwood High' },
-  { rank: 3, name: 'Sophia', avatar: 'https://picsum.photos/seed/student3/40/40', points: 1680, school: 'Greenwood High' },
-  { rank: 4, name: 'James', avatar: 'https://picsum.photos/seed/student4/40/40', points: 1500, school: 'Greenwood High' },
-  { rank: 5, name: 'Alex', avatar: 'https://picsum.photos/seed/student5/40/40', points: 1250, school: 'Greenwood High' },
+  { rank: 1, name: 'Priya Sharma', avatar: 'https://picsum.photos/seed/student1/40/40', points: 1850, school: 'Delhi Public School' },
+  { rank: 2, name: 'Rohan Mehta', avatar: 'https://picsum.photos/seed/student2/40/40', points: 1720, school: 'Delhi Public School' },
+  { rank: 3, name: 'Aisha Khan', avatar: 'https://picsum.photos/seed/student3/40/40', points: 1680, school: 'Delhi Public School' },
+  { rank: 4, name: 'Vikram Singh', avatar: 'https://picsum.photos/seed/student4/40/40', points: 1500, school: 'Delhi Public School' },
+  { rank: 5, name: 'Anjali Verma', avatar: 'https://picsum.photos/seed/student5/40/40', points: 1250, school: 'Delhi Public School' },
 ];
 
 
@@ -587,6 +587,7 @@ export const quotes: Quote[] = [
     
 
     
+
 
 
 
