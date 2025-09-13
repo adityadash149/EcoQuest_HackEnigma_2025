@@ -86,7 +86,7 @@ export default function RecyclingGamePage() {
   const [isClient, setIsClient] = useState(false);
   const [isGameComplete, setIsGameComplete] = useState(false);
 
-  const { addPoints } = useUserData();
+  const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
   const { setNodeRef: itemAreaRef } = useDroppable({ id: 'item-area' });
 
@@ -182,6 +182,7 @@ export default function RecyclingGamePage() {
     setFeedback({});
     setScore(0);
     setIsGameComplete(false);
+    resetPoints();
   }
   
   if (!isClient) return null;
@@ -254,6 +255,9 @@ export default function RecyclingGamePage() {
                     <CardTitle className="text-red-500 flex items-center gap-2"><XCircle /> Not Quite!</CardTitle>
                     <p className="text-muted-foreground">Some items are in the wrong bin. Items with a red 'X' are incorrect. Try dragging them to the right bin!</p>
                 </CardHeader>
+                <CardFooter>
+                  <Button onClick={handlePlayAgain} variant="outline">Reset Game</Button>
+                </CardFooter>
             </Card>
         )}
 

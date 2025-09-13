@@ -73,7 +73,7 @@ export default function WaterConservationPage() {
   const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<WaterGameQuestion[]>([]);
   const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
   const { toast } = useToast();
-  const { addPoints } = useUserData();
+  const { addPoints, resetPoints } = useUserData();
   
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>();
@@ -94,6 +94,7 @@ export default function WaterConservationPage() {
     setQuiz(null);
     setQuizQuestionIndex(0);
     setShuffledQuizQuestions(shuffleArray(waterGameQuestions));
+    resetPoints();
   };
 
   const endGame = useCallback(() => {
@@ -273,6 +274,9 @@ export default function WaterConservationPage() {
             Back to Games
           </Link>
         </Button>
+        {isGameActive && !isGameOver && (
+             <Button onClick={startGame} variant="outline">Reset Game</Button>
+        )}
         {!isGameActive && !isGameOver && (
             <Button onClick={startGame} size="lg">Start Game</Button>
         )}

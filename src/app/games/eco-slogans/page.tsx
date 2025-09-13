@@ -90,7 +90,7 @@ export default function EcoSloganScramblePage() {
   const [activeWord, setActiveWord] = useState<{id: string, word: string} | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
-  const { addPoints } = useUserData();
+  const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -160,10 +160,14 @@ export default function EcoSloganScramblePage() {
     }
   };
 
-  const handleResetAttempt = () => {
-    const words = currentSlogan.split(' ').map((word, index) => ({ id: `jumbled-${word}-${index}`, word }));
-    setJumbledWords(shuffleArray([...words]));
+  const handleResetGame = () => {
+    setSloganIndex(0);
+    setJumbledWords([]);
     setArrangedWords([]);
+    setAttempts(0);
+    setFeedback(null);
+    setIsGameOver(false);
+    resetPoints();
   }
 
   const handleSubmit = () => {
@@ -203,7 +207,7 @@ export default function EcoSloganScramblePage() {
                     <p className="text-muted-foreground mb-4">You've successfully unscrambled all the slogans. You're an Eco-Hero!</p>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
-                    <Button onClick={() => { setSloganIndex(0); setIsGameOver(false); }} className="w-full">
+                    <Button onClick={handleResetGame} className="w-full">
                         Play Again
                     </Button>
                     <Button asChild variant="ghost" className="w-full">
@@ -257,8 +261,8 @@ export default function EcoSloganScramblePage() {
             <Button onClick={handleSubmit} className="w-full" disabled={feedback === 'correct' || attempts >= 3 || arrangedWords.length === 0}>
               Check Slogan
             </Button>
-            <Button onClick={handleResetAttempt} variant="outline" className="w-full">
-              Reset
+            <Button onClick={handleResetGame} variant="outline" className="w-full">
+              Reset Game
             </Button>
           </CardFooter>
         </Card>

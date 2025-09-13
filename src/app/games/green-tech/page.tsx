@@ -84,7 +84,7 @@ export default function GreenTechCityPage() {
   const [shuffledQuizQuestions, setShuffledQuizQuestions] = useState<CityBuildingQuestion[]>([]);
   const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
 
-  const { addPoints } = useUserData();
+  const { addPoints, resetPoints } = useUserData();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -210,6 +210,7 @@ export default function GreenTechCityPage() {
     setIsWelcomeOpen(true);
     setShuffledQuizQuestions(shuffleArray(cityBuildingQuestions));
     setQuizQuestionIndex(0);
+    resetPoints();
   }
 
   const renderGrid = () => {
@@ -362,6 +363,9 @@ export default function GreenTechCityPage() {
                             ))}
                         </CardContent>
                     </Card>
+                     <Button onClick={resetGame} variant="outline" className="w-full">
+                        Reset Game
+                    </Button>
                 </div>
             </div>
         </div>
