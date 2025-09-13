@@ -53,7 +53,7 @@ export const lessons: Lesson[] = [
     subject: 'Science',
     gradeLevel: 'Middle School',
     description: 'Explore the causes and effects of the 2024 Amazon rainforest fire and learn how to prevent such disasters.',
-    image: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
+    image: 'https://www.youtube.com/embed/tDOswhAUwKI',
     coverImage: 'https://www.greenpeace.org/static/planet4-international-stateless/2022/09/fbc851c4-gp1szphr_.jpg',
     imageType: 'video',
     scenarios: [
@@ -195,9 +195,9 @@ export const lessons: Lesson[] = [
     subject: 'Environmental Studies',
     gradeLevel: 'Elementary',
     description: 'Understand the journey of plastic from our homes to the ocean and its impact on marine life.',
-    image: 'https://ocean.si.edu/sites/default/files/styles/full_width_overview/public/2023-11/sargassum-oil-deepwater-horizon.jpg.webp?itok=yeTdGfWP',
+    image: 'https://www.youtube.com/embed/70G0kG1S_zE',
     coverImage: 'https://ocean.si.edu/sites/default/files/styles/full_width_overview/public/2023-11/sargassum-oil-deepwater-horizon.jpg.webp?itok=yeTdGfWP',
-    imageType: 'image',
+    imageType: 'video',
     scenarios: [
       {
         scenarioTitle: 'The Single-Use Choice',
