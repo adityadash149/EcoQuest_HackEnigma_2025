@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const [randomQuote, setRandomQuote] = useState<Quote | null>(null);
-  const { points } = useUserData();
+  const { points, currentBadge } = useUserData();
 
   useEffect(() => {
     // Select a random quote on component mount (client-side)
@@ -132,7 +132,7 @@ export default function HomePage() {
                         </div>
                     </TooltipProvider>
                      <p className="text-xs text-muted-foreground mt-1">
-                        Your progress to the next badge
+                        Current Badge: <span className="font-semibold">{currentBadge.name}</span>
                     </p>
                 </CardContent>
               </Card>
