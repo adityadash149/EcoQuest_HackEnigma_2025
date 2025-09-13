@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Atom, Users, Cpu, Palette, BookCopy, ArrowRight, CheckCircle } from "lucide-react";
+import { Atom, Users, Cpu, Palette, BookCopy, ArrowRight, CheckCircle, FileText } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -101,13 +101,20 @@ export default function SubjectsPage() {
                                             ) : (
                                                 <p className="text-muted-foreground">Explore lessons and activities related to {topic.name}.</p>
                                             )}
-                                            {topic.gameHref && (
-                                                 <Button asChild>
-                                                    <Link href={topic.gameHref}>
-                                                        Play Game <ArrowRight className="ml-2 h-4 w-4" />
+                                            <div className="flex gap-2">
+                                                {topic.gameHref && (
+                                                    <Button asChild>
+                                                        <Link href={topic.gameHref}>
+                                                            Play Game <ArrowRight className="ml-2 h-4 w-4" />
+                                                        </Link>
+                                                    </Button>
+                                                )}
+                                                <Button asChild variant="outline">
+                                                    <Link href="/summarize-feature">
+                                                        Summarize <FileText className="ml-2 h-4 w-4" />
                                                     </Link>
                                                 </Button>
-                                            )}
+                                            </div>
                                        </div>
                                     </AccordionContent>
                                 </AccordionItem>
