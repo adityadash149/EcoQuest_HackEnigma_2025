@@ -337,9 +337,9 @@ export const lessons: Lesson[] = [
     subject: 'Environmental Studies',
     gradeLevel: 'High School',
     description: 'Discover how Israel is combating desertification by planting forests and greening the desert.',
-    image: 'https://yale-threesixty.transforms.svdcdn.com/production/YatirForestPlanting_web.jpg?w=1961&h=1091&auto=compress%2Cformat&fit=crop&dm=1740245693&s=a79339114ce2797299d9dd1e9f1c591f',
+    image: 'https://www.youtube.com/embed/nizXCsCGk7k',
     coverImage: 'https://yale-threesixty.transforms.svdcdn.com/production/YatirForestPlanting_web.jpg?w=1961&h=1091&auto=compress%2Cformat&fit=crop&dm=1740245693&s=a79339114ce2797299d9dd1e9f1c591f',
-    imageType: 'image',
+    imageType: 'video',
     scenarios: [
       {
         scenarioTitle: 'The Challenge of the Desert',
@@ -742,3 +742,4 @@ export const quotes: Quote[] = [
     
 
     
+
