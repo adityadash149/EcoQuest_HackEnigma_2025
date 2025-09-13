@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { lessons } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
