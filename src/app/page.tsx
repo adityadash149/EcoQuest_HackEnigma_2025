@@ -19,7 +19,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { EcoQuestLogo } from '@/components/icons';
-import { quotes } from '@/lib/mock-data';
+import { quotes, badges as allBadges } from '@/lib/mock-data';
 import type { Quote } from '@/lib/types';
 import { useUserData } from '@/hooks/use-user-data';
 import {
@@ -28,10 +28,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const [randomQuote, setRandomQuote] = useState<Quote | null>(null);
-  const { points, currentBadge, earnedBadges } = useUserData();
+  const { points } = useUserData();
 
   useEffect(() => {
     // Select a random quote on component mount (client-side)
@@ -100,31 +101,39 @@ export default function HomePage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Badges Earned
+                    Badges
                   </CardTitle>
                   <Award className="h-4 w-4 text-accent-foreground" />
                 </CardHeader>
                 <CardContent>
                     <TooltipProvider>
-                        <div className="flex -space-x-2">
-                            {earnedBadges.map(badge => (
-                                <Tooltip key={badge.name}>
-                                    <TooltipTrigger>
-                                        <Badge
-                                            variant="default"
-                                            className="rounded-full p-2 border-2 border-background"
-                                        >
-                                            <badge.icon className="h-4 w-4" />
-                                        </Badge>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>{badge.name}</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            ))}
+                        <div className="flex items-center -space-x-2">
+                            {allBadges.map(badge => {
+                                const isEarned = points >= badge.minPoints;
+                                return (
+                                    <Tooltip key={badge.name}>
+                                        <TooltipTrigger>
+                                            <div
+                                                className={cn(
+                                                    'p-2 rounded-full bg-muted border-2 border-background transition-all',
+                                                    !isEarned && 'grayscale opacity-60'
+                                                )}
+                                            >
+                                                <badge.icon className="h-5 w-5" />
+                                            </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="font-semibold">{badge.name}</p>
+                                            {!isEarned && <p className="text-xs text-muted-foreground">Unlock at {badge.minPoints} points</p>}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                );
+                            })}
                         </div>
                     </TooltipProvider>
-                    <p className="text-xs text-muted-foreground">{currentBadge.name}</p>
+                     <p className="text-xs text-muted-foreground mt-1">
+                        Your progress to the next badge
+                    </p>
                 </CardContent>
               </Card>
               <Card>
