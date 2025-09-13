@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
         hostname: 'ocean.si.edu',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'yale-threesixty.transforms.svdcdn.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
