@@ -479,9 +479,9 @@ export const lessons: Lesson[] = [
     subject: 'Geography',
     gradeLevel: 'Middle School',
     description: 'Learn about India\'s ambitious plan to create a green wall to combat desertification and land degradation.',
-    image: 'https://static.toiimg.com/thumb/msid-121606490,width-1280,height-720,resizemode-72/121606490.jpg',
+    image: 'https://www.youtube.com/embed/o4xgQvEzHnM',
     coverImage: 'https://static.toiimg.com/thumb/msid-121606490,width-1280,height-720,resizemode-72/121606490.jpg',
-    imageType: 'image',
+    imageType: 'video',
     scenarios: [
       {
         scenarioTitle: 'The Spreading Desert',
@@ -810,5 +810,7 @@ export const quotes: Quote[] = [
 
 
 
+
+    
 
     
