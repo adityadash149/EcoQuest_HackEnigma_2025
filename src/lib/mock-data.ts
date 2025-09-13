@@ -380,6 +380,19 @@ export const lessons: Lesson[] = [
         explanation: 'By delivering water directly to the soil at the base of the plant, drip irrigation prevents the massive water loss that occurs when water is sprayed into the hot, dry air, making it extremely efficient.',
         animationUpdate: 'Thin black tubes appear, running to the base of the pine tree, with a single drop of water forming at the root.',
       },
+       {
+        scenarioTitle: 'Community and Vision',
+        scenarioDescription: 'The project was not just a scientific endeavor but a national one, driven by organizations like the Jewish National Fund (KKL-JNF) and local communities.',
+        question: 'Why is long-term planning and community involvement crucial for such a large-scale project?',
+        correctAnswer: 'It ensures consistent effort and stewardship over decades.',
+        incorrectAnswers: [
+          'It is required by international law.',
+          'It makes for better photographs.',
+          'It helps get government funding.',
+        ],
+        explanation: 'A forest takes decades to mature. The sustained effort of organizations and the dedication of local communities who help plant and care for the trees are the backbone of the project\'s success.',
+        animationUpdate: 'Silhouettes of people appear, planting more trees, expanding the small group of trees into a larger section.',
+      },
       {
         scenarioTitle: 'Creating a Microclimate',
         scenarioDescription: 'As thousands of trees grow, they begin to change their own environment. The shade from the trees cools the ground, and their fallen needles create a new layer of soil.',
@@ -405,6 +418,58 @@ export const lessons: Lesson[] = [
         ],
         explanation: 'The Yatir Forest research proved that even in extreme conditions, afforestation is a powerful tool for fighting climate change, challenging previous assumptions and showing that such projects can be successful carbon sinks.',
         animationUpdate: 'Arrows representing CO2 are shown being drawn down from the sky into the growing forest.',
+      },
+       {
+        scenarioTitle: 'A Haven for Biodiversity',
+        scenarioDescription: 'The new forest ecosystem starts to attract wildlife. Animals, birds, and insects that were not seen in the desert now find food and shelter here.',
+        question: 'What is a major ecological benefit of creating a forest in an arid region?',
+        correctAnswer: 'It creates a new habitat and increases biodiversity.',
+        incorrectAnswers: [
+          'It keeps animals in one place.',
+          'It makes it easier for hunters.',
+          'It scares away native desert animals.',
+        ],
+        explanation: 'Afforestation creates complex new habitats. The Yatir forest has become an important home for many species, dramatically increasing the biodiversity of the region.',
+        animationUpdate: 'Silhouettes of a deer and several birds appear within the forest, which is now looking dense.',
+      },
+      {
+        scenarioTitle: 'Stopping the Dust',
+        scenarioDescription: 'The dense wall of trees acts as a natural barrier, slowing down desert winds and preventing dust from blowing into nearby towns and agricultural lands.',
+        question: 'How does the forest improve the lives of people in nearby areas?',
+        correctAnswer: 'By acting as a "green wall" that improves air quality.',
+        incorrectAnswers: [
+          'By providing a place for loud concerts.',
+          'By blocking the view of the desert.',
+          'By attracting more tourists.',
+        ],
+        explanation: 'The forest serves as a massive windbreak, reducing the intensity of dust storms and filtering the air. This leads to better public health and protects valuable farmland.',
+        animationUpdate: 'Wind lines are shown hitting the edge of the forest and breaking apart, with very little dust getting past the trees.',
+      },
+      {
+        scenarioTitle: 'Harvesting Water from the Air',
+        scenarioDescription: 'Scientists in the forest noticed that the trees are so effective at cooling the air that they cause moisture to condense, a phenomenon that could be a new water source.',
+        question: 'How do the trees "harvest" water from the air?',
+        correctAnswer: 'By cooling the air and causing dew and fog to condense on their needles.',
+        incorrectAnswers: [
+          'Their roots pull water from clouds.',
+          'They have special water-attracting leaves.',
+          'They shout at the clouds to make it rain.',
+        ],
+        explanation: 'In a process called "fog harvesting," the massive surface area of the tree needles allows them to collect significant amounts of water from the air, which then drips down to the forest floor, adding precious moisture.',
+        animationUpdate: 'Close-up on pine needles, showing tiny water droplets forming on them and dripping to the ground.',
+      },
+      {
+        scenarioTitle: 'A Blueprint for the Future',
+        scenarioDescription: 'The success of Yatir Forest is now seen as a model for other countries facing desertification. It proves that with innovation and dedication, we can make the desert bloom.',
+        question: 'What is the most important lesson from the Yatir Forest project?',
+        correctAnswer: 'That technology and long-term commitment can successfully reverse desertification.',
+        incorrectAnswers: [
+          'That only Israel can grow trees in a desert.',
+          'That planting forests is easy.',
+          'That deserts are not worth saving.',
+        ],
+        explanation: 'Yatir Forest is a powerful symbol of hope. It demonstrates that a combination of the right technology (like drip irrigation), careful planning, and persistent effort can reclaim land thought to be lost to the desert.',
+        animationUpdate: 'The view zooms out to show the entire, vast Yatir Forest as a green patch against the brown desert, a symbol of success.',
       },
     ]
   },
@@ -742,4 +807,5 @@ export const quotes: Quote[] = [
     
 
     
+
 
