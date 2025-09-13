@@ -517,11 +517,11 @@ export const schoolLeaderboard: LeaderboardEntry[] = [
 ];
 
 export const classLeaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: 'Priya Sharma', avatar: 'https://picsum.photos/seed/student1/40/40', points: 1850, school: 'Delhi Public School' },
-  { rank: 2, name: 'Rohan Mehta', avatar: 'https://picsum.photos/seed/student2/40/40', points: 1720, school: 'Delhi Public School' },
-  { rank: 3, name: 'Aisha Khan', avatar: 'https://picsum.photos/seed/student3/40/40', points: 1680, school: 'Delhi Public School' },
-  { rank: 4, name: 'Vikram Singh', avatar: 'https://picsum.photos/seed/student4/40/40', points: 1500, school: 'Delhi Public School' },
-  { rank: 5, name: 'Anjali Verma', avatar: 'https://picsum.photos/seed/student5/40/40', points: 1250, school: 'Delhi Public School' },
+  { rank: 1, name: 'Subhashree M', avatar: 'https://picsum.photos/seed/student1/40/40', points: 1850, school: 'Delhi Public School' },
+  { rank: 2, name: 'Swayam M', avatar: 'https://picsum.photos/seed/student2/40/40', points: 1720, school: 'Delhi Public School' },
+  { rank: 3, name: 'Varun P', avatar: 'https://picsum.photos/seed/student3/40/40', points: 1680, school: 'Delhi Public School' },
+  { rank: 4, name: 'Aditya D', avatar: 'https://picsum.photos/seed/student4/40/40', points: 1500, school: 'Delhi Public School' },
+  { rank: 5, name: 'Manshya P', avatar: 'https://picsum.photos/seed/student5/40/40', points: 1250, school: 'Delhi Public School' },
 ];
 
 
@@ -604,3 +604,6 @@ export const quotes: Quote[] = [
 
 
 
+
+
+    
